@@ -1,15 +1,13 @@
-// src/App.tsx
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import PrivateRoute from './components/PrivateRoute';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
+import Dashboard from '../pages/Dashboard';
+import PrivateRoute from '../components/PrivateRoute';
 
-function App() {
+export default function AppRoutes() {
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
             <Route
                 path="/dashboard"
                 element={
@@ -18,9 +16,8 @@ function App() {
                     </PrivateRoute>
                 }
             />
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="/register" element={<Register />} />
         </Routes>
     );
 }
-
-export default App;
