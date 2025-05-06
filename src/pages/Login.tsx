@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Button, Alert } from 'react-bootstrap';
-import { loginApi } from '../api/auth';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Form, Button, Alert, Container } from 'react-bootstrap';
+import { loginApi } from '../api/authApi';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const { isLoggedIn, login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from || '/';
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate(from);
+        }
+    }, [isLoggedIn, navigate, from]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,22 +35,17 @@ const Login: React.FC = () => {
 
         try {
             const result = await loginApi(email, password);
-            console.log('登入成功', result);
-            localStorage.setItem('token', result.token);
-            navigate('/dashboard');
+            // console.log('登入成功', result.data);
+            login(result.token, { email, nickname: result.user.name });
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                // Access error.message or other properties safely
-                console.error(error.message);
-            } else {
-                // Handle cases where the error is not an Error object
-                console.error('An unexpected error occurred');
-            }
+            setError(error instanceof Error ? error.message : '發生未知錯誤，請稍後再試');
         }
     };
 
     return (
-        <>
+        <Container className="mt-5" style={{ maxWidth: '400px' }}>
+            <h3>登入</h3>
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form.Group className="mb-3" controlId="formEmail">
@@ -73,7 +78,7 @@ const Login: React.FC = () => {
             <p>
                 沒有帳號？<a href="/register">註冊</a>
             </p>
-        </>
+        </Container>
     );
 };
 

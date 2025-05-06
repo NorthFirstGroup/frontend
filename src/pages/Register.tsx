@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-import { Form, Button, Alert } from 'react-bootstrap';
-import { registerApi } from '../api/auth';
+import { useNavigate } from 'react-router-dom';
+import { Form, Button, Alert, Container } from 'react-bootstrap';
+import { registerApi } from '../api/authApi';
 
 const Register: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -9,7 +9,7 @@ const Register: React.FC = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // 阻止預設 GET 行為
@@ -43,72 +43,72 @@ const Register: React.FC = () => {
             const res = await registerApi({ email, name, password });
             console.log(res);
             // localStorage.setItem('token', res.token); // 假設註冊後自動登入
-            // navigate('/dashboard');
+            navigate('/');
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                // Access error.message or other properties safely
-                setError('註冊失敗');
-                console.error(error.message);
-            } else {
-                // Handle cases where the error is not an Error object
-                console.error('An unexpected error occurred');
-            }
+            setError(error instanceof Error ? error.message : '發生未知錯誤，請稍後再試');
+            // setError('註冊失敗');
         }
     };
 
     return (
-        <Form onSubmit={handleSubmit}>
-            {error && <Alert variant="danger">{error}</Alert>}
+        <Container className="mt-5" style={{ maxWidth: '400px' }}>
+            <h3>註冊</h3>
+            <Form onSubmit={handleSubmit}>
+                {error && <Alert variant="danger">{error}</Alert>}
 
-            <Form.Group className="mb-3" controlId="formEmail">
-                <Form.Label>電子郵件</Form.Label>
-                <Form.Control
-                    type="email"
-                    placeholder="請輸入 Email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                />
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="formEmail">
+                    <Form.Label>電子郵件</Form.Label>
+                    <Form.Control
+                        type="email"
+                        placeholder="請輸入 Email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formName">
-                <Form.Label>暱稱</Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="請輸入暱稱 (最多10個字)"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    maxLength={10}
-                    required
-                />
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="formName">
+                    <Form.Label>暱稱</Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="請輸入暱稱 (最多10個字)"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        maxLength={10}
+                        required
+                    />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formPassword">
-                <Form.Label>密碼</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="請輸入密碼"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                />
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="formPassword">
+                    <Form.Label>密碼</Form.Label>
+                    <Form.Control
+                        type="password"
+                        placeholder="請輸入密碼"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formConfirmPassword">
-                <Form.Label>確認密碼</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="再次輸入密碼"
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    required
-                />
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="formConfirmPassword">
+                    <Form.Label>確認密碼</Form.Label>
+                    <Form.Control
+                        type="password"
+                        placeholder="再次輸入密碼"
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-            <Button variant="success" type="submit" className="w-100">
-                註冊
-            </Button>
-        </Form>
+                <Button variant="success" type="submit" className="w-100">
+                    註冊
+                </Button>
+            </Form>
+            <p>
+                已有帳號：<a href="/login">登入</a>
+            </p>
+        </Container>
     );
 };
 
