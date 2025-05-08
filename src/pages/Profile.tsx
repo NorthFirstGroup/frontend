@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { getProfile, updateProfile } from '../api/profile';
 import { useAuth } from '../hooks/useAuth';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 interface ProfileFormData {
-    nickname: string;
+    name: string;
     phone_num: string;
     birth_date: string;
     profile_url: string;
@@ -15,7 +21,7 @@ const Profile: React.FC = () => {
 
     const email = user!.email;
     const [formData, setFormData] = useState<ProfileFormData>({
-        nickname: '',
+        name: '',
         phone_num: '',
         birth_date: '',
         profile_url: ''
@@ -31,7 +37,9 @@ const Profile: React.FC = () => {
             setLoading(true);
             try {
                 const profileData = await getProfile();
-                setFormData(profileData);
+                // Format birth_date using Day.js
+                const formattedBirthDate = dayjs(profileData.birth_date).format('YYYY-MM-DD');
+                setFormData({ ...profileData, birth_date: formattedBirthDate });
             } catch (err) {
                 console.error(err);
                 setError('無法取得會員資料');
@@ -62,10 +70,11 @@ const Profile: React.FC = () => {
 
         try {
             const updatedProfile = await updateProfile(formData, file || undefined);
+            const formattedBirthDate = dayjs(updatedProfile.birth_date).format('YYYY-MM-DD');
             setFormData({
-                nickname: updatedProfile?.name || '',
+                name: updatedProfile?.name || '',
                 phone_num: updatedProfile.phone_num || '',
-                birth_date: updatedProfile.birth_date || '',
+                birth_date: formattedBirthDate,
                 profile_url: updatedProfile.profile_url || ''
             });
             setFile(null);
@@ -91,49 +100,44 @@ const Profile: React.FC = () => {
                 </div>
             ) : (
                 <Form onSubmit={handleSubmit}>
-                    {/* Email - 唯讀欄位 */}
                     <Form.Group className="mb-3">
                         <Form.Label>電子郵件</Form.Label>
                         <Form.Control type="email" name="email" value={email} readOnly plaintext disabled />
                     </Form.Group>
 
-                    {/* Nickname */}
                     <Form.Group className="mb-3">
                         <Form.Label>暱稱</Form.Label>
                         <Form.Control
                             type="text"
-                            name="nickname"
-                            value={formData.nickname}
+                            name="name"
+                            value={formData.name}
                             onChange={handleInputChange}
                             maxLength={10}
                             placeholder="請輸入暱稱"
                         />
                     </Form.Group>
 
-                    {/* Phone */}
                     <Form.Group className="mb-3">
                         <Form.Label>手機號碼</Form.Label>
                         <Form.Control
                             type="tel"
-                            name="phone"
+                            name="phone_num"
                             value={formData.phone_num}
                             onChange={handleInputChange}
                             placeholder="請輸入手機號碼"
                         />
                     </Form.Group>
 
-                    {/* Birthdate */}
                     <Form.Group className="mb-3">
                         <Form.Label>出生年月日</Form.Label>
                         <Form.Control
                             type="date"
-                            name="birthdate"
+                            name="birth_date"
                             value={formData.birth_date}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
 
-                    {/* Avatar */}
                     <Form.Group className="mb-3">
                         <Form.Label>大頭照</Form.Label>
                         <div className="mb-2">
