@@ -6,6 +6,7 @@ export interface ProfileData {
     phone_num?: string;
     birth_date?: string;
     profile_url?: string;
+    location_ids?: number[];
 }
 
 /**
@@ -14,8 +15,7 @@ export interface ProfileData {
 export const getProfile = async () => {
     try {
         const res = await apiClient.get('/v1/user/profile');
-        console.log(res);
-        console.log(res.data.data);
+        // console.log(res);
         return res.data.data;
     } catch (error) {
         console.error('Error fetching profile:', error);
@@ -54,8 +54,8 @@ export const updateProfile = async (updatedData: ProfileData, file?: File): Prom
         console.log('before put api', JSON.stringify(updatedData));
         // const response = await apiClient.patch('/v1/user/profile', {
         const response = await apiClient.put('/v1/user/profile', {
-            ...updatedData
-            // avatar: avatarUrl
+            ...updatedData,
+            avatar: avatarUrl
         });
 
         return response.data;

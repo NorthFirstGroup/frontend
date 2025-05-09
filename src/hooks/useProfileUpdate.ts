@@ -20,7 +20,7 @@ export const useProfileUpdate = () => {
             setLoading(true);
             try {
                 const data = await getProfile();
-                console.log('component', data);
+                // console.log('component', data);
                 setProfile({
                     name: data.name,
                     phone_num: data.phone_num,
