@@ -1,7 +1,8 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-
+import goTicketLogo from '/Subtract.png';
+import goTicketVector from '../assets/Vector.png';
 const Header = () => {
     const { isLoggedIn, user, logout } = useAuth();
     const navigate = useNavigate();
@@ -16,7 +17,8 @@ const Header = () => {
         <Navbar bg="light" expand="lg">
             <Container>
                 <Navbar.Brand as={Link} to="/">
-                    GoTicket
+                    <img src={goTicketLogo} alt="Logo" />
+                    <img src={goTicketVector} alt="GoTicket" />
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="goticket-navbar" />
                 <Navbar.Collapse id="goticket-navbar">

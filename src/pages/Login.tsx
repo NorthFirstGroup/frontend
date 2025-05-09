@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
 import { loginApi } from '../api/authApi';
+// import FadeAlert from '../components/FadeAlert';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -26,10 +27,12 @@ const Login: React.FC = () => {
 
         if (!email || !password) {
             setError('請填寫所有欄位');
+            // setTimeout(() => setError(''), 12000);
             return;
         }
         if (!emailRegex.test(email)) {
             setError('Email 格式不正確');
+            // setTimeout(() => setError(''), 12000);
             return;
         }
 
@@ -46,8 +49,8 @@ const Login: React.FC = () => {
         <Container className="mt-5" style={{ maxWidth: '400px' }}>
             <h3>登入</h3>
             {error && <Alert variant="danger">{error}</Alert>}
+            {/*error && <FadeAlert message={error} variant="danger" />*/}
             <Form onSubmit={handleSubmit}>
-                {error && <Alert variant="danger">{error}</Alert>}
                 <Form.Group className="mb-3" controlId="formEmail">
                     <Form.Label>電子郵件</Form.Label>
                     <Form.Control
@@ -76,7 +79,7 @@ const Login: React.FC = () => {
             </Form>
 
             <p>
-                沒有帳號？<a href="/register">註冊</a>
+                沒有 Go Ticket 帳號嗎？<a href="/register">前往註冊</a>
             </p>
         </Container>
     );

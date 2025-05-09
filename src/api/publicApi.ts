@@ -2,22 +2,14 @@ import axios from 'axios';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-const apiClient = axios.create({
+const publicApiClient = axios.create({
     baseURL: apiBaseUrl,
     headers: {
         'Content-Type': 'application/json'
     }
 });
 
-apiClient.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-});
-
-apiClient.interceptors.response.use(
+publicApiClient.interceptors.response.use(
     response => response,
     error => {
         console.error('API Error:', error);
@@ -25,4 +17,4 @@ apiClient.interceptors.response.use(
     }
 );
 
-export default apiClient;
+export default publicApiClient;

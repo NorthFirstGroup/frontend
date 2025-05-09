@@ -9,16 +9,16 @@ export const useAuthProvider = (): AuthContextType => {
 
     const login = (newToken: string, user: User) => {
         localStorage.setItem('token', newToken);
-        console.log('newToken', newToken);
+        // console.log('newToken', newToken);
         setToken(newToken);
-        console.log('token', token);
+        // console.log('token', token);
         setUser(user);
     };
 
     const logout = () => {
         localStorage.removeItem('token');
         setToken(null);
-        console.log('token', token);
+        // console.log('token', token);
         setUser(null);
     };
 

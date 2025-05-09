@@ -1,13 +1,13 @@
-import apiClient from './client';
+import publicApiClient from './publicApi';
 
 export async function loginApi(email: string, password: string) {
-    const res = await apiClient.post('/user/signin', { email, password });
-    console.log(res);
+    const res = await publicApiClient.post('/v1/user/signin', { email, password });
+    // console.log(res);
     return res.data.data;
 }
 
 export const registerApi = async (payload: { email: string; name: string; password: string }) => {
-    const res = await apiClient.post('/user/signup', payload);
-    console.log(res);
-    return res.data;
+    const res = await publicApiClient.post('/v2/user/signup', payload);
+    // console.log(res);
+    return res.data.data;
 };
