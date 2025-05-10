@@ -1,26 +1,25 @@
-import apiClient from './client';
+import { ApiResponse } from '../types/ApiResponse';
+import { apiClient } from './client';
 import { uploadToS3 } from './uploadApi';
 
-export interface ProfileData {
-    name?: string;
-    phone_num?: string;
-    birth_date?: string;
-    profile_url?: string;
-    location_ids?: number[];
+export interface setProfileData {
+    name: string;
+    phone_num: string;
+    birth_date: string;
+    location_ids: number[];
+    profile_url: string;
+}
+
+export interface getProfileData {
+    user: setProfileData;
 }
 
 /**
  * 取得會員資料
  */
-export const getProfile = async () => {
-    try {
-        const res = await apiClient.get('/v1/user/profile');
-        // console.log(res);
-        return res.data.data;
-    } catch (error) {
-        console.error('Error fetching profile:', error);
-        throw new Error('Failed to fetch profile');
-    }
+export const getProfile = async (): Promise<ApiResponse<getProfileData>> => {
+    const res = await apiClient.get<ApiResponse<getProfileData>>('/v1/user/profile');
+    return res.data || {};
 };
 
 /**
@@ -42,7 +41,7 @@ export const getProfile = async () => {
  * 更新會員資料
  * @param data 會員資料 (僅需傳遞需要更新的欄位)
  */
-export const updateProfile = async (updatedData: ProfileData, file?: File): Promise<ProfileData> => {
+export const updateProfile = async (updatedData: setProfileData, file?: File): Promise<ApiResponse<{}>> => {
     try {
         let avatarUrl = updatedData.profile_url;
 
@@ -53,12 +52,12 @@ export const updateProfile = async (updatedData: ProfileData, file?: File): Prom
 
         console.log('before put api', JSON.stringify(updatedData));
         // const response = await apiClient.patch('/v1/user/profile', {
-        const response = await apiClient.put('/v1/user/profile', {
+        const response = await apiClient.put<ApiResponse<{}>>('/v1/user/profile', {
             ...updatedData,
             avatar: avatarUrl
         });
 
-        return response.data;
+        return response.data || {};
     } catch (error) {
         console.error('Error updating profile:', error);
         throw new Error('Failed to update profile');
