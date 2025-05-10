@@ -28,7 +28,7 @@ interface Area {
 
 const Profile: React.FC = () => {
     const { user } = useAuth();
-    const email = user!.email;
+    const email = user?.email;
     const [formData, setFormData] = useState<ProfileFormData>({
         name: '',
         phone_num: '',
