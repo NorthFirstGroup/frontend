@@ -1,0 +1,60 @@
+name: Deploy to EC2
+
+on:
+    push:
+        branches: [master] # 每次 push 到 main 分支時觸發部署流程
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest # 使用 GitHub 提供的 Ubuntu runner
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+              # 下載你 GitHub repo 的原始碼
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 20
+              # 安裝 Node.js 20 環境
+
+            - name: Install dependencies
+              run: npm install
+              # 安裝 npm 套件（根據 package.json）
+
+            - name: Build Vue app
+              run: npm run build
+              # 執行 Vue 專案打包，產出 dist/
+
+            - name: Compress dist content (no dist folder)
+              run: |
+                  cd dist
+                  tar -czf ../vue-app.tar.gz .
+              # 進入 dist/ 資料夾後打包它的內容，而不是包含 dist 本身
+              # 結果：vue-app.tar.gz 裡面是 index.html, assets/ 等
+
+            - name: Upload tar.gz to EC2:/tmp
+              uses: appleboy/scp-action@v0.1.4
+              with:
+                  host: ${{ secrets.EC2_HOST }} # EC2 公網 IP 或 DNS
+                  username: ${{ secrets.EC2_USER }} # 一般是 ubuntu
+                  key: ${{ secrets.EC2_KEY }} # SSH 私鑰
+                  source: 'vue-app.tar.gz'
+                  target: '/tmp'
+              # 使用 scp 把 vue-app.tar.gz 上傳到 EC2 的 /tmp 目錄
+
+            - name: Deploy and extract to /var/www/html
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USER }}
+                  key: ${{ secrets.EC2_KEY }}
+                  script: |
+                      sudo rm -rf /var/www/html/*                 # 清空舊的網站內容
+                      sudo mkdir -p /var/www/html                 # 確保資料夾存在
+                      sudo tar -xzf /tmp/vue-app.tar.gz -C /var/www/html  # 解壓縮進 html 目錄
+                      sudo rm /tmp/vue-app.tar.gz                 # 刪除中繼檔案
+                      # 可選：重啟 nginx（視伺服器設定）
+                      # sudo systemctl restart nginx
+              # 使用 SSH 遠端登入，解壓並部署檔案

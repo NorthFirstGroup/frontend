@@ -17,7 +17,7 @@ dayjs.extend(timezone);
 
 const Profile: React.FC = () => {
     const { user } = userAuth();
-    const email = user!.email;
+    const email = user?.email;
 
     const {
         profile,
