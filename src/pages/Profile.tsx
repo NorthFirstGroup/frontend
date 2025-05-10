@@ -1,232 +1,216 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Container, Form, Button, Alert } from 'react-bootstrap';
 import dayjs from 'dayjs';
-
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { availAreas } from '../api/availArea';
-import { getProfile, updateProfile } from '../api/profile';
-import { useAuth } from '../hooks/useAuth';
+import { availAreas, Area, AreaResponseData } from '../api/availArea';
+import { ProfileData } from '../api/profile';
+import { userAuth } from '../hooks/userAuth';
+import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
+import { handleApiError } from '../utils/errorHandling';
+import UserNameInput from '../components/UserNameInput';
+import PhoneNumberInput from '../components/PhoneNumberInput';
+import { userProfileData } from '../hooks/userProfileUpdate';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-// 定義 ProfileFormData 介面
-interface ProfileFormData {
-    name: string;
-    phone_num: string;
-    birth_date: string;
-    profile_url: string;
-    location_ids: number[];
-}
-
-// 定義地區選項介面
-interface Area {
-    id: number;
-    name: string;
-}
-
 const Profile: React.FC = () => {
-    const { user } = useAuth();
+    const { user } = userAuth();
     const email = user?.email;
-    const [formData, setFormData] = useState<ProfileFormData>({
+
+    const {
+        profile,
+        loading: profileLoading,
+        error: profileError,
+        handleFileChange: handleProfileFileChange,
+        handleUpdateProfile,
+        updateSuccess,
+        updating: isUpdating,
+        updateError: profileUpdateError
+    } = userProfileData();
+
+    const [formData, setFormData] = useState<Required<ProfileData>>({
+        name: '',
+        phone_num: '',
+        birth_date: dayjs().format('YYYY-MM-DD'),
+        location_ids: [],
+        profile_url: '' // 包含 profile_url 並給予初始值
+    });
+    const [areas, setAreas] = useState<Area[]>([]);
+
+    const [errors, setErrors] = useState({
         name: '',
         phone_num: '',
         birth_date: '',
-        profile_url: '',
-        location_ids: []
+        profile_url: ''
     });
+    const [loadingAreas, setLoadingAreas] = useState(false);
+    const [areasError, setAreasError] = useState<string | null>(null);
 
-    const [areas, setAreas] = useState<Area[]>([]);
-    const [file, setFile] = useState<File | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    // const [submitLoading, setSubmitLoading] = useState(false);
+    // const [submitError, setSubmitError] = useState('');
 
-    // 獲取使用者資料及地區選項
     useEffect(() => {
-        const fetchProfile = async () => {
-            setLoading(true);
+        if (profile) {
+            setFormData({
+                name: profile.name || '',
+                phone_num: profile.phone_num || '',
+                birth_date: profile.birth_date || dayjs().format('YYYY-MM-DD'),
+                location_ids: profile.location_ids || [],
+                profile_url: profile.profile_url || ''
+            });
+        }
+    }, [profile]);
+
+    useEffect(() => {
+        const fetchAreasData = async () => {
+            if (loadingAreas) {
+                return; // 如果還在載入中，則不重複執行
+            }
+            setLoadingAreas(true);
+            setAreasError(null);
             try {
-                const profileData = await getProfile();
-                const formattedBirthDate = dayjs(profileData.birth_date).format('YYYY-MM-DD');
-                setFormData({ ...profileData, birth_date: formattedBirthDate });
-            } catch (err) {
-                console.error(err);
-                setError('無法取得會員資料');
+                const response: ApiResponse<AreaResponseData> = await availAreas();
+                if (response.data) setAreas(response.data.results);
+            } catch (error: any) {
+                setAreasError(handleApiError(error, '無法取得地區選項'));
             } finally {
-                setLoading(false);
+                setLoadingAreas(false);
             }
         };
 
-        const fetchAreas = async () => {
-            try {
-                const res = await availAreas();
-                setAreas(res);
-            } catch (err) {
-                console.error(err);
-                setError('無法取得地區選項');
-            }
-        };
-
-        fetchProfile();
-        fetchAreas();
+        fetchAreasData();
     }, []);
+
+    const validateField = (name: string, value: string) => {
+        let errorMsg = '';
+
+        if (name === 'name') {
+            if (value.length < 2 || value.length > 10) {
+                errorMsg = '暱稱需為 2-10 字，且不可包含特殊符號';
+            }
+        }
+
+        if (name === 'phone_num') {
+            const phoneRegex = /^09\d{8}$/;
+            if (!phoneRegex.test(value)) {
+                errorMsg = '手機號碼需為 09 開頭的 10 位數字';
+            }
+        }
+
+        setErrors(prev => ({ ...prev, [name]: errorMsg }));
+        return errorMsg === '';
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+
+        if (name === 'name' || name === 'phone_num') {
+            validateField(name, value);
+        }
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setFile(e.target.files[0]);
+        const target = e.target as HTMLInputElement; // 類型斷言
+        const selectedFile = target.files?.[0];
+        if (selectedFile) {
+            if (selectedFile.size > 2 * 1024 * 1024) {
+                setErrors(prev => ({
+                    ...prev,
+                    profile_url: '圖片大小不可超過 2MB'
+                }));
+            } else {
+                handleProfileFileChange(selectedFile);
+                setErrors(prev => ({ ...prev, profile_url: '' }));
+            }
         }
     };
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.target.value);
-        setFormData(prev => {
-            const updatedLocationIds = prev.location_ids.includes(value)
+        setFormData(prev => ({
+            ...prev,
+            location_ids: prev.location_ids.includes(value)
                 ? prev.location_ids.filter(id => id !== value)
-                : [...prev.location_ids, value];
-            return { ...prev, location_ids: updatedLocationIds };
-        });
+                : [...prev.location_ids, value]
+        }));
+    };
+
+    const isFormValid = () => {
+        return !errors.name && !errors.phone_num && !errors.profile_url && formData.location_ids.length > 0;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
-        setSuccess('');
-        setLoading(true);
+        setErrors(prev => ({ ...prev, profile_url: '' })); // 清空圖片錯誤
+        // setSubmitError('');
 
-        if (formData.name.length < 2 || formData.name.length > 10) {
-            setError('暱稱格式錯誤');
-            setLoading(false);
-            return;
-        }
-
-        const phoneRegex = /^09\d{8}$/;
-
-        if (!phoneRegex.test(formData.phone_num)) {
-            setError('手機號碼格式錯誤，需為 09 開頭且 10 位數字');
-            return;
-        }
-
-        if (formData.location_ids.length === 0) {
-            setError('請至少選擇一個地區');
-            setLoading(false);
-            return;
-        }
-
-        try {
-            await updateProfile(formData, file || undefined);
-            setSuccess('會員資料已更新');
-        } catch (err) {
-            console.error(err);
-            setError('更新失敗，請稍後再試');
-        } finally {
-            setLoading(false);
+        if (isFormValid()) {
+            await handleUpdateProfile(formData);
+        } else {
+            // setSubmitError('請檢查表單是否有錯誤');
         }
     };
 
     return (
         <Container className="mt-5" style={{ maxWidth: '600px' }}>
             <h3>會員資料</h3>
+            {areasError && <Alert variant="danger">{areasError}</Alert>}
+            {/* {submitError && <Alert variant="danger">{submitError}</Alert>} */}
+            {profileError && <Alert variant="danger">{profileError}</Alert>} {/* 顯示錯誤訊息 */}
+            {profileUpdateError && <Alert variant="danger">{profileUpdateError}</Alert>}
+            {updateSuccess && <Alert variant="success">{updateSuccess}</Alert>}
+            <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                    <Form.Label>會員帳號</Form.Label>
+                    <Form.Control type="email" value={email} readOnly plaintext disabled />
+                </Form.Group>
 
-            {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">{success}</Alert>}
+                <UserNameInput value={formData.name} onChange={handleInputChange} error={errors.name} />
 
-            {loading ? (
-                <div className="text-center my-4">
-                    <Spinner animation="border" />
-                </div>
-            ) : (
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>會員帳號</Form.Label>
-                        <Form.Control type="email" name="email" value={email} readOnly plaintext disabled />
-                    </Form.Group>
+                <PhoneNumberInput value={formData.phone_num} onChange={handleInputChange} error={errors.phone_num} />
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>暱稱</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            minLength={2}
-                            maxLength={10}
-                            placeholder="請輸入暱稱"
-                            required
-                        />
-                        <Form.Text className="text-muted">最少2個字，最多10個字，不可包含任何特殊符號與空白</Form.Text>
-                    </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>出生年月日</Form.Label>
+                    <Form.Control
+                        type="date"
+                        name="birth_date"
+                        value={formData.birth_date}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>手機號碼</Form.Label>
-                        <Form.Control
-                            type="tel"
-                            name="phone_num"
-                            value={formData.phone_num}
-                            onChange={handleInputChange}
-                            placeholder="請輸入手機號碼"
-                            pattern="^09\d{8}$"
-                            required
-                        />
-                        <Form.Text className="text-muted">手機號碼必須以 09 開頭，共 10 位數字。</Form.Text>
-                    </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>偏好活動地區（至少勾選一個）</Form.Label>
+                    <div className="d-flex flex-wrap gap-2">
+                        {areas.map(area => (
+                            <Form.Check
+                                key={area.id}
+                                type="checkbox"
+                                label={area.name}
+                                value={area.id}
+                                checked={formData.location_ids.includes(area.id)}
+                                onChange={handleCheckboxChange}
+                                className="flex-grow-1"
+                                style={{ minWidth: 'calc(25% - 10px)' }}
+                            />
+                        ))}
+                    </div>
+                </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>出生年月日</Form.Label>
-                        <Form.Control
-                            type="date"
-                            name="birth_date"
-                            value={formData.birth_date}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>大頭照(還沒好)</Form.Label>
+                    <Form.Control type="file" onChange={handleFileChange} disabled />
+                    {errors.profile_url && <Form.Text className="text-danger">{errors.profile_url}</Form.Text>}
+                </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>偏好活動地區（至少勾選一個）</Form.Label>
-                        <div className="d-flex flex-wrap gap-2">
-                            {areas.map(area => (
-                                <Form.Check
-                                    key={area.id}
-                                    type="checkbox"
-                                    label={area.name}
-                                    value={area.id}
-                                    checked={formData.location_ids.includes(area.id)}
-                                    onChange={handleCheckboxChange}
-                                    className="flex-grow-1"
-                                    style={{ minWidth: 'calc(25% - 10px)' }}
-                                />
-                            ))}
-                        </div>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>大頭照</Form.Label>
-                        <div className="mb-2">
-                            {formData.profile_url && (
-                                <img
-                                    src={formData.profile_url}
-                                    alt="Avatar"
-                                    width={100}
-                                    height={100}
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            )}
-                        </div>
-                        <Form.Control type="file" onChange={handleFileChange} />
-                    </Form.Group>
-
-                    <Button type="submit" variant="primary" disabled={loading}>
-                        {loading ? '更新中...' : '更新'}
-                    </Button>
-                </Form>
-            )}
+                <Button type="submit" variant="primary" disabled={!isFormValid() || profileLoading || isUpdating}>
+                    {profileLoading || isUpdating ? '更新中...' : '更新'}
+                </Button>
+            </Form>
         </Container>
     );
 };

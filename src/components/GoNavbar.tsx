@@ -1,10 +1,10 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { userAuth } from '../hooks/userAuth';
 import goTicketLogo from '/Subtract.png';
 import goTicketVector from '../assets/Vector.png';
 const Header = () => {
-    const { isLoggedIn, user, logout } = useAuth();
+    const { isLoggedIn, user, logout } = userAuth();
     const navigate = useNavigate();
     const location = useLocation();
 

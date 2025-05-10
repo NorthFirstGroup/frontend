@@ -1,11 +1,17 @@
-import publicApiClient from './publicApi';
+import { publicApiClient } from './client';
+import { ApiResponse } from '../types/ApiResponse';
 
-export const availAreas = async () => {
-    try {
-        const res = await publicApiClient.get('/v1/admin/areas');
-        // console.log(res);
-        return res.data.data.results;
-    } catch (err) {
-        console.error('Error fetching areas:', err);
-    }
+// 定義地區選項介面
+export interface Area {
+    id: number;
+    name: string;
+}
+
+export interface AreaResponseData {
+    results: Area[];
+}
+
+export const availAreas = async (): Promise<ApiResponse<AreaResponseData>> => {
+    const res = await publicApiClient.get<ApiResponse<AreaResponseData>>('/v1/admin/areas');
+    return res.data || {};
 };

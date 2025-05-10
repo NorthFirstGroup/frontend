@@ -1,13 +1,22 @@
-import publicApiClient from './publicApi';
+import { publicApiClient } from './client';
+import { ApiResponse } from '../types/ApiResponse';
 
-export async function loginApi(email: string, password: string) {
-    const res = await publicApiClient.post('/v1/user/signin', { email, password });
-    // console.log(res);
-    return res.data.data;
+export interface LoginResponseData {
+    token: string;
+    user: {
+        name: string;
+    };
 }
+export const loginApi = async (email: string, password: string): Promise<ApiResponse<LoginResponseData>> => {
+    const res = await publicApiClient.post<ApiResponse<LoginResponseData>>('/v1/user/signin', { email, password });
+    return res.data || {};
+};
 
-export const registerApi = async (payload: { email: string; name: string; password: string }) => {
-    const res = await publicApiClient.post('/v2/user/signup', payload);
-    // console.log(res);
-    return res.data.data;
+export const registerApi = async (payload: {
+    email: string;
+    name: string;
+    password: string;
+}): Promise<ApiResponse<LoginResponseData>> => {
+    const res = await publicApiClient.post<ApiResponse<LoginResponseData>>('/v2/user/signup', payload);
+    return res.data || {};
 };
