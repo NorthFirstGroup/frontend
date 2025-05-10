@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { getProfile, updateProfile, setProfileData, getProfileData } from '../api/profile';
+import { getProfile, updateProfile, ProfileData } from '../api/profile';
 import { uploadToS3 } from '../api/uploadApi';
 import { ApiResponse } from '../types/ApiResponse';
 import { handleApiError } from '../utils/errorHandling';
 
 export const userProfileData = () => {
-    const [profile, setProfile] = useState<setProfileData | null>(null);
+    const [profile, setProfile] = useState<ProfileData | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -18,15 +18,14 @@ export const userProfileData = () => {
             setLoading(true);
             setError(null);
             try {
-                const response: ApiResponse<getProfileData> = await getProfile();
+                const response: ApiResponse<ProfileData> = await getProfile();
                 if (response.data) {
-                    const { user } = response.data;
                     setProfile({
-                        name: user.name,
-                        phone_num: user.phone_num,
-                        birth_date: user.birth_date,
-                        profile_url: user.profile_url,
-                        location_ids: user.location_ids || []
+                        name: response.data.name,
+                        phone_num: response.data.phone_num,
+                        birth_date: response.data.birth_date,
+                        profile_url: response.data.profile_url,
+                        location_ids: response.data.location_ids || []
                     });
                 }
             } catch (err: unknown) {
@@ -44,7 +43,7 @@ export const userProfileData = () => {
         setSelectedFile(file);
     };
 
-    const handleUpdateProfile = async (updatedData: setProfileData) => {
+    const handleUpdateProfile = async (updatedData: ProfileData) => {
         setUpdating(true);
         setUpdateError(null);
         setUpdateSuccess(null);

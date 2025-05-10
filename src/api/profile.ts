@@ -2,7 +2,7 @@ import { ApiResponse } from '../types/ApiResponse';
 import { apiClient } from './client';
 import { uploadToS3 } from './uploadApi';
 
-export interface setProfileData {
+export interface ProfileData {
     name: string;
     phone_num: string;
     birth_date: string;
@@ -10,15 +10,11 @@ export interface setProfileData {
     profile_url: string;
 }
 
-export interface getProfileData {
-    user: setProfileData;
-}
-
 /**
  * 取得會員資料
  */
-export const getProfile = async (): Promise<ApiResponse<getProfileData>> => {
-    const res = await apiClient.get<ApiResponse<getProfileData>>('/v1/user/profile');
+export const getProfile = async (): Promise<ApiResponse<ProfileData>> => {
+    const res = await apiClient.get<ApiResponse<ProfileData>>('/v1/user/profile');
     return res.data || {};
 };
 
@@ -41,7 +37,7 @@ export const getProfile = async (): Promise<ApiResponse<getProfileData>> => {
  * 更新會員資料
  * @param data 會員資料 (僅需傳遞需要更新的欄位)
  */
-export const updateProfile = async (updatedData: setProfileData, file?: File): Promise<ApiResponse<{}>> => {
+export const updateProfile = async (updatedData: ProfileData, file?: File): Promise<ApiResponse<{}>> => {
     try {
         let avatarUrl = updatedData.profile_url;
 

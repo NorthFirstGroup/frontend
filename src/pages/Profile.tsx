@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { availAreas, Area, AreaResponseData } from '../api/availArea';
-import { setProfileData } from '../api/profile';
+import { ProfileData } from '../api/profile';
 import { userAuth } from '../hooks/userAuth';
 import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
 import { handleApiError } from '../utils/errorHandling';
@@ -30,7 +30,7 @@ const Profile: React.FC = () => {
         updateError: profileUpdateError
     } = userProfileData();
 
-    const [formData, setFormData] = useState<Required<setProfileData>>({
+    const [formData, setFormData] = useState<Required<ProfileData>>({
         name: '',
         phone_num: '',
         birth_date: dayjs().format('YYYY-MM-DD'),
@@ -202,8 +202,8 @@ const Profile: React.FC = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                    <Form.Label>大頭照</Form.Label>
-                    <Form.Control type="file" onChange={handleFileChange} />
+                    <Form.Label>大頭照(還沒好)</Form.Label>
+                    <Form.Control type="file" onChange={handleFileChange} disabled />
                     {errors.profile_url && <Form.Text className="text-danger">{errors.profile_url}</Form.Text>}
                 </Form.Group>
 
