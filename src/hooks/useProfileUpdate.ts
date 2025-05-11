@@ -4,7 +4,7 @@ import { uploadToS3 } from '../api/uploadApi';
 import { ApiResponse } from '../types/ApiResponse';
 import { handleApiError } from '../utils/errorHandling';
 
-export const userProfileData = () => {
+export const useUserProfileData = () => {
     const [profile, setProfile] = useState<ProfileData | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);

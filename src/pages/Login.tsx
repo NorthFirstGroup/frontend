@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { userAuth } from '../hooks/userAuth';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
 import { loginApi, LoginResponseData } from '../api/authApi';
@@ -11,7 +11,7 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [submitError, setSubmitError] = useState('');
-    const { isLoggedIn, login } = userAuth();
+    const { isLoggedIn, login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from || '/';

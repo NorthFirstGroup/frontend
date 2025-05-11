@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { userAuth } from '../hooks/userAuth';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
 import { registerApi, LoginResponseData } from '../api/authApi';
@@ -20,7 +20,7 @@ const Register: React.FC = () => {
         name: ''
     });
 
-    const { isLoggedIn, login } = userAuth();
+    const { isLoggedIn, login } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {

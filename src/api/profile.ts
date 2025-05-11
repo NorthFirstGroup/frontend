@@ -15,7 +15,7 @@ export interface ProfileData {
  */
 export const getProfile = async (): Promise<ApiResponse<ProfileData>> => {
     const res = await apiClient.get<ApiResponse<ProfileData>>('/v1/user/profile');
-    return res.data || {};
+    return res.data;
 };
 
 /**
@@ -37,7 +37,7 @@ export const getProfile = async (): Promise<ApiResponse<ProfileData>> => {
  * 更新會員資料
  * @param data 會員資料 (僅需傳遞需要更新的欄位)
  */
-export const updateProfile = async (updatedData: ProfileData, file?: File): Promise<ApiResponse<{}>> => {
+export const updateProfile = async (updatedData: ProfileData, file?: File): Promise<ApiResponse<object>> => {
     try {
         let avatarUrl = updatedData.profile_url;
 
@@ -48,12 +48,12 @@ export const updateProfile = async (updatedData: ProfileData, file?: File): Prom
 
         console.log('before put api', JSON.stringify(updatedData));
         // const response = await apiClient.patch('/v1/user/profile', {
-        const response = await apiClient.put<ApiResponse<{}>>('/v1/user/profile', {
+        const response = await apiClient.put<ApiResponse<object>>('/v1/user/profile', {
             ...updatedData,
             avatar: avatarUrl
         });
 
-        return response.data || {};
+        return response.data;
     } catch (error) {
         console.error('Error updating profile:', error);
         throw new Error('Failed to update profile');

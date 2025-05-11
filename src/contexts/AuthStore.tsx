@@ -3,7 +3,7 @@ import type { AuthContextType, User } from '../types/auth';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const userAuthProvider = (): AuthContextType => {
+export const useAuthProvider = (): AuthContextType => {
     const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
     const [user, setUser] = useState<User | null>(
         localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null
@@ -26,8 +26,8 @@ export const userAuthProvider = (): AuthContextType => {
     return { isLoggedIn: !!token, token, user, login, logout };
 };
 
-export const userAuth = () => {
+export const useAuth = () => {
     const context = useContext(AuthContext);
-    if (!context) throw new Error('userAuth must be used within AuthProvider');
+    if (!context) throw new Error('useAuth must be used within AuthProvider');
     return context;
 };

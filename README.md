@@ -68,10 +68,15 @@ src/
 │   └── AuthStore.tsx    # 登入狀態處理
 │
 ├── hooks/           # 自定義 Hook
-│   ├── userAuth.tsx    # 認證 Hook
+│   ├── useAuth.tsx    # 認證 Hook
 │   └── useProfileUpdate.ts # 會員資料更新 Hook
 │
 ├── pages/           # 頁面元件
+|   ├── orgazier       # 廠商相關頁面
+│   │   └─ Apply.tsx   # 申請成為廠商
+|   └── user           # 會員相關頁面
+|       ├─ Profile.tsx # 會員資訊
+|       └─ Point.tsx   # 會員點數
 │   ├── Home.tsx       # 首頁
 │   ├── Login.tsx      # 登入頁面
 │   ├── Profile.tsx    # 會員中心頁面
