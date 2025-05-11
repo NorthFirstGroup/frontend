@@ -70,7 +70,7 @@ const Profile: React.FC = () => {
             try {
                 const response: ApiResponse<AreaResponseData> = await availAreas();
                 if (response.data) setAreas(response.data.results);
-            } catch (error: any) {
+            } catch (error: unknown) {
                 setAreasError(handleApiError(error, '無法取得地區選項'));
             } finally {
                 setLoadingAreas(false);

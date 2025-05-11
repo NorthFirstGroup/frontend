@@ -39,7 +39,7 @@ const Login: React.FC = () => {
         try {
             const response: ApiResponse<LoginResponseData> = await loginApi(email, password);
             if (response.data) login(response.data.token, { email, nickname: response.data.user.name });
-        } catch (error: any) {
+        } catch (error: unknown) {
             const errorMessage = handleApiError(error, '登入失敗');
             setSubmitError(errorMessage);
             if (error instanceof ApiError) {
