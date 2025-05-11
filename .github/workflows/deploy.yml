@@ -23,15 +23,15 @@ jobs:
               run: npm install
               # 安裝 npm 套件（根據 package.json）
 
-            - name: Create .env file
+            - name: Set .env & Build Vue app
               run: |
-                  echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env
+                  echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" > .env
                   echo "VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}" >> .env
                   echo "VITE_ENV_MODE=${{ secrets.VITE_ENV_MODE }}" >> .env
 
-            - name: Build Vue app
-              run: npm run build
-              # 執行 Vue 專案打包，產出 dist/
+                  npm run build
+              # 這裡的 secrets 是 GitHub Secrets 裡設定的變數
+              # 設定環境變數並執行 npm run build
 
             - name: Compress dist content (no dist folder)
               run: |
@@ -64,3 +64,22 @@ jobs:
                       # 可選：重啟 nginx（視伺服器設定）
                       # sudo systemctl restart nginx
               # 使用 SSH 遠端登入，解壓並部署檔案
+
+            - name: Notify Discord (success or failure)
+              if: always()
+              run: |
+                  STATUS="${{ job.status }}"
+                  COLOR="✅"
+                  MESSAGE="goticket 前端專案部署環境成功！ 🚀\n"
+
+                  if [ "$STATUS" != "success" ]; then
+                    COLOR="❌"
+                    MESSAGE="goticket 前端專案部署環境失敗！ ❗️\n"
+                  fi
+
+                  curl -X POST ${{ secrets.DISCORD_WEBHOOK_URL }} \
+                    -H "Content-Type: application/json" \
+                    -d "{
+                      \"content\": \"$COLOR $MESSAGE\n📦 專案：${{ github.repository }}\n👤 推送者：${{ github.event.pusher.name }}\n🌿 分支：${{ github.ref_name }}\n🕐 時間：$(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M')\"
+                    }"
+              # 發送 Discord 通知，告知部署狀態
