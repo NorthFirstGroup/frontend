@@ -55,6 +55,7 @@ const OrganizerApplyForm: React.FC = () => {
 
     return (
         <Container className="mt-5" style={{ maxWidth: '600px' }}>
+            <h3>廠商資料</h3>
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formName">
                     <Form.Label>單位名稱</Form.Label>
