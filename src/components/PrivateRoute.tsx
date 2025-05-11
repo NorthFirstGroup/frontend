@@ -4,9 +4,16 @@ import { useAuth as useAuth } from '../hooks/useAuth';
 
 interface Props {
     children: React.JSX.Element;
+    allowedRoles: string[];
 }
 
-export default function PrivateRoute({ children }: Props) {
-    const { isLoggedIn } = useAuth();
-    return isLoggedIn ? children : <Navigate to="/login" replace />;
+export default function PrivateRoute({ children, allowedRoles }: Props) {
+    const { isLoggedIn, userRole } = useAuth();
+    if (!isLoggedIn) {
+        return <Navigate to="/login" replace />;
+    }
+    if (allowedRoles && !allowedRoles.includes(userRole)) {
+        return <Navigate to="/" />;
+    }
+    return children;
 }

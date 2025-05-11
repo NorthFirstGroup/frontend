@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import goTicketLogo from '/Subtract.png';
 import goTicketVector from '../assets/Vector.png';
+
 const Header = () => {
     const { isLoggedIn, user, logout } = useAuth();
     const navigate = useNavigate();
@@ -38,6 +39,11 @@ const Header = () => {
                                     <NavDropdown.Item as={Link} to="/organizer/apply">
                                         申請成為廠商
                                     </NavDropdown.Item>
+                                    {user?.role === 'ORGANIZER' && (
+                                        <NavDropdown.Item as={Link} to="/organizer/activity">
+                                            活動管理
+                                        </NavDropdown.Item>
+                                    )}
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item onClick={handleLogout}>登出</NavDropdown.Item>
                                 </NavDropdown>
