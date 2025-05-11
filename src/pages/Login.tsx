@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { userAuth } from '../hooks/userAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
-import { loginApi } from '../api/authApi';
-// import FadeAlert from '../components/FadeAlert';
+import { loginApi, LoginResponseData } from '../api/authApi';
+import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
+import { ApiError } from '../types/ApiError';
+import { handleApiError } from '../utils/errorHandling';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const { isLoggedIn, login } = useAuth();
+    const [submitError, setSubmitError] = useState('');
+    const { isLoggedIn, login } = userAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from || '/';
@@ -26,30 +28,32 @@ const Login: React.FC = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!email || !password) {
-            setError('請填寫所有欄位');
-            // setTimeout(() => setError(''), 12000);
+            setSubmitError('請填寫所有欄位');
             return;
         }
         if (!emailRegex.test(email)) {
-            setError('Email 格式不正確');
-            // setTimeout(() => setError(''), 12000);
+            setSubmitError('Email 格式不正確');
             return;
         }
 
         try {
-            const result = await loginApi(email, password);
-            // console.log('登入成功', result.data);
-            login(result.token, { email, nickname: result.user.name });
-        } catch (error: unknown) {
-            setError(error instanceof Error ? error.message : '發生未知錯誤，請稍後再試');
+            const response: ApiResponse<LoginResponseData> = await loginApi(email, password);
+            if (response.data) login(response.data.token, { email, nickname: response.data.user.name });
+        } catch (error: any) {
+            const errorMessage = handleApiError(error, '登入失敗');
+            setSubmitError(errorMessage);
+            if (error instanceof ApiError) {
+                console.warn('Bad Request:', error.data);
+            } else {
+                console.error('登入錯誤:', error);
+            }
         }
     };
 
     return (
         <Container className="mt-5" style={{ maxWidth: '400px' }}>
             <h3>登入</h3>
-            {error && <Alert variant="danger">{error}</Alert>}
-            {/*error && <FadeAlert message={error} variant="danger" />*/}
+            {submitError && <Alert variant="danger">{submitError}</Alert>}
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formEmail">
                     <Form.Label>電子郵件</Form.Label>
