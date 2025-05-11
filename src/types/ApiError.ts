@@ -1,10 +1,10 @@
 // types/ApiError.ts
 export class ApiError extends Error {
     status?: number;
-    data?: any;
-    originalError?: any;
+    data?: unknown;
+    originalError?: unknown;
 
-    constructor(message: string, status?: number, data?: any, originalError?: any) {
+    constructor(message: string, status?: number, data?: unknown, originalError?: unknown) {
         super(message);
         this.status = status;
         this.data = data;
