@@ -25,8 +25,9 @@ jobs:
 
             - name: Create .env file
               run: |
-                  echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
-                  echo "VITE_AUTH_KEY=${{ secrets.VITE_AUTH_KEY }}" >> .env
+                  echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env
+                  echo "VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}" >> .env
+                  echo "VITE_ENV_MODE=${{ secrets.VITE_ENV_MODE }}" >> .env
 
             - name: Build Vue app
               run: npm run build
