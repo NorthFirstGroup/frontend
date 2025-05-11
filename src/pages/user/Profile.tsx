@@ -3,20 +3,20 @@ import { Container, Form, Button, Alert } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { availAreas, Area, AreaResponseData } from '../api/availArea';
-import { ProfileData } from '../api/profile';
-import { userAuth } from '../hooks/userAuth';
-import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
-import { handleApiError } from '../utils/errorHandling';
-import UserNameInput from '../components/UserNameInput';
-import PhoneNumberInput from '../components/PhoneNumberInput';
-import { userProfileData } from '../hooks/userProfileUpdate';
+import { availAreas, Area, AreaResponseData } from '../../api/availArea';
+import { ProfileData } from '../../api/profile';
+import { useAuth } from '../../hooks/useAuth';
+import { ApiResponse } from '../../types/ApiResponse'; // 確保路徑正確
+import { handleApiError } from '../../utils/errorHandling';
+import UserNameInput from '../../components/UserNameInput';
+import PhoneNumberInput from '../../components/PhoneNumberInput';
+import { useUserProfileData } from '../../hooks/useProfileUpdate';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const Profile: React.FC = () => {
-    const { user } = userAuth();
+    const { user } = useAuth();
     const email = user?.email;
 
     const {
@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
         updateSuccess,
         updating: isUpdating,
         updateError: profileUpdateError
-    } = userProfileData();
+    } = useUserProfileData();
 
     const [formData, setFormData] = useState<Required<ProfileData>>({
         name: '',
@@ -65,9 +65,6 @@ const Profile: React.FC = () => {
 
     useEffect(() => {
         const fetchAreasData = async () => {
-            if (loadingAreas) {
-                return; // 如果還在載入中，則不重複執行
-            }
             setLoadingAreas(true);
             setAreasError(null);
             try {
@@ -186,18 +183,22 @@ const Profile: React.FC = () => {
                 <Form.Group className="mb-3">
                     <Form.Label>偏好活動地區（至少勾選一個）</Form.Label>
                     <div className="d-flex flex-wrap gap-2">
-                        {areas.map(area => (
-                            <Form.Check
-                                key={area.id}
-                                type="checkbox"
-                                label={area.name}
-                                value={area.id}
-                                checked={formData.location_ids.includes(area.id)}
-                                onChange={handleCheckboxChange}
-                                className="flex-grow-1"
-                                style={{ minWidth: 'calc(25% - 10px)' }}
-                            />
-                        ))}
+                        {loadingAreas ? (
+                            <div>Loading Areas...</div> // Show loading message
+                        ) : (
+                            areas.map(area => (
+                                <Form.Check
+                                    key={area.id}
+                                    type="checkbox"
+                                    label={area.name}
+                                    value={area.id}
+                                    checked={formData.location_ids.includes(area.id)}
+                                    onChange={handleCheckboxChange}
+                                    className="flex-grow-1"
+                                    style={{ minWidth: 'calc(25% - 10px)' }}
+                                />
+                            ))
+                        )}
                     </div>
                 </Form.Group>
 
