@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "clean": "rimraf dist",
-        "dev": "vite",
+        "dev": "npm run lint && vite",
         "typecheck": "tsc",
         "build": "npm run clean && npm run typecheck && vite build",
         "lint": "eslint src --ext .ts,.tsx",
