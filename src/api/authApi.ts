@@ -5,6 +5,7 @@ export interface LoginResponseData {
     token: string;
     user: {
         name: string;
+        role: string;
     };
 }
 export const loginApi = async (email: string, password: string): Promise<ApiResponse<LoginResponseData>> => {

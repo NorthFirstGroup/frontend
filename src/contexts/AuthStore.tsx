@@ -23,7 +23,7 @@ export const useAuthProvider = (): AuthContextType => {
         setToken(null);
     };
 
-    return { isLoggedIn: !!token, token, user, login, logout };
+    return { isLoggedIn: !!token, userRole: user?.role || '', token, user, login, logout };
 };
 
 export const useAuth = () => {

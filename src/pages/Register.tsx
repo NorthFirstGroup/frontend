@@ -85,7 +85,8 @@ const Register: React.FC = () => {
 
         try {
             const response: ApiResponse<LoginResponseData> = await registerApi({ email, name, password });
-            if (response.data) login(response.data.token, { email, nickname: name });
+            if (response.data)
+                login(response.data.token, { email, nickname: name, role: response.data.user?.role || 'USER' });
         } catch (error: unknown) {
             const errorMessage = handleApiError(error, '註冊失敗');
             setSubmitError(errorMessage);
