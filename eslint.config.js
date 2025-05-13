@@ -2,6 +2,8 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
 import { defineConfig } from 'eslint/config';
 
 export default tseslint.config(
@@ -9,9 +11,13 @@ export default tseslint.config(
     {
         ignores: ['dist', 'build', 'node_modules']
     },
-
     // 主設定
     {
+        settings: {
+            react: {
+                version: 'detect'
+            }
+        },
         files: ['**/*.{ts,tsx}'],
         languageOptions: {
             ecmaVersion: 2020,
