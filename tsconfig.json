@@ -9,7 +9,7 @@
         "skipLibCheck": true, //  不檢查 lib 檔案
 
         /* Bundler mode */
-        "moduleResolution": "node", //  模組解析方式
+        "moduleResolution": "bundler", //  模組解析方式
         "isolatedModules": true,
         "noEmit": true, // 不產出 JS 檔案，僅做型別檢查
         "jsx": "react-jsx", // React 17+
