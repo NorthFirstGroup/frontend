@@ -9,7 +9,9 @@
         "build": "npm run clean && tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "format": "prettier --write \"src/**/*.{js,ts,vue,jsx,tsx,json,css,scss,md}\""
+        "format": "prettier --write \"src/**/*.{js,ts,vue,jsx,tsx,json,css,scss,md}\"",
+        "version:major": "export ENV_ASSIGN='major' && chmod +x ./version-up.sh && ./version-up.sh",
+        "version:patch": "export ENV_ASSIGN='patch' && chmod +x ./version-up.sh && ./version-up.sh"
     },
     "keywords": [
         "GoTicket",
