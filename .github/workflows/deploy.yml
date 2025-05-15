@@ -20,7 +20,7 @@ jobs:
               # 安裝 Node.js 20 環境
 
             - name: Install dependencies
-              run: npm install
+              run: npm ci
               # 安裝 npm 套件（根據 package.json）
 
             - name: Set .env & Build Vue app
