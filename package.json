@@ -1,7 +1,7 @@
 {
     "name": "go-ticket-frontend",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.0.1",
     "type": "module",
     "scripts": {
         "clean": "rimraf dist",
@@ -10,7 +10,9 @@
         "build": "npm run clean && npm run typecheck && vite build",
         "lint": "eslint src ",
         "preview": "vite preview",
-        "format": "prettier --write \"src/**/*.{js,ts,vue,jsx,tsx,json,css,scss,md}\""
+        "format": "prettier --write \"src/**/*.{js,ts,vue,jsx,tsx,json,css,scss,md}\"",
+        "version:major": "export ENV_ASSIGN='major' && chmod +x ./version-up.sh && ./version-up.sh",
+        "version:patch": "export ENV_ASSIGN='patch' && chmod +x ./version-up.sh && ./version-up.sh"
     },
     "keywords": [
         "GoTicket",

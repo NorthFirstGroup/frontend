@@ -1,8 +1,10 @@
 name: Deploy to EC2
 
+# 這個 GitHub Action 用來自動化部署 Vue.js 前端專案到 EC2 上
 on:
     push:
-        branches: [master] # 每次 push 到 main 分支時觸發部署流程
+        tags:
+            - 'v*.*.*'
 
 jobs:
     build-and-deploy:
