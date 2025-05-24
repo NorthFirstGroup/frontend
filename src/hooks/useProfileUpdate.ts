@@ -43,22 +43,22 @@ export const useUserProfileData = () => {
         setSelectedFile(file);
     };
 
-    const handleUpdateProfile = async (updatedData: ProfileData) => {
+    const handleUpdateProfile = async (userId: string, updatedData: ProfileData) => {
         setUpdating(true);
         setUpdateError(null);
         setUpdateSuccess(null);
-
+        if (!userId) return;
         try {
             let avatarUrl = profile?.profile_url || '';
             const fileToPass = selectedFile ? selectedFile : undefined;
 
             // 檢查是否有新上傳的圖片
             if (selectedFile) {
-                avatarUrl = await uploadToS3(selectedFile);
+                avatarUrl = await uploadToS3(userId, selectedFile);
                 setSelectedFile(null); // 重置選擇檔案狀態
             }
 
-            await updateProfile({ ...updatedData, profile_url: avatarUrl }, fileToPass);
+            await updateProfile(userId, { ...updatedData, profile_url: avatarUrl }, fileToPass);
             setProfile({ ...updatedData, profile_url: avatarUrl });
             setUpdateSuccess('會員資料已更新');
             setSelectedFile(null); // 重置選擇檔案狀態

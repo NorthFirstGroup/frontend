@@ -37,13 +37,17 @@ export const getProfile = async (): Promise<ApiResponse<ProfileData>> => {
  * 更新會員資料
  * @param data 會員資料 (僅需傳遞需要更新的欄位)
  */
-export const updateProfile = async (updatedData: ProfileData, file?: File): Promise<ApiResponse<object>> => {
+export const updateProfile = async (
+    userId: string,
+    updatedData: ProfileData,
+    file?: File
+): Promise<ApiResponse<object>> => {
     try {
         let avatarUrl = updatedData.profile_url;
 
         // 若有上傳新圖片，執行上傳並取得新的 URL
         if (file) {
-            avatarUrl = await uploadToS3(file);
+            avatarUrl = await uploadToS3(userId, file);
         }
 
         console.log('before put api', JSON.stringify(updatedData));

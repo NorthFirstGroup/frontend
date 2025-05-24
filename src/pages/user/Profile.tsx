@@ -145,7 +145,7 @@ const Profile: React.FC = () => {
         // setSubmitError('');
 
         if (isFormValid()) {
-            await handleUpdateProfile(formData);
+            await handleUpdateProfile(user?.id || '', formData);
         } else {
             // setSubmitError('請檢查表單是否有錯誤');
         }
