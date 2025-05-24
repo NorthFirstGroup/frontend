@@ -1,4 +1,26 @@
 {
-    "files": [],
-    "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+    "compilerOptions": {
+        "incremental": true, //  編譯加速：需搭配 incremental 或 composite
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "target": "ES2020", // ECMAScript target 版本
+        "useDefineForClassFields": true,
+        "lib": ["ES2020", "DOM", "DOM.Iterable"], // 專案中要包含的語言功能庫
+        "module": "ESNext", // 輸出模組格式
+        "skipLibCheck": true, //  不檢查 lib 檔案
+
+        /* Bundler mode */
+        "moduleResolution": "bundler", //  模組解析方式
+        "isolatedModules": true,
+        "noEmit": true, // 不產出 JS 檔案，僅做型別檢查
+        "jsx": "react-jsx", // React 17+
+
+        /* Linting */
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["src"]
 }
