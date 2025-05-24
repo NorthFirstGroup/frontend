@@ -1,0 +1,18 @@
+.search-input {
+    &::placeholder {
+        color: black;
+        opacity: 0.8;
+    }
+    &::-webkit-input-placeholder {
+        color: black;
+        opacity: 0.8;
+    }
+    &::-moz-placeholder {
+        color: black;
+        opacity: 0.8;
+    }
+    &:-ms-input-placeholder {
+        color: black;
+        opacity: 0.8;
+    }
+}

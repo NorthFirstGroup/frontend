@@ -6,6 +6,7 @@ import { loginApi, LoginResponseData } from '../api/authApi';
 import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
 import { ApiError } from '../types/ApiError';
 import { handleApiError } from '../utils/errorHandling';
+import { decodeToken } from '../utils/jwt';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -39,12 +40,15 @@ const Login: React.FC = () => {
         //test only : change default 'USER' to 'ORGANIZER'
         try {
             const response: ApiResponse<LoginResponseData> = await loginApi(email, password);
-            if (response.data)
+            if (response.data) {
+                const decodedData = decodeToken(response.data.token);
                 login(response.data.token, {
                     email,
                     nickname: response.data.user.name,
-                    role: response.data.user?.role || 'USER'
+                    role: decodedData?.role || 'USER',
+                    id: decodedData?.id
                 });
+            }
         } catch (error: unknown) {
             const errorMessage = handleApiError(error, '登入失敗');
             setSubmitError(errorMessage);
@@ -83,7 +87,7 @@ const Login: React.FC = () => {
                     />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" className="w-100">
+                <Button variant="primary" type="submit" className="my-hover-gradient-btn">
                     登入
                 </Button>
             </Form>

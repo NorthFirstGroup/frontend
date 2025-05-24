@@ -2,6 +2,8 @@ export interface User {
     email: string;
     nickname?: string;
     role?: string;
+    avatar?: string;
+    id?: string;
 }
 
 export interface AuthContextType {

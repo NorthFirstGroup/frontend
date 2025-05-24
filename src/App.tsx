@@ -1,5 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import Header from './components/GoNavbar';
+import Header from './components/Header/GoNavbar';
 import Footer from './components/Footer';
 import AppRoutes from './routes/AppRoutes';
 

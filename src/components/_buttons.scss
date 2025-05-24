@@ -1,0 +1,82 @@
+.btn {
+    @include button-base();
+
+    &:hover,
+    &:focus {
+        transform: none;
+    }
+    &:focus,
+    &.focus {
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba($primary-500, 0.5);
+    }
+}
+
+$button-content-types: (
+    'icon-text': 'icon-text',
+    'text-icon': 'text-icon',
+    'text-only': 'text-only',
+    'icon-only': 'icon-only'
+);
+
+$button-style-types: (
+    'primary-filled': 'primary-filled',
+    'secondary-outlined': 'secondary-outlined',
+    'ghost': 'ghost',
+    'links': 'links'
+);
+
+// 為每種內容類型和樣式類型組合生成按鈕類別
+@each $style-name, $style-mixin-name in $button-style-types {
+    @each $content-name, $content-mixin-name in $button-content-types {
+        .btn-#{$style-name}-#{$content-name} {
+            // 只應用基礎樣式 Mixin
+            @if $style-name == 'primary-filled' {
+                @include button-primary-filled();
+                // 針對 primary-filled 的 hover 漸層特殊處理 (如果需要與 Bootstrap 預設不同)
+                &:hover {
+                    @include custom-gradient($gradient-hover-start, $gradient-hover-end, 145.98deg);
+                }
+                // 焦點陰影 (如果 Bootstrap 預設的焦點環不符合設計)
+                &:focus,
+                &.focus {
+                    box-shadow: 0 0 0 0.25rem rgba($primary-500, 0.5);
+                }
+            } @else if $style-name == 'secondary-outlined' {
+                @include button-secondary-outlined();
+            } @else if $style-name == 'ghost' {
+                @include button-ghost();
+            } @else if $style-name == 'links' {
+                @include button-links();
+            }
+
+            // 應用內容類型 Mixin
+            @if $content-name == 'icon-text' {
+                @include button-icon-text();
+            } @else if $content-name == 'text-icon' {
+                @include button-text-icon();
+            } @else if $content-name == 'icon-only' {
+                @include button-icon-only();
+            } @else if $content-name == 'text-only' {
+                @include button-text-only();
+            }
+        }
+    }
+}
+
+// 針對 React Bootstrap 的 .btn-primary 覆蓋
+// 讓它自動帶有你 Primary Filled 的基礎樣式和 Text Only 的內容佈局
+.btn-primary {
+    @include button-primary-filled();
+    @include button-text-only();
+
+    // *** 新增這裡，定義 .btn-primary 的 hover 效果 ***
+    &:hover {
+        @include custom-gradient($gradient-hover-start, $gradient-hover-end, 145.98deg);
+    }
+    // 如果還有其他交互效果，例如 focus, active，也應該在這裡處理
+    &:focus,
+    &.focus {
+        box-shadow: 0 0 0 0.25rem rgba($primary-500, 0.5); // 如果你需要自定義 focus 陰影
+    }
+}
