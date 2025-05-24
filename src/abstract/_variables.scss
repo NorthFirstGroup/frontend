@@ -1,0 +1,190 @@
+// 全局字型家族定義 (會覆蓋 Bootstrap 預設)
+$font-family-base: 'Noto Sans TC', sans-serif;
+$font-family-roboto-mono: 'Roboto Mono', monospace; // 新增 Roboto Mono 字型家族
+
+// 將你的自定義字體家族設定為 Bootstrap 的預設，這樣它會影響所有 Bootstrap 文本
+$font-family-sans-serif: $font-family-base;
+$headings-font-family: $font-family-base;
+$headings-font-weight: 700; // 標題字重
+
+$primary-50: #fff7ec;
+$primary-100: #ffedd3;
+$primary-200: #ffd6a5;
+$primary-300: #ffb96d;
+$primary-400: #ff8f32;
+$primary-500: #ff6f0a;
+$primary-600: #f2590c;
+$primary-700: #cc3b02;
+$primary-800: #a12f0b;
+$primary-900: #82290c;
+$primary-950: #461104;
+
+// 這會直接影響 Bootstrap 的 .btn-primary, .text-primary 等
+$primary: $primary-500;
+// @debug 'DEBUG1: My $primary is: #{$primary}';
+
+$gray-50: #f6f6f6;
+$gray-100: #e7e7e7;
+$gray-200: #d1d1d1;
+$gray-300: #b0b0b0;
+$gray-400: #888888;
+$gray-500: #6d6d6d;
+$gray-600: #5d5d5d;
+$gray-700: #4f4f4f;
+$gray-800: #454545;
+$gray-900: #3d3d3d;
+$gray-950: #121212;
+
+$enable-gradients: true;
+
+// 定義你自定義的漸層顏色 (用於你的 Mixin)
+$gradient-default-start: #e0530b;
+$gradient-default-end: #ea6320;
+$gradient-hover-start: #cc3b02;
+$gradient-hover-end: #e5540b;
+
+$custom-font-sizes: (
+    'xxl': 2.5rem,
+    'xl': 2.25rem,
+    'lg': 2rem,
+    'md': 1.75rem,
+    'sm': 1.5rem,
+    'xs': 1.25rem,
+    'xxs': 1.125rem,
+    'xxxs': 1rem,
+    'xxxxs': 0.875rem,
+    'xxxxxs': 0.75rem
+);
+
+$h1-font-size: map-get($custom-font-sizes, xxl);
+$h2-font-size: map-get($custom-font-sizes, xl);
+$h3-font-size: map-get($custom-font-sizes, lg);
+$h4-font-size: map-get($custom-font-sizes, md);
+$h5-font-size: map-get($custom-font-sizes, sm);
+$h6-font-size: map-get($custom-font-sizes, xs);
+
+$headings-line-height: 1.2;
+$paragraph-line-height: 1.5; // 對應你的 .lead 行高
+
+$theme-colors: map-merge(
+    $theme-colors,
+    // 從 Bootstrap 預設的 $theme-colors 開始合併
+    (
+            // 覆蓋或定義核心主題顏色
+            'primary': $primary,
+            // <-- 這會讓 .text-primary 等使用您的 $primary-500
+            'secondary': $gray-600,
+            // 使用您定義的 $gray-600
+            'success': #198754,
+            'error': #dc3545,
+            'warning': #ffc107,
+            'info': #0dcaf0,
+            'light': #f8f9fa,
+            'dark': #212529,
+
+            // 確保標準的 Bootstrap 顏色也存在於最終的 map 中，如果它們不在 $theme-colors 初始值中
+            // 這些通常是 Bootstrap 預設的，但為確保完整性，可以在這裡明確包含或覆蓋
+            'blue': #0d6efd,
+            'indigo': #6610f2,
+            'purple': #6f42c1,
+            'pink': #d63384,
+            'red': #dc3545,
+            'orange': #fd7e14,
+            'yellow': #ffc107,
+            'green': #198754,
+            'teal': #20c997,
+            'cyan': #0dcaf0,
+            'white': #fff,
+            'gray': #6c757d,
+            'gray-dark': #343a40,
+
+            // 添加您的 Primary 色階到 $theme-colors map
+            'primary-50': $primary-50,
+            'primary-100': $primary-100,
+            'primary-200': $primary-200,
+            'primary-300': $primary-300,
+            'primary-400': $primary-400,
+            'primary-500': $primary-500,
+            'primary-600': $primary-600,
+            'primary-700': $primary-700,
+            'primary-800': $primary-800,
+            'primary-900': $primary-900,
+            'primary-950': $primary-950
+        )
+);
+
+@import 'bootstrap/scss/bootstrap'; //:root 具較高優先等級
+
+// @debug 'DEBUG2: My $primary is: #{$primary}';
+// --- 新增：將您自定義的 SCSS 變數輸出為 CSS Custom Properties ---
+:root {
+    // 自定義字體家族 (如果 Bootstrap 沒有自動生成對應的 CSS 變數，或者您想直接控制)
+    --gt-font-family-base: #{$font-family-base};
+    --gt-font-family-roboto-mono: #{$font-family-roboto-mono};
+
+    // 主要顏色階 (因為您將它們加入到 $theme-colors，Bootstrap 也會生成 --bs-primary-500 等)
+    // 但為了更明確或在非 Bootstrap 元素中使用，可以額外定義。
+    // 如果您主要依賴 Bootstrap 的 Utilities，則可以省略這些，直接用 var(--bs-primary-500)
+    --gt-primary-50: #{$primary-50};
+    --gt-primary-100: #{$primary-100};
+    --gt-primary-200: #{$primary-200};
+    --gt-primary-300: #{$primary-300};
+    --gt-primary-400: #{$primary-400};
+    --gt-primary-500: #{$primary-500};
+    --gt-primary-600: #{$primary-600};
+    --gt-primary-700: #{$primary-700};
+    --gt-primary-800: #{$primary-800};
+    --gt-primary-900: #{$primary-900};
+    --gt-primary-950: #{$primary-950};
+
+    // 灰色階 (同理，Bootstrap 會生成 --bs-gray-950 等)
+    --gt-gray-50: #{$gray-50};
+    --gt-gray-100: #{$gray-100};
+    --gt-gray-200: #{$gray-200};
+    --gt-gray-300: #{$gray-300};
+    --gt-gray-400: #{$gray-400};
+    --gt-gray-500: #{$gray-500};
+    --gt-gray-600: #{$gray-600};
+    --gt-gray-700: #{$gray-700};
+    --gt-gray-800: #{$gray-800};
+    --gt-gray-900: #{$gray-900};
+    --gt-gray-950: #{$gray-950};
+
+    // 自定義漸層顏色
+    --gt-gradient-default-start: #{$gradient-default-start};
+    --gt-gradient-default-end: #{$gradient-default-end};
+    --gt-gradient-hover-start: #{$gradient-hover-start};
+    --gt-gradient-hover-end: #{$gradient-hover-end};
+
+    // 自定義字體大小 (如果這些是全局使用的，並且您想在 Styled-Components 中使用)
+    --gt-font-size-xxl: #{map-get($custom-font-sizes, xxl)};
+    --gt-font-size-xl: #{map-get($custom-font-sizes, xl)};
+    --gt-font-size-lg: #{map-get($custom-font-sizes, lg)};
+    --gt-font-size-md: #{map-get($custom-font-sizes, md)};
+    --gt-font-size-sm: #{map-get($custom-font-sizes, sm)};
+    --gt-font-size-xs: #{map-get($custom-font-sizes, xs)};
+    --gt-font-size-xxs: #{map-get($custom-font-sizes, xxs)};
+    --gt-font-size-xxxs: #{map-get($custom-font-sizes, xxxs)};
+    --gt-font-size-xxxxs: #{map-get($custom-font-sizes, xxxxs)};
+    --gt-font-size-xxxxxs: #{map-get($custom-font-sizes, xxxxxs)};
+
+    // 通用文本行高 (如果這些是全局使用的)
+    --gt-headings-line-height: #{$headings-line-height};
+    --gt-paragraph-line-height: #{$paragraph-line-height};
+
+    // 常用非 Bootstrap 顏色變數 (例如下拉選單背景、文字顏色等)
+    --gt-color-text-default: var(--bs-gray-950, #121212); // 使用 Bootstrap 的灰度，並提供 fallback
+    --gt-color-dropdown-menu-background: #ffffff;
+    --gt-color-dropdown-menu-border: var(--bs-gray-200, #e0e0e0);
+    --gt-color-dropdown-item-hover-background: var(--bs-gray-100, #e9ecef);
+
+    --bs-primary-rgb: #{to-rgb($primary)};
+
+    --bs-gray-950: #1a1a1a; /* <-- 將這裡替換成您想要的具體 #gray-950 顏色碼 */
+    --bs-gray-950-rgb: 26, 26, 26; /* <-- 這是 #1a1a1a 的 RGB 值 */
+}
+
+/* 創建一個新的工具類別來使用這個顏色 */
+.text-gray-950 {
+    color: var(--bs-gray-950) !important; /* 使用 !important 確保覆蓋性 */
+}

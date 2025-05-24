@@ -51,15 +51,17 @@ src/
 │   ├── availArea.ts   # 可用區域 API
 │   ├── client.ts      # Axios 實例配置
 │   ├── profile.ts     # 會員資料 API
-│   ├── publicApi.ts   # 不需驗證的 API
 │   └── uploadApi.ts   # 圖片上傳 API
 │
 ├── assets/          # 靜態資源（圖片、圖示）
 │   └── Vector.png     # GoTicket 文字
 │
 ├── components/      # 共用元件
+│   ├── Header/       # 導覽列元件
+|   |   ├── GoNavbar.tsx   # 導覽列元件
+|   |   ├── Header.module.css # 定義元件內部的特定結構和佈局相關的樣式
+|   |   └── HeaderStyles.ts   # 定義可重複使用、基於元件狀態或 props 變化的樣式，帶有特定視覺風格的 UI 元件
 │   ├── Footer.tsx     # 底部元件
-│   ├── GoNavbar.tsx   # 導覽列元件
 │   ├── Layout.tsx     # 頁面佈局
 │   └── PrivateRoute.tsx # 受保護路由設定
 │
@@ -73,10 +75,15 @@ src/
 │
 ├── pages/           # 頁面元件
 |   ├── orgazier       # 廠商相關頁面
-│   │   └─ Apply.tsx   # 申請成為廠商
-|   └── user           # 會員相關頁面
-|       ├─ Profile.tsx # 會員資訊
-|       └─ Point.tsx   # 會員點數
+│   │   ├── Activity.tsx # 活動管理
+|   |   ├── Apply.tsx   # 申請成為廠商
+|   |   └── ValidateEntry.tsx # 入場資格驗證
+│   |
+|   ├── user           # 會員相關頁面
+|   |   ├── MyOrders.tsx # 我的訂單
+|   |   ├── Profile.tsx # 會員資訊
+|   |   └── Point.tsx   # 會員點數
+│   |
 │   ├── Home.tsx       # 首頁
 │   ├── Login.tsx      # 登入頁面
 │   ├── Profile.tsx    # 會員中心頁面
@@ -91,7 +98,6 @@ src/
 ├── utils/           # 工具函式
 │
 ├── App.tsx          # 根元件
-├── index.css        # 全域樣式
 ├── main.tsx         # React 進入點
 ├── vite-env.d.ts    # Vite 環境定義
 ├── tsconfig.json    # TypeScript 設定檔

@@ -3,17 +3,27 @@ import type { AuthContextType, User } from '../types/auth';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const STORAGE_KEYS = {
+    TOKEN: 'token',
+    USER: 'user'
+};
+
+const getStoredToken = (): string | null => localStorage.getItem(STORAGE_KEYS.TOKEN);
+
+const getStoredUser = (): User | null => {
+    const userData = localStorage.getItem(STORAGE_KEYS.USER);
+    return userData ? JSON.parse(userData) : null;
+};
+
 export const useAuthProvider = (): AuthContextType => {
-    const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-    const [user, setUser] = useState<User | null>(
-        localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null
-    );
+    const [token, setToken] = useState<string | null>(getStoredToken());
+    const [user, setUser] = useState<User | null>(getStoredUser());
 
     const login = (newToken: string, newUser: User) => {
-        localStorage.setItem('token', newToken);
-        localStorage.setItem('user', JSON.stringify(newUser));
         setToken(newToken);
         setUser(newUser);
+        localStorage.setItem(STORAGE_KEYS.TOKEN, newToken);
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(newUser));
     };
 
     const logout = () => {

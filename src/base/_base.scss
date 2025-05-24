@@ -1,0 +1,28 @@
+html {
+    font-size: 16px; // 設定根字體大小
+}
+
+body {
+    margin: 0;
+    font-family: var(--#{$prefix}font-sans-serif);
+    font-weight: 400;
+    line-height: var(--#{$prefix}body-line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@each $size-key, $size-value in $custom-font-sizes {
+    .font-header-#{$size-key} {
+        @include font-header($size-key);
+    }
+    .font-label-#{$size-key} {
+        @include font-label($size-key);
+    }
+    .font-paragraph-#{$size-key} {
+        @include font-paragraph($size-key);
+    }
+}
+
+.font-countdown-number {
+    @include font-countdown-number();
+}

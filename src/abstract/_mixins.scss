@@ -1,0 +1,122 @@
+// 通用漸層 Mixin (這個是你的核心自定義 Mixin，保留)
+// @use 'bootstrap/scss/functions' as bs-func; // 給予命名空間
+// @use 'bootstrap/scss/variables' as bs-vars; // 給予命名空間
+
+// @include bs-func._assert-ascending($grid-breakpoints, '$grid-breakpoints');
+
+@mixin custom-gradient($start-color, $end-color, $angle: 180deg) {
+    background-image: linear-gradient($angle, $start-color, $end-color);
+    background-repeat: no-repeat;
+}
+
+// Font Mixins (這些 Mixins 依賴於 `_variables.scss` 中定義的變數)
+// 注意：這裡使用 `var(--#{$prefix}font-sans-serif)` 是一個更健壯的方法，
+// 它會使用 Bootstrap 生成的 CSS 變數，而不是直接使用 Sass 變數。
+// `$prefix` 是 Bootstrap 的變數，如果沒有特別覆寫，通常是 `bs-`。
+@mixin font-header($size-key) {
+    font-family: var(--#{$prefix}font-sans-serif);
+    font-weight: 700;
+    font-size: map-get($custom-font-sizes, $size-key);
+    line-height: 1.2;
+}
+
+@mixin font-label($size-key) {
+    font-family: var(--#{$prefix}font-sans-serif);
+    font-weight: 600;
+    font-size: map-get($custom-font-sizes, $size-key);
+    line-height: 1.2;
+}
+
+@mixin font-paragraph($size-key) {
+    font-family: var(--#{$prefix}font-sans-serif);
+    font-weight: 400;
+    font-size: map-get($custom-font-sizes, $size-key);
+    line-height: 1.5;
+}
+
+@mixin font-countdown-number() {
+    font-family: $font-family-roboto-mono; // 這個仍然可以直接使用你的變數
+    font-weight: 700;
+    font-size: map-get($custom-font-sizes, sm);
+    line-height: 1.2;
+}
+
+// Button Base Style Mixin (這是你的自定義按鈕通用樣式，保留)
+@mixin button-base() {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; // 新增的間距
+    // padding: 12px 24px; // 新增的 padding
+    // min-height: 48px;
+    // border-radius: 12px; // 新增的圓角
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    font-family: var(--#{$prefix}font-sans-serif);
+    // @include font-label(md); // 按鈕文字預設使用 Label Medium (16px, Semibold)
+    white-space: nowrap;
+}
+
+// 簡化 Style Types Mixins：只定義基礎樣式，讓 Bootstrap 處理狀態
+// 這些 Mixins 只負責給按鈕設定背景、邊框和顏色，不處理 :hover, :focus, :disabled 狀態
+// 因為 Bootstrap 的主題變數已經處理了這些狀態。
+@mixin button-primary-filled($text-color: white) {
+    @include custom-gradient($gradient-default-start, $gradient-default-end, 145.98deg);
+    border: none;
+    color: $text-color;
+}
+
+@mixin button-secondary-outlined($border-color: $primary-500, $text-color: $primary-500) {
+    background-color: transparent;
+    border: 1px solid $border-color;
+    color: $text-color;
+    &:hover {
+        background-color: $gray-100;
+        border-color: $gray-500;
+        color: $gray-900;
+    }
+}
+
+@mixin button-ghost($text-color: $primary-500) {
+    background-color: transparent;
+    border: none;
+    color: $text-color;
+    &:hover {
+        background-color: $gray-100;
+        color: $gray-900;
+    }
+}
+
+@mixin button-links($text-color: $primary-500) {
+    background-color: transparent;
+    border: none;
+    color: $text-color;
+    padding: 0;
+    min-height: auto;
+    &:hover {
+        color: $primary-700;
+        text-decoration: none;
+    }
+}
+
+// Content Types Mixins (這些是你按鈕佈局特有的，保留)
+@mixin button-icon-text() {
+    flex-direction: row;
+}
+@mixin button-text-icon() {
+    flex-direction: row-reverse;
+}
+@mixin button-icon-only() {
+    padding: 0; // 覆寫 Bootstrap 的 padding，確保 icon-only 按鈕是正方形
+    width: auto; // 確保它能適應內容寬度
+    height: auto; // 確保它能適應內容高度
+    min-width: 38px; // 確保最小尺寸，你可能需要根據 Bootstrap 的 btn-sm, btn-md 調整這些值
+    min-height: 38px; // 確保最小尺寸
+    font-size: var(--#{$prefix}btn-font-size); // 使用 Bootstrap 默認的按鈕字體大小
+    // 如果需要特定尺寸，可以再定義一個 $button-icon-only-size 變數，然後應用 width/height
+    // 例如：width: $button-icon-only-size; height: $button-icon-only-size;
+}
+@mixin button-text-only() {
+    /* 如果沒有特殊樣式，可留空 */
+}

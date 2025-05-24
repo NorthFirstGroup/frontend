@@ -8,6 +8,7 @@ import { ApiError } from '../types/ApiError';
 import { handleApiError } from '../utils/errorHandling';
 import UserNameInput from '../components/UserNameInput';
 import PasswordFields from '../components/PasswordFields';
+import { decodeToken } from '../utils/jwt';
 
 const Register: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -85,8 +86,15 @@ const Register: React.FC = () => {
 
         try {
             const response: ApiResponse<LoginResponseData> = await registerApi({ email, name, password });
-            if (response.data)
-                login(response.data.token, { email, nickname: name, role: response.data.user?.role || 'USER' });
+            if (response.data) {
+                const decodedData = decodeToken(response.data.token);
+                login(response.data.token, {
+                    email,
+                    nickname: name,
+                    role: decodedData?.role || 'USER',
+                    id: decodedData?.id
+                });
+            }
         } catch (error: unknown) {
             const errorMessage = handleApiError(error, '註冊失敗');
             setSubmitError(errorMessage);
@@ -121,7 +129,7 @@ const Register: React.FC = () => {
 
                 <PasswordFields onChange={handlePasswordChange} />
 
-                <Button variant="success" type="submit" className="w-100" disabled={!isFormValid()}>
+                <Button variant="primary" type="submit" className="w-100" disabled={!isFormValid()}>
                     確認送出
                 </Button>
             </Form>
