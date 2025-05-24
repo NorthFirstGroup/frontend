@@ -4,10 +4,9 @@
 
 @import './abstract/variables';
 
-@import 'bootstrap/scss/bootstrap';
-
 @import './abstract/mixins';
 
 @import './base/base';
 @import './components/buttons';
 @import './utils/helpers';
+// @debug 'DEBUG3: My $primary is: #{$primary}';
