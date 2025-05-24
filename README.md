@@ -98,7 +98,6 @@ src/
 ├── utils/           # 工具函式
 │
 ├── App.tsx          # 根元件
-├── index.css        # 全域樣式
 ├── main.tsx         # React 進入點
 ├── vite-env.d.ts    # Vite 環境定義
 ├── tsconfig.json    # TypeScript 設定檔
