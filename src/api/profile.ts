@@ -2,6 +2,7 @@ import { ApiResponse } from '../types/ApiResponse';
 import { apiClient } from './client';
 import { uploadToS3 } from './uploadApi';
 import { GetProfileSchema } from '../schemas/profile';
+import { UpdateProfileSchema } from '../schemas/profile';
 
 export interface ProfileData {
     name: string;
@@ -63,7 +64,13 @@ export const updateProfile = async (
             avatar: avatarUrl
         });
 
-        return response.data;
+        const parsed = UpdateProfileSchema.safeParse(response.data);
+        if (!parsed.success) console.error('PUT - /v1/user/profile 驗證錯誤', parsed.error.format());
+
+        return {
+            ...response.data,
+            data: parsed.data
+        };
     } catch (error) {
         console.error('Error updating profile:', error);
         throw new Error('Failed to update profile');
