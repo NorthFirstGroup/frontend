@@ -12,7 +12,7 @@ export interface AreaResponseData {
     results: Area[];
 }
 
-export const availAreas = async (): Promise<ApiResponse<AreaResponseData>> => {
+export const getAvailAreas = async (): Promise<ApiResponse<AreaResponseData>> => {
     const res = await publicApiClient.get<ApiResponse<AreaResponseData>>('/v1/admin/areas');
     const parsed = GetAvailAreas.safeParse(res.data.data);
     if (!parsed.success) console.error('GET - /v1/admin/areas 驗證錯誤', parsed.error.format());
