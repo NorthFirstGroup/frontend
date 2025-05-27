@@ -1,6 +1,6 @@
 import { publicApiClient } from './client';
 import { ApiResponse } from '../types/ApiResponse';
-import { SignInSchema } from '../schemas/authApi';
+import { SignInSchema, SignUpSchema } from '../schemas/authApi';
 
 export interface LogInAndUpResponseData {
     token: string;
@@ -29,5 +29,11 @@ export const signUp = async (payload: {
     password: string;
 }): Promise<ApiResponse<LogInAndUpResponseData>> => {
     const res = await publicApiClient.post<ApiResponse<LogInAndUpResponseData>>('/v2/user/signup', payload);
-    return res.data || {};
+    const parsed = SignUpSchema.safeParse(res.data.data);
+    if (!parsed.success) console.error('POST - /v2/user/signup 認證錯誤', parsed.error.format());
+
+    return {
+        ...res.data,
+        data: parsed.data
+    };
 };
