@@ -1,3 +1,4 @@
+import { UploadSchema } from '../schemas/uploadApi';
 import { ApiResponse } from '../types/ApiResponse';
 import { apiClient } from './client';
 
@@ -17,7 +18,10 @@ export const uploadToS3 = async (userId: string, file: File): Promise<string> =>
             }
         });
         if (response.data && response.data.status_code === 2000) {
-            return response.data.data?.url || '';
+            const parsed = UploadSchema.safeParse(response.data.data);
+            if (!parsed.success) console.warn('Upload 回傳格式錯誤', parsed.error.format());
+
+            return parsed.data?.data?.url || '';
         } else {
             const apiMessage = response.data?.message || '未知錯誤';
             throw new Error(`API回報錯誤: ${apiMessage} (Code: ${response.data?.status_code})`);
