@@ -96,7 +96,10 @@ src/
 ├── routes/          # 路由設定
 │   └── AppRoutes.tsx
 ├── schemas/          # 路由設定
+│   └── authApi.ts
+│   └── availArea.ts
 │   └── profile.ts
+│   └── uploadApi.ts
 ├── types/           # 型別定義
 │   └── auth.ts      # 認證型別定義
 │
