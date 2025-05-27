@@ -23,7 +23,7 @@ export const signIn = async (email: string, password: string): Promise<ApiRespon
     };
 };
 
-export const registerApi = async (payload: {
+export const signUp = async (payload: {
     email: string;
     name: string;
     password: string;
