@@ -118,6 +118,11 @@ const Profile: React.FC = () => {
                     ...prev,
                     profile_url: '圖片大小不可超過 2MB'
                 }));
+            } else if (!['image/jpeg', 'image/png', 'image/gif'].includes(selectedFile.type)) {
+                setErrors(prev => ({
+                    ...prev,
+                    profile_url: '圖片格式須為JPEG, PNG, 或 GIF'
+                }));
             } else {
                 handleProfileFileChange(selectedFile);
                 setErrors(prev => ({ ...prev, profile_url: '' }));
@@ -203,8 +208,8 @@ const Profile: React.FC = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                    <Form.Label>大頭照(還沒好)</Form.Label>
-                    <Form.Control type="file" onChange={handleFileChange} disabled />
+                    <Form.Label>大頭照</Form.Label>
+                    <Form.Control type="file" onChange={handleFileChange} />
                     {errors.profile_url && <Form.Text className="text-danger">{errors.profile_url}</Form.Text>}
                 </Form.Group>
 
