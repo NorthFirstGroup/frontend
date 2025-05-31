@@ -1,13 +1,15 @@
 import { ApiResponse } from '../types/ApiResponse';
 import { apiClient } from './client';
 import { uploadToS3 } from './uploadApi';
+import { GetProfileSchema } from '../schemas/profile';
+import { UpdateProfileSchema } from '../schemas/profile';
 
 export interface ProfileData {
     name: string;
     phone_num: string;
     birth_date: string;
     location_ids: number[];
-    profile_url: string;
+    profile_url: string | null;
 }
 
 /**
@@ -15,7 +17,12 @@ export interface ProfileData {
  */
 export const getProfile = async (): Promise<ApiResponse<ProfileData>> => {
     const res = await apiClient.get<ApiResponse<ProfileData>>('/v1/user/profile');
-    return res.data;
+    const parsed = GetProfileSchema.safeParse(res.data.data);
+    if (!parsed.success) console.error('GET - /v1/user/profile 驗證錯誤', parsed.error.format());
+    return {
+        ...res.data,
+        data: parsed.data
+    };
 };
 
 /**
@@ -57,7 +64,13 @@ export const updateProfile = async (
             avatar: avatarUrl
         });
 
-        return response.data;
+        const parsed = UpdateProfileSchema.safeParse(response.data);
+        if (!parsed.success) console.error('PUT - /v1/user/profile 驗證錯誤', parsed.error.format());
+
+        return {
+            ...response.data,
+            data: parsed.data
+        };
     } catch (error) {
         console.error('Error updating profile:', error);
         throw new Error('Failed to update profile');

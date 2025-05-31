@@ -3,7 +3,7 @@ import { Container, Form, Button, Alert } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { availAreas, Area, AreaResponseData } from '../../api/availArea';
+import { getAvailAreas, Area, AreaResponseData } from '../../api/availArea';
 import { ProfileData } from '../../api/profile';
 import { useAuth } from '../../hooks/useAuth';
 import { ApiResponse } from '../../types/ApiResponse'; // 確保路徑正確
@@ -68,7 +68,7 @@ const Profile: React.FC = () => {
             setLoadingAreas(true);
             setAreasError(null);
             try {
-                const response: ApiResponse<AreaResponseData> = await availAreas();
+                const response: ApiResponse<AreaResponseData> = await getAvailAreas();
                 if (response.data) setAreas(response.data.results);
             } catch (error: unknown) {
                 setAreasError(handleApiError(error, '無法取得地區選項'));
