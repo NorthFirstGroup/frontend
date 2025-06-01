@@ -5,7 +5,7 @@ export const GetProfileSchema = z.object({
     phone_num: z.string(),
     birth_date: z.string().refine(date => date === '' || !isNaN(Date.parse(date))),
     location_ids: z.array(z.number().int()),
-    profile_url: z.string().url().nullable() // 允許 null，但若非 null 要是 URL 格式
+    profile_url: z.string().url().or(z.literal(''))
 });
 
 export const UpdateProfileSchema = z.object({

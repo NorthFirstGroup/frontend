@@ -8,8 +8,8 @@ export const uploadToS3 = async (userId: string, file: File): Promise<string> =>
     }
 
     const formData = new FormData();
-    formData.append('userId', userId);
     formData.append('file', file);
+    formData.append('user_id', userId);
 
     try {
         const response = await apiClient.post<ApiResponse<{ url: string }>>('/v1/user/upload', formData, {
