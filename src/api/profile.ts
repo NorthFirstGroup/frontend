@@ -26,21 +26,6 @@ export const getProfile = async (): Promise<ApiResponse<ProfileData>> => {
 };
 
 /**
- * 上傳大頭照
- * @param file 圖片檔案 (最大 2MB)
- */
-// export const uploadAvatar = async (file: File) => {
-//     try {
-//         const url = await uploadToS3(file);
-//         //fix later
-//         return url;
-//     } catch (error) {
-//         console.error('Error uploading avatar:', error);
-//         throw new Error('Failed to upload avatar');
-//     }
-// };
-
-/**
  * 更新會員資料
  * @param data 會員資料 (僅需傳遞需要更新的欄位)
  */
@@ -61,7 +46,7 @@ export const updateProfile = async (
         // const response = await apiClient.patch('/v1/user/profile', {
         const response = await apiClient.put<ApiResponse<object>>('/v1/user/profile', {
             ...updatedData,
-            avatar: avatarUrl
+            profile: avatarUrl
         });
 
         const parsed = UpdateProfileSchema.safeParse(response.data);

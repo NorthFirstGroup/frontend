@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { getProfile, updateProfile, ProfileData } from '../api/profile';
-import { uploadToS3 } from '../api/uploadApi';
 import { ApiResponse } from '../types/ApiResponse';
 import { handleApiError } from '../utils/errorHandling';
 
@@ -51,12 +50,6 @@ export const useUserProfileData = () => {
         try {
             let avatarUrl = profile?.profile_url || '';
             const fileToPass = selectedFile ? selectedFile : undefined;
-
-            // 檢查是否有新上傳的圖片
-            if (selectedFile) {
-                avatarUrl = await uploadToS3(userId, selectedFile);
-                setSelectedFile(null); // 重置選擇檔案狀態
-            }
 
             await updateProfile(userId, { ...updatedData, profile_url: avatarUrl }, fileToPass);
             setProfile({ ...updatedData, profile_url: avatarUrl });

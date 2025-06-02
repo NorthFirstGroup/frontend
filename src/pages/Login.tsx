@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
-import { signIn, LoginResponseData } from '../api/authApi';
+import { signIn, LogInAndUpResponseData } from '../api/authApi';
 import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
 import { ApiError } from '../types/ApiError';
 import { handleApiError } from '../utils/errorHandling';
@@ -39,14 +39,15 @@ const Login: React.FC = () => {
 
         //test only : change default 'USER' to 'ORGANIZER'
         try {
-            const response: ApiResponse<LoginResponseData> = await signIn(email, password);
+            const response: ApiResponse<LogInAndUpResponseData> = await signIn(email, password);
             if (response.data) {
                 const decodedData = decodeToken(response.data.token);
                 login(response.data.token, {
                     email,
                     nickname: response.data.user.name,
                     role: decodedData?.role || 'USER',
-                    id: decodedData?.id
+                    id: decodedData?.id,
+                    profile_url: response.data.user?.profile_url
                 });
             }
         } catch (error: unknown) {
