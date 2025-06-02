@@ -46,7 +46,7 @@ export const updateProfile = async (
         // const response = await apiClient.patch('/v1/user/profile', {
         const response = await apiClient.put<ApiResponse<object>>('/v1/user/profile', {
             ...updatedData,
-            profile: avatarUrl
+            profile_url: avatarUrl
         });
 
         const parsed = UpdateProfileSchema.safeParse(response.data);
