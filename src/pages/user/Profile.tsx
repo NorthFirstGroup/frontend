@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { getAvailAreas, Area, AreaResponseData } from '../../api/availArea';
-import { ProfileData } from '../../api/profile';
+import { GetProfileData } from '../../api/profile';
 import { useAuth } from '../../hooks/useAuth';
 import { ApiResponse } from '../../types/ApiResponse';
 import { handleApiError } from '../../utils/errorHandling';
@@ -17,10 +17,11 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const Profile: React.FC = () => {
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
     const email = user?.email;
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [localAvatarUrl, setLocalAvatarUrl] = useState<string | null>(null);
+    const [submitError, setSubmitError] = useState<string>('');
 
     const {
         profile,
@@ -30,10 +31,11 @@ const Profile: React.FC = () => {
         handleUpdateProfile,
         updateSuccess,
         updating: isUpdating,
-        updateError: profileUpdateError
+        updateError: profileUpdateError,
+        latestProfileUrl
     } = useUserProfileData();
 
-    const [formData, setFormData] = useState<Required<ProfileData>>({
+    const [formData, setFormData] = useState<Required<GetProfileData>>({
         name: '',
         phone_num: '',
         birth_date: dayjs().format('YYYY-MM-DD'),
@@ -63,6 +65,13 @@ const Profile: React.FC = () => {
             setLocalAvatarUrl(profile.profile_url || null);
         }
     }, [profile]);
+
+    useEffect(() => {
+        if (latestProfileUrl !== null) {
+            setLocalAvatarUrl(latestProfileUrl); // Update local preview/display to the API's URL
+            updateUser({ profile_url: latestProfileUrl });
+        }
+    }, [latestProfileUrl, updateUser]); // Dependencies are crucial here
 
     useEffect(() => {
         const fetchAreasData = async () => {
@@ -120,21 +129,28 @@ const Profile: React.FC = () => {
                     profile_url: '圖片大小不可超過 2MB'
                 }));
                 setLocalAvatarUrl(null);
+                handleProfileFileChange(null);
             } else if (!['image/jpeg', 'image/png', 'image/gif'].includes(selectedFile.type)) {
                 setErrors(prev => ({
                     ...prev,
                     profile_url: '圖片格式須為JPEG, PNG, 或 GIF'
                 }));
                 setLocalAvatarUrl(null);
+                handleProfileFileChange(null);
             } else {
-                handleProfileFileChange(selectedFile);
                 setErrors(prev => ({ ...prev, profile_url: '' }));
+                handleProfileFileChange(selectedFile);
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     setLocalAvatarUrl(reader.result as string);
                 };
                 reader.readAsDataURL(selectedFile);
             }
+        } else {
+            // If user cancels file selection, clear the error and the selected file in the hook
+            setErrors(prev => ({ ...prev, profile_url: '' }));
+            handleProfileFileChange(null); // Pass null to hook
+            setLocalAvatarUrl(user?.profile_url || profile?.profile_url || null); // Revert to current avatar
         }
     };
 
@@ -158,15 +174,25 @@ const Profile: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setSubmitError('');
         setErrors(prev => ({ ...prev, profile_url: '' })); // 清空圖片錯誤
 
-        if (isFormValid()) {
-            await handleUpdateProfile(user?.id || '', formData);
-        } else {
-            // setSubmitError('請檢查表單是否有錯誤');
+        if (!isFormValid()) {
+            setSubmitError('請檢查表單是否有錯誤或未填寫完整');
+            return;
+        }
+        try {
+            const newUrlFromApi = await handleUpdateProfile(user?.id || '', formData);
+            if (!newUrlFromApi) {
+                setSubmitError(profileUpdateError || '更新完成，但沒有收到新的大頭貼URL');
+            }
+        } catch (err: unknown) {
+            setSubmitError(profileUpdateError || handleApiError(err, '更新資料失敗'));
         }
     };
 
+    const currentAvatarToDisplay =
+        localAvatarUrl || latestProfileUrl || user?.profile_url || profile?.profile_url || defaultAvatar;
     return (
         <Container className="mt-5" style={{ maxWidth: '600px' }}>
             <h3>會員資料</h3>
@@ -185,7 +211,7 @@ const Profile: React.FC = () => {
                     }}
                 >
                     <Image
-                        src={localAvatarUrl || profile?.profile_url || defaultAvatar}
+                        src={currentAvatarToDisplay}
                         alt="Avatar"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         onError={e => {
@@ -193,8 +219,8 @@ const Profile: React.FC = () => {
                         }}
                     />
                 </div>
-                <Button variant="outline-primary" onClick={handleAvatarButtonClick} size="sm">
-                    更換 Avatar
+                <Button variant="outline-primary" onClick={handleAvatarButtonClick} size="sm" disabled={isUpdating}>
+                    {isUpdating ? '上傳中...' : '更換 Avatar'}
                 </Button>
                 <Form.Control
                     type="file"
@@ -209,6 +235,7 @@ const Profile: React.FC = () => {
             {profileError && <Alert variant="danger">{profileError}</Alert>} {/* 顯示錯誤訊息 */}
             {profileUpdateError && <Alert variant="danger">{profileUpdateError}</Alert>}
             {updateSuccess && <Alert variant="success">{updateSuccess}</Alert>}
+            {submitError && <Alert variant="info">{submitError}</Alert>}
             <Form onSubmit={handleSubmit} className="mt-4">
                 <Form.Group className="mb-3">
                     <Form.Label>會員帳號</Form.Label>

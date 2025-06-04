@@ -4,7 +4,7 @@ import { uploadToS3 } from './uploadApi';
 import { GetProfileSchema } from '../schemas/profile';
 import { UpdateProfileSchema } from '../schemas/profile';
 
-export interface ProfileData {
+export interface GetProfileData {
     name: string;
     phone_num: string;
     birth_date: string;
@@ -12,11 +12,21 @@ export interface ProfileData {
     profile_url: string | null;
 }
 
+export interface SetProfileData {
+    name: string;
+    phone_num: string;
+    birth_date: string;
+    location_ids: number[];
+}
+
+export interface UpdateProfileResponseData {
+    profile_url?: string;
+}
 /**
  * 取得會員資料
  */
-export const getProfile = async (): Promise<ApiResponse<ProfileData>> => {
-    const res = await apiClient.get<ApiResponse<ProfileData>>('/v1/user/profile');
+export const getProfile = async (): Promise<ApiResponse<GetProfileData>> => {
+    const res = await apiClient.get<ApiResponse<GetProfileData>>('/v1/user/profile');
     const parsed = GetProfileSchema.safeParse(res.data.data);
     if (!parsed.success) console.error('GET - /v1/user/profile 驗證錯誤', parsed.error.format());
     return {
@@ -31,22 +41,20 @@ export const getProfile = async (): Promise<ApiResponse<ProfileData>> => {
  */
 export const updateProfile = async (
     userId: string,
-    updatedData: ProfileData,
+    updatedData: SetProfileData,
     file?: File
-): Promise<ApiResponse<object>> => {
+): Promise<ApiResponse<UpdateProfileResponseData>> => {
     try {
-        let avatarUrl = updatedData.profile_url;
+        let avatarUrl = '';
 
-        // 若有上傳新圖片，執行上傳並取得新的 URL
+        // 若有上傳新圖片，執行上傳並取得新的 URL, 更新 localStorage
         if (file) {
             avatarUrl = await uploadToS3(userId, file);
         }
 
-        console.log('before put api', JSON.stringify(updatedData));
         // const response = await apiClient.patch('/v1/user/profile', {
         const response = await apiClient.put<ApiResponse<object>>('/v1/user/profile', {
-            ...updatedData,
-            profile_url: avatarUrl
+            ...updatedData
         });
 
         const parsed = UpdateProfileSchema.safeParse(response.data);
@@ -54,7 +62,7 @@ export const updateProfile = async (
 
         return {
             ...response.data,
-            data: parsed.data
+            data: { ...parsed.data, profile_url: avatarUrl }
         };
     } catch (error) {
         console.error('Error updating profile:', error);
