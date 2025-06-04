@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
-import { signUp, LoginResponseData } from '../api/authApi';
+import { signUp, LogInAndUpResponseData } from '../api/authApi';
 import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
 import { ApiError } from '../types/ApiError';
 import { handleApiError } from '../utils/errorHandling';
@@ -85,7 +85,7 @@ const Register: React.FC = () => {
         }
 
         try {
-            const response: ApiResponse<LoginResponseData> = await signUp({ email, name, password });
+            const response: ApiResponse<LogInAndUpResponseData> = await signUp({ email, name, password });
             if (response.data) {
                 const decodedData = decodeToken(response.data.token);
                 login(response.data.token, {
