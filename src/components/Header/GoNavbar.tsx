@@ -30,7 +30,7 @@ const Header = () => {
     const renderDropdownTitle = (
         <div className="d-flex align-items-center justify-content-center" style={{ padding: '0 0.5rem' }}>
             <Image
-                src={user?.avatar || avatarPng}
+                src={user?.profile_url || avatarPng}
                 alt="User Avatar"
                 roundedCircle
                 width="28" // 稍微調整大小以符合 Navbar
@@ -47,7 +47,7 @@ const Header = () => {
                 style={{ cursor: 'default', borderBottom: '1px solid #e0e0e0' }}
             >
                 <Image
-                    src={user?.avatar || avatarPng}
+                    src={user?.profile_url || avatarPng}
                     alt="User Avatar"
                     roundedCircle
                     width="40"

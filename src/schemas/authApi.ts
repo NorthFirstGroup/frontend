@@ -6,7 +6,8 @@ export const SignInSchema = z.object({
     token: z.string().regex(jwtRegex),
     user: z.object({
         role: z.string(),
-        name: z.string()
+        name: z.string(),
+        profile_url: z.string().or(z.literal(''))
     })
 });
 
@@ -14,7 +15,8 @@ export const SignUpSchema = z.object({
     token: z.string().regex(jwtRegex),
     user: z.object({
         role: z.string(),
-        name: z.string()
+        name: z.string(),
+        profile_url: z.string().or(z.literal(''))
     })
 });
 

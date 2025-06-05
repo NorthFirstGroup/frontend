@@ -8,8 +8,8 @@ export const uploadToS3 = async (userId: string, file: File): Promise<string> =>
     }
 
     const formData = new FormData();
-    formData.append('userId', userId);
     formData.append('file', file);
+    formData.append('user_id', userId);
 
     try {
         const response = await apiClient.post<ApiResponse<{ url: string }>>('/v1/user/upload', formData, {
@@ -18,7 +18,7 @@ export const uploadToS3 = async (userId: string, file: File): Promise<string> =>
             }
         });
         if (response.data && response.data.status_code === 2000) {
-            const parsed = UploadSchema.safeParse(response.data.data);
+            const parsed = UploadSchema.safeParse(response.data);
             if (!parsed.success) console.warn('Upload 回傳格式錯誤', parsed.error.format());
 
             return parsed.data?.data?.url || '';
