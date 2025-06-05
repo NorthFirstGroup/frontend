@@ -1,12 +1,13 @@
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Profile from '../pages/user/Profile';
-import Point from '../pages/user/Point';
-import MyOrders from '../pages/user/MyOrders';
-import OrganizerApplyForm from '../pages/organizer/Apply';
-import ActivityForm from '../pages/organizer/Activity';
-import ValidateEntry from '../pages/organizer/ValidateEntry';
+import Home from '@pages/Home';
+import Login from '@pages/Login';
+import Register from '@pages/Register';
+import Profile from '@pages/user/Profile';
+import Point from '@pages/user/Point';
+import MyOrders from '@pages/user/MyOrders';
+import OrganizerApplyForm from '@pages/organizer/Apply';
+import ActivityForm from '@pages/organizer/Activity';
+import ValidateEntry from '@pages/organizer/ValidateEntry';
+import ActivityPage from '@pages/activity/ActivityPage';
 
 export const routeConfigs = [
     { path: '/', element: <Home />, roles: [] },
@@ -41,5 +42,10 @@ export const routeConfigs = [
         path: '/organizer/validate-entry',
         element: <ValidateEntry />,
         roles: ['ORGANIZER'] // 入場資格驗證
+    },
+    {
+        path: '/activity/:activityId',
+        element: <ActivityPage />,
+        roles: [] // 單一活動詳情
     }
 ];
