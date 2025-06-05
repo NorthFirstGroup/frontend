@@ -5,10 +5,12 @@
             "@/*": ["src/*"], // 路徑別名設定
             "@components/*": ["src/components/*"],
             "@utils/*": ["src/utils/*"],
-            "@hooks/*": ["src/hooks/*"],
-            "@pages/*": ["src/pages/*"],
             "@assets/*": ["src/assets/*"],
-            "@context/*": ["src/context/*"]
+            "@pages/*": ["src/pages/*"],
+            "@hooks/*": ["src/hooks/*"],
+            "@context/*": ["src/context/*"],
+            "@api/*": ["src/api/*"],
+            "@types/*": ["src/types/*"]
         },
         "incremental": true, //  編譯加速：需搭配 incremental 或 composite
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
