@@ -1,10 +1,10 @@
 // src/components/ActivityCard.tsx
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import { Activity } from '../types/home';
+import { FrontpageActivity } from '../types/home';
 
 interface ActivityCardProps {
-    activity: Activity;
+    activity: FrontpageActivity;
 }
 
 const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
@@ -37,29 +37,31 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
             {/* h-100 確保卡片高度一致 */}
             <Card.Img
                 variant="top"
-                src={activity.poster_url}
-                alt={activity.title}
+                src={activity.cover_image}
+                alt={activity.name}
                 style={{ height: '200px', objectFit: 'cover' }}
             />
             <Card.Body className="d-flex flex-column">
-                <Card.Title className="h5">{activity.title}</Card.Title>
+                <Card.Title className="h5">{activity.name}</Card.Title>
                 <Card.Text>
-                    <p className="mb-1 text-muted">{activity.location}</p>
-                    <p className="mb-1 text-muted">{new Date(activity.start_date).toLocaleDateString()}</p>
-                    {activity.price_range && <p className="mb-1 fw-bold text-primary">{activity.price_range}</p>}
+                    {/* <p className="mb-1 text-muted">{activity.location}</p> */}
+                    <p className="mb-1 text-muted">{activity.start_time?.toString()}</p>
+                    {/* {activity.price_range && <p className="mb-1 fw-bold text-primary">{activity.price_range}</p>} */}
 
                     {/* 即將完售的邏輯 */}
-                    {activity.remaining_tickets !== undefined &&
+                    {/* {activity.remaining_tickets !== undefined &&
                         activity.total_tickets &&
                         activity.remaining_tickets > 0 &&
                         (activity.remaining_tickets <= activity.total_tickets * 0.2 ||
                             activity.remaining_tickets < 50) && ( // 設為總票數20%以下或少於50張
                             <p className="mb-1 text-danger fw-bold">🔥 剩餘票數：{activity.remaining_tickets}</p>
-                        )}
+                        )} */}
 
                     {/* 開賣倒數中 */}
-                    {activity.sale_start_date && new Date(activity.sale_start_date) > new Date() && (
-                        <p className="mb-1 text-info fw-bold">開賣倒數：{getRemainingTime(activity.sale_start_date)}</p>
+                    {activity.sales_start_time && new Date(activity.sales_start_time) > new Date() && (
+                        <p className="mb-1 text-info fw-bold">
+                            開賣倒數：{getRemainingTime(new Date(activity.sales_start_time).toDateString())}
+                        </p>
                     )}
                 </Card.Text>
                 <Button variant="primary" className="mt-auto">
