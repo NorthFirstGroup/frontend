@@ -1,22 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'; // 引入 React-Bootstrap 組件
-import { ActivityCategory } from '../types/home';
+import { Category, getCategories } from '../api/category';
 import TopBannerActivities from '../components/Home/Banner';
 import HotTopicActivitiesSection from '../components/Home/HotTopicActivitiesSection';
 
 const Home: React.FC = () => {
-    const activityCategories: ActivityCategory[] = [
-        '熱門',
-        '音樂',
-        '戲劇',
-        '展覽',
-        '電影',
-        '運動',
-        '親子',
-        '舞蹈',
-        '演唱會',
-        '戶外'
-    ];
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    useEffect(() => {
+        (async () => {
+            const results = await getCategories();
+            setCategories(results);
+        })();
+    }, []);
 
     return (
         <div className="home-page">
@@ -25,16 +21,17 @@ const Home: React.FC = () => {
                 {/* 活動分類 Icons */}
                 <Container className="my-5">
                     <Row className="justify-content-center g-3">
-                        {activityCategories.map(category => (
-                            <Col key={category} xs={6} sm={4} md={2} lg={1} className="text-center">
+                        {categories.map(category => (
+                            <Col key={category.id} xs={6} sm={4} md={2} lg={1} className="text-center">
                                 <div
                                     className="category-icon-wrapper p-2 border rounded-3 d-flex flex-column align-items-center justify-content-center"
                                     style={{ minHeight: '80px', cursor: 'pointer' }}
                                 >
+                                    <img src={category.media} alt="icon" style={{ width: 48, height: 48 }} />
                                     {/* 這裡可以放置 Icon component */}
-                                    <i className="bi bi-star-fill fs-4 text-warning"></i>{' '}
+                                    {/*<i className="bi bi-star-fill fs-4 text-warning"></i>{' '} */}
                                     {/* 範例：使用 Bootstrap Icons */}
-                                    <small className="mt-1">{category}</small>
+                                    <small className="mt-1">{category.name}</small>
                                 </div>
                             </Col>
                         ))}
