@@ -2,11 +2,11 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ActivityCard from './ActivityCard';
-import { Activity } from '../types/home';
+import { FrontpageActivity } from '../types/home';
 
 interface ActivitySectionProps {
     title: string;
-    activities: Activity[];
+    activities: FrontpageActivity[];
 }
 
 const ActivitySection: React.FC<ActivitySectionProps> = ({ title, activities }) => {

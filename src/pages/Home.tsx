@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'; // 引入 React-Bootstrap 組件
-import Banner from '../components/Banner';
-import ActivitySection from '../components/ActivitySection';
-import { Activity } from '../types/home';
-import { ApiResponse } from '../types/ApiResponse';
 import { Category, getCategories } from '../api/category';
+import TopBannerActivities from '../components/Home/Banner';
+import HotTopicActivitiesSection from '../components/Home/HotTopicActivitiesSection';
 
 const Home: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);
-    const [popularActivities, setPopularActivities] = useState<Activity[]>([]);
-    const [trendingActivities, setTrendingActivities] = useState<Activity[]>([]);
-    const [sellingOutActivities, setSellingOutActivities] = useState<Activity[]>([]);
-    const [countdownActivities, setCountdownActivities] = useState<Activity[]>([]);
 
     useEffect(() => {
         (async () => {
@@ -20,34 +14,10 @@ const Home: React.FC = () => {
         })();
     }, []);
 
-    useEffect(() => {
-        const fetchActivities = async () => {
-            try {
-                const [popularRes, trendingRes, sellingOutRes, countdownRes] = await Promise.all([
-                    fetch('/api/activities/popular'),
-                    fetch('/api/activities/trending'),
-                    fetch('/api/activities/selling-out'),
-                    fetch('/api/activities/countdown')
-                ]);
-                const popularData: ApiResponse<Activity> = await popularRes.json();
-                const trendingData: ApiResponse<Activity> = await trendingRes.json();
-                const sellingOutData: ApiResponse<Activity> = await sellingOutRes.json();
-                const countdownData: ApiResponse<Activity> = await countdownRes.json();
-                setPopularActivities(popularData.data || []);
-                setTrendingActivities(trendingData.data || []);
-                setSellingOutActivities(sellingOutData.data || []);
-                setCountdownActivities(countdownData.data || []);
-            } catch (error) {
-                console.error('Error fetching activities:', error);
-            }
-        };
-        fetchActivities();
-    }, []);
-
     return (
         <div className="home-page">
             <main>
-                <Banner />
+                <TopBannerActivities />
                 {/* 活動分類 Icons */}
                 <Container className="my-5">
                     <Row className="justify-content-center g-3">
@@ -68,10 +38,12 @@ const Home: React.FC = () => {
                     </Row>
                 </Container>
 
-                <ActivitySection title="熱門推薦" activities={popularActivities} />
+                <HotTopicActivitiesSection />
+                {/*
                 <ActivitySection title="發燒主題" activities={trendingActivities} />
                 <ActivitySection title="即將完售" activities={sellingOutActivities} />
                 <ActivitySection title="開賣倒數中" activities={countdownActivities} />
+                */}
             </main>
         </div>
     );
