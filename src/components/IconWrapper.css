@@ -6,9 +6,9 @@
     padding: 0px; /* As per spec, but you might need some padding for spacing */
     gap: 8px; /* This gap won't apply if there's only one child (the icon) */
 
-    width: 40px;
+    /* width: 40px;
     height: 40px;
 
-    background: #ffedd3;
+    background: #ffedd3; */
     border-radius: 1000px;
 }

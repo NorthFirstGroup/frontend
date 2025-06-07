@@ -67,7 +67,10 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
                     )
                 )}
                 {IconSvgComponent && (
-                    <IconWrapper>
+                    <IconWrapper
+                        size={40} // Default size (40px width/height)
+                        bgColor="#FFEDD3" // Default background color
+                    >
                         {' '}
                         {/* Now IconWrapper handles the background and centering */}
                         <IconSvgComponent size={20} color="#E5540B" /> {/* Pass size/color to the icon itself */}
