@@ -4,6 +4,7 @@ import ActivitySection from '../ActivitySection';
 import { ApiResponse } from '../../types/ApiResponse';
 import { FrontpageActivity } from '../../types/home';
 import { getHotTopicActivities } from '../../api/frontpage';
+import { FaThumbsUp } from 'react-icons/fa6';
 
 const HotTopicActivitiesSection: React.FC = () => {
     const [activities, setActivities] = useState<FrontpageActivity[]>([]);
@@ -37,7 +38,20 @@ const HotTopicActivitiesSection: React.FC = () => {
 
     // You can customize the layout here if "popular" section needs a different one
     // For now, it reuses the generic ActivitySection
-    return <ActivitySection title="發燒主題" activities={activities} />;
+    {
+        /* 熱門推薦 section */
+    }
+    return (
+        <ActivitySection
+            title="熱門推薦"
+            subtitle="現在大家都在搶這些！熱門活動一次看，精彩不漏接。"
+            activities={activities}
+            iconSvg={FaThumbsUp}
+            initialRows={2}
+            cardsPerRow={3}
+            categoryKeyword="熱門" // Pass the keyword for this section
+        />
+    );
 };
 
 export default HotTopicActivitiesSection;

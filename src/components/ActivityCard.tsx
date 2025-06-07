@@ -1,13 +1,19 @@
 // src/components/ActivityCard.tsx
 import React from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; // <<< 導入 useNavigate
 import { FrontpageActivity } from '../types/home';
+import './ActivityCard.css';
 
 interface ActivityCardProps {
     activity: FrontpageActivity;
+    hasBorder?: boolean;
+    borderColor?: string;
 }
 
-const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
+const ActivityCard: React.FC<ActivityCardProps> = ({ activity, hasBorder = false, borderColor = '#E0E0E0' }) => {
+    const navigate = useNavigate(); // <<< 初始化 useNavigate hook
+
     const getRemainingTime = (saleStartDate: string) => {
         const now = new Date();
         const saleStart = new Date(saleStartDate);
@@ -31,44 +37,81 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
         return countdownString;
     };
 
+    const formatActivityDate = (startDate: string | undefined, endDate: string | undefined): string => {
+        if (!startDate) return '';
+        const start = new Date(startDate);
+        const end = endDate ? new Date(endDate) : null;
+
+        const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: false // 24-hour format
+        };
+
+        const startDateString = start.toLocaleString('zh-TW', options); // Or 'en-US' depending on your locale preference
+
+        if (end && start.toDateString() !== end.toDateString()) {
+            // If the event spans multiple days
+            const endDateString = end.toLocaleString('zh-TW', options);
+            return `${startDateString} - ${endDateString}`;
+        }
+        return startDateString;
+    };
+
+    const isComingSoon = activity.sales_start_time && new Date(activity.sales_start_time) > new Date();
+
+    const cardWrapperStyle: React.CSSProperties = {
+        border: hasBorder ? `1px solid ${borderColor}` : 'none',
+        cursor: 'pointer'
+        // 可以選擇性地移除 shadow-sm 或在有邊框時移除它
+        // boxShadow: hasBorder ? 'none' : '0 .125rem .25rem rgba(0,0,0,.075)',
+    };
+
+    const handleCardClick = () => {
+        // 導航到 /Activity/{activity.id} 路徑
+        console.log('點擊 ActivityCard，導航至:', `/activity/${activity.id}`); // 方便調試
+        navigate(`/activity/${activity.id}`);
+    };
+
     return (
-        <Card className="h-100 shadow-sm">
-            {' '}
-            {/* h-100 確保卡片高度一致 */}
-            <Card.Img
-                variant="top"
-                src={activity.cover_image}
-                alt={activity.name}
-                style={{ height: '200px', objectFit: 'cover' }}
-            />
-            <Card.Body className="d-flex flex-column">
-                <Card.Title className="h5">{activity.name}</Card.Title>
-                <Card.Text>
-                    {/* <p className="mb-1 text-muted">{activity.location}</p> */}
-                    <p className="mb-1 text-muted">{activity.start_time?.toString()}</p>
-                    {/* {activity.price_range && <p className="mb-1 fw-bold text-primary">{activity.price_range}</p>} */}
+        <Card className="card-wrapper shadow-sm" style={cardWrapperStyle} onClick={handleCardClick}>
+            <div className="card-image-container">
+                <img className="card-image" src={activity.cover_image} alt={activity.name} />
+                {/* Apply overlay badge only when it's coming soon */}
+                {isComingSoon && (
+                    <div className="card-overlay-badge" style={{ display: 'flex' }}>
+                        開賣倒數：{getRemainingTime(activity.sales_start_time!.toString())}
+                    </div>
+                )}
+            </div>
+            <div className="card-info">
+                <div className="card-badge">
+                    {/* <span className="card-badge-text">{activity.category}</span> */}
+                    <label className="text-sm-start">{activity.category}</label>
+                </div>
+                {/* 使用 OverlayTrigger 包裹 h3，並在 Tooltip 中顯示完整的活動名稱 */}
+                <OverlayTrigger
+                    placement="top" // Tooltip 顯示位置 (可選: 'bottom', 'left', 'right')
+                    overlay={<Tooltip id={`tooltip-${activity.id}`}>{activity.name}</Tooltip>}
+                >
+                    <h6 className="card-title">{activity.name}</h6>
+                </OverlayTrigger>
+                <p className="card-date">{formatActivityDate(activity.start_time, activity.end_time)}</p>
 
-                    {/* 即將完售的邏輯 */}
-                    {/* {activity.remaining_tickets !== undefined &&
-                        activity.total_tickets &&
-                        activity.remaining_tickets > 0 &&
-                        (activity.remaining_tickets <= activity.total_tickets * 0.2 ||
-                            activity.remaining_tickets < 50) && ( // 設為總票數20%以下或少於50張
-                            <p className="mb-1 text-danger fw-bold">🔥 剩餘票數：{activity.remaining_tickets}</p>
-                        )} */}
-
-                    {/* 開賣倒數中 */}
-                    {activity.sales_start_time && new Date(activity.sales_start_time) > new Date() && (
-                        <p className="mb-1 text-info fw-bold">
-                            開賣倒數：{getRemainingTime(new Date(activity.sales_start_time).toDateString())}
-                        </p>
+                {/* You can add logic for '即將完售' here if needed */}
+                {/*
+                {activity.remaining_tickets !== undefined &&
+                    activity.total_tickets &&
+                    activity.remaining_tickets > 0 &&
+                    (activity.remaining_tickets <= activity.total_tickets * 0.2 ||
+                        activity.remaining_tickets < 50) && (
+                        <p className="mb-1 text-danger fw-bold">🔥 剩餘票數：{activity.remaining_tickets}</p>
                     )}
-                </Card.Text>
-                <Button variant="primary" className="mt-auto">
-                    查看詳情
-                </Button>{' '}
-                {/* mt-auto 將按鈕推到底部 */}
-            </Card.Body>
+                */}
+            </div>
         </Card>
     );
 };
