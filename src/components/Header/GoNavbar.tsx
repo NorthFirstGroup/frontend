@@ -1,20 +1,21 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Navbar, Nav, Container, NavDropdown, Form, Image } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import logoPng from '/logo.png';
 import goTicketPng from '../../assets/brand.png';
 import avatarPng from '../../assets/def-avatar.png';
-import memberPng from '../../assets/member.png';
-import pointPng from '../../assets/point.png';
-import cartPng from '../../assets/cart.png';
-import applyPng from '../../assets/apply.png';
-import activityMgmtPng from '../../assets/activity-mgmt.png';
-import validataEntryPng from '../../assets/validate-ticket.png';
-import signoutPng from '../../assets/sign-out.png';
 import searchPng from '../../assets/search.png';
+import { CgProfile } from 'react-icons/cg';
+import { BsLightningChargeFill } from 'react-icons/bs';
+import { IoCartOutline } from 'react-icons/io5';
+import { PiIdentificationBadge } from 'react-icons/pi';
+import { FaRegCalendarDays } from 'react-icons/fa6';
+import { FaTicketAlt } from 'react-icons/fa';
+import { RxExit } from 'react-icons/rx';
 import styles from './Header.module.css';
 import { StyledNavbar, StyledNavDropdown, StyledNavDropdownItem, StyledAuthButton } from './HeaderStyles'; // 引入您的 Styled-Components
+import { useActivityFilterNavigation } from '../../utils/navigationUtils';
 
 const Header = () => {
     const { isLoggedIn, user, logout } = useAuth();
@@ -22,9 +23,22 @@ const Header = () => {
     const location = useLocation();
     const [showMobileSearchForm, setShowMobileSearchForm] = useState(false);
 
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigateToActivityListWithFilters = useActivityFilterNavigation();
+
     const handleLogout = () => {
         logout();
         navigate('/'); // 登出後導回首頁
+    };
+
+    const handleSearchSubmit = (event: React.FormEvent) => {
+        event.preventDefault(); // Prevent the default form submission (page reload)
+        if (searchTerm.trim()) {
+            // Only navigate if there's actual input
+            navigateToActivityListWithFilters({ keyword: searchTerm.trim() });
+        }
+        // Optionally, clear the search term after submission
+        setSearchTerm('');
     };
 
     const renderDropdownTitle = (
@@ -63,15 +77,15 @@ const Header = () => {
             <NavDropdown.Divider className={styles.dropdownDivider} />
             {/* 已登入的使用者連結 */}
             <StyledNavDropdownItem as={Link} to="/user/profile">
-                <img src={memberPng} alt="member-icon" className={styles.dropdownIcon} />
+                <CgProfile className={styles.dropdownIcon} />
                 個人資訊
             </StyledNavDropdownItem>
             <StyledNavDropdownItem as={Link} to="/user/point">
-                <img src={pointPng} alt="point-icon" className={styles.dropdownIcon} />
+                <BsLightningChargeFill className={styles.dropdownIcon} />
                 點數資訊
             </StyledNavDropdownItem>
             <StyledNavDropdownItem as={Link} to="/user/orders">
-                <img src={cartPng} alt="my-orders-icon" className={styles.dropdownIcon} />
+                <IoCartOutline className={styles.dropdownIcon} />
                 我的訂單
             </StyledNavDropdownItem>
 
@@ -79,31 +93,37 @@ const Header = () => {
                 <>
                     <NavDropdown.Divider className={styles.dropdownDivider} />
                     <StyledNavDropdownItem as={Link} to="/organizer/apply">
-                        <img src={applyPng} alt="apply-icon" className={styles.dropdownIcon} />
+                        <PiIdentificationBadge className={styles.dropdownIcon} />
                         廠商資訊
                     </StyledNavDropdownItem>
                     <StyledNavDropdownItem as={Link} to="/organizer/activity">
-                        <img src={activityMgmtPng} alt="activity-management-icon" className={styles.dropdownIcon} />
+                        <FaRegCalendarDays className={styles.dropdownIcon} />
                         活動管理
                     </StyledNavDropdownItem>
                     <StyledNavDropdownItem as={Link} to="/organizer/validate-entry">
-                        <img src={validataEntryPng} alt="validate-entry-icon" className={styles.dropdownIcon} />
+                        <FaTicketAlt className={styles.dropdownIcon} />
                         入場資格驗證
                     </StyledNavDropdownItem>
                 </>
             ) : (
                 <StyledNavDropdownItem as={Link} to="/organizer/apply">
-                    <img src={applyPng} alt="apply-icon" className={styles.dropdownIcon} />
+                    <PiIdentificationBadge className={styles.dropdownIcon} />
                     申請成為廠商
                 </StyledNavDropdownItem>
             )}
             <NavDropdown.Divider className={styles.dropdownDivider} />
             <StyledNavDropdownItem onClick={handleLogout}>
-                <img src={signoutPng} alt="signout-icon" className={styles.dropdownIcon} />
+                <RxExit className={styles.dropdownIcon} />
                 登出
             </StyledNavDropdownItem>
         </>
     );
+
+    const iconStyle = {
+        width: '28px',
+        height: '28px',
+        color: '#000000' // Or your desired dark color, e.g., '#333333'
+    };
 
     return (
         <StyledNavbar bg="light" expand="lg" className={styles.navbar}>
@@ -113,8 +133,19 @@ const Header = () => {
                     <img src={goTicketPng} alt="GoTicket" className={styles.logoText} />
                 </Navbar.Brand>
                 {/* 2. 桌面版搜尋欄 (大螢幕顯示，小螢幕隱藏) */}
-                <Form className="d-none d-lg-flex mx-auto flex-grow-1" style={{ maxWidth: '400px' }}>
-                    <Form.Control type="search" placeholder="🔍 搜尋活動" className="ms-2 me-2" aria-label="Search" />
+                <Form
+                    className="d-none d-lg-flex mx-auto flex-grow-1"
+                    style={{ maxWidth: '400px' }}
+                    onSubmit={handleSearchSubmit}
+                >
+                    <Form.Control
+                        type="search"
+                        placeholder="🔍 搜尋活動"
+                        className="ms-2 me-2"
+                        aria-label="Search"
+                        value={searchTerm} // Bind input value to state
+                        onChange={e => setSearchTerm(e.target.value)} // Update state on change
+                    />
                 </Form>
                 {/* 3. 手機版搜尋圖示按鈕 和 漢堡選單 */}
                 <div className="d-flex d-lg-none ms-auto">
@@ -122,7 +153,7 @@ const Header = () => {
                         onClick={() => setShowMobileSearchForm(!showMobileSearchForm)}
                         className={styles.searchIconButton}
                     >
-                        <img src={searchPng} alt="Search" />
+                        <Image src={searchPng} style={iconStyle} />
                     </button>
                     {isLoggedIn ? (
                         // 已登入：顯示漢堡選單
@@ -185,7 +216,12 @@ const Header = () => {
             {showMobileSearchForm && (
                 <Container fluid className="d-lg-none py-2">
                     <Form className="mx-auto" style={{ maxWidth: '400px' }}>
-                        <Form.Control type="search" placeholder="🔍 搜尋活動" className="w-100" />
+                        <Form.Control
+                            type="search"
+                            placeholder="🔍 搜尋活動"
+                            className="w-100"
+                            onSubmit={handleSearchSubmit}
+                        />
                     </Form>
                 </Container>
             )}

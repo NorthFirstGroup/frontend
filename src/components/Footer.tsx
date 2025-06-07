@@ -4,11 +4,15 @@ import { Container, Row, Col, Nav } from 'react-bootstrap';
 import styles from './Header/Header.module.css';
 import logoPng from '/logo.png';
 import goTicketPng from '../assets/brand.png';
-import facebookPng from '../assets/facebook.png';
-import instagramPng from '../assets/instagram.png';
+import { FaFacebook, FaInstagramSquare } from 'react-icons/fa';
 import linePng from '../assets/line.png';
 
 const Footer: React.FC = () => {
+    const iconStyle = {
+        width: '28px',
+        height: '28px',
+        color: '#000000' // Or your desired dark color, e.g., '#333333'
+    };
     return (
         <footer className="bg-light text-white py-5 mt-5">
             <Container>
@@ -26,7 +30,7 @@ const Footer: React.FC = () => {
                                 rel="noopener noreferrer"
                                 className="me-3"
                             >
-                                <img src={facebookPng} alt="Facebook" style={{ width: '28px', height: '28px' }} />
+                                <FaFacebook style={iconStyle} />
                             </Nav.Link>
                             <Nav.Link
                                 href="https://www.instagram.com"
@@ -34,10 +38,10 @@ const Footer: React.FC = () => {
                                 rel="noopener noreferrer"
                                 className="me-3"
                             >
-                                <img src={instagramPng} alt="Instagram" style={{ width: '28px', height: '28px' }} />
+                                <FaInstagramSquare style={iconStyle} />
                             </Nav.Link>
                             <Nav.Link href="https://line.me" target="_blank" rel="noopener noreferrer">
-                                <img src={linePng} alt="LINE" style={{ width: '28px', height: '28px' }} />
+                                <img src={linePng} alt="LINE" style={iconStyle} />
                             </Nav.Link>
                         </div>
                     </Col>
