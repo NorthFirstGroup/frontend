@@ -4,6 +4,7 @@ import { Category, getCategories } from '../api/category';
 import TopBannerActivities from '../components/Home/Banner';
 import HotTopicActivitiesSection from '../components/Home/HotTopicActivitiesSection';
 import IconWrapper from '../components/IconWrapper';
+import { useActivityFilterNavigation } from '../utils/navigationUtils';
 
 const Home: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);
@@ -14,6 +15,8 @@ const Home: React.FC = () => {
             setCategories(results);
         })();
     }, []);
+
+    const navigateToActivityListWithFilters = useActivityFilterNavigation();
 
     return (
         <div className="home-page">
@@ -27,15 +30,13 @@ const Home: React.FC = () => {
                                 <div
                                     className="category-icon-wrapper p-2 rounded-3 d-flex flex-column align-items-center justify-content-center"
                                     style={{ minHeight: '80px', cursor: 'pointer' }}
+                                    onClick={() => navigateToActivityListWithFilters({ category: category.name })}
                                 >
                                     <IconWrapper size={72} bgColor="#F6F6F6">
                                         {' '}
                                         {/* Now IconWrapper handles the background and centering */}
                                         <img src={category.media} alt="icon" style={{ width: 48, height: 48 }} />
                                     </IconWrapper>
-                                    {/* 這裡可以放置 Icon component */}
-                                    {/*<i className="bi bi-star-fill fs-4 text-warning"></i>{' '} */}
-                                    {/* 範例：使用 Bootstrap Icons */}
                                     <small className="mt-1">{category.name}</small>
                                 </div>
                             </Col>

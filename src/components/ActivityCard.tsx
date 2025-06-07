@@ -1,6 +1,7 @@
 // src/components/ActivityCard.tsx
 import React from 'react';
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; // <<< 導入 useNavigate
 import { FrontpageActivity } from '../types/home';
 import './ActivityCard.css';
 
@@ -11,6 +12,8 @@ interface ActivityCardProps {
 }
 
 const ActivityCard: React.FC<ActivityCardProps> = ({ activity, hasBorder = false, borderColor = '#E0E0E0' }) => {
+    const navigate = useNavigate(); // <<< 初始化 useNavigate hook
+
     const getRemainingTime = (saleStartDate: string) => {
         const now = new Date();
         const saleStart = new Date(saleStartDate);
@@ -61,13 +64,20 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity, hasBorder = false
     const isComingSoon = activity.sales_start_time && new Date(activity.sales_start_time) > new Date();
 
     const cardWrapperStyle: React.CSSProperties = {
-        border: hasBorder ? `1px solid ${borderColor}` : 'none'
+        border: hasBorder ? `1px solid ${borderColor}` : 'none',
+        cursor: 'pointer'
         // 可以選擇性地移除 shadow-sm 或在有邊框時移除它
         // boxShadow: hasBorder ? 'none' : '0 .125rem .25rem rgba(0,0,0,.075)',
     };
 
+    const handleCardClick = () => {
+        // 導航到 /Activity/{activity.id} 路徑
+        console.log('點擊 ActivityCard，導航至:', `/activity/${activity.id}`); // 方便調試
+        navigate(`/activity/${activity.id}`);
+    };
+
     return (
-        <Card className="card-wrapper shadow-sm" style={cardWrapperStyle}>
+        <Card className="card-wrapper shadow-sm" style={cardWrapperStyle} onClick={handleCardClick}>
             <div className="card-image-container">
                 <img className="card-image" src={activity.cover_image} alt={activity.name} />
                 {/* Apply overlay badge only when it's coming soon */}

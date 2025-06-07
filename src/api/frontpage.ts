@@ -22,7 +22,6 @@ export const getTopBannerActivities = async (): Promise<ApiResponse<BannerSlide[
 
 export const getHotTopicActivities = async (): Promise<ApiResponse<FrontpageActivity[]>> => {
     const res = await publicApiClient.get<ApiResponse<FrontpageActivity[]>>('/v1/frontpage/hot-topics');
-    console.log(res.data.data);
     const parsed = GetFrontpageResponseData.safeParse(res.data.data);
     if (!parsed.success) {
         console.error('GET - /v1/frontpage/hot-topics 驗證錯誤', parsed.error.format());

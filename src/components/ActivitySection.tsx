@@ -1,6 +1,7 @@
 // src/components/ActivitySection.tsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import { useActivityFilterNavigation } from '../utils/navigationUtils'; // Adjust path as needed
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import ActivityCard from './ActivityCard';
 import IconWrapper from './IconWrapper';
@@ -25,7 +26,8 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
     cardsPerRow = 3,
     categoryKeyword
 }) => {
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    // const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigateToActivityListWithFilters = useActivityFilterNavigation();
 
     if (activities.length === 0) {
         return null; // 如果沒有活動，則不顯示此區塊
@@ -40,13 +42,14 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
     const hasMore = activities.length > initialCardsToShow;
 
     const handleViewMoreClick = () => {
-        if (categoryKeyword) {
-            navigate(`/activity?keyword=${encodeURIComponent(categoryKeyword)}`);
-        } else {
-            // Fallback or a default behavior if no categoryKeyword is provided
-            // For example, navigate to a general activity listing page
-            navigate('/activity');
-        }
+        // if (categoryKeyword) {
+        //     navigate(`/activity?keyword=${encodeURIComponent(categoryKeyword)}`);
+        // } else {
+        //     // Fallback or a default behavior if no categoryKeyword is provided
+        //     // For example, navigate to a general activity listing page
+        //     navigate('/activity');
+        // }
+        navigateToActivityListWithFilters({ keyword: categoryKeyword || '' });
     };
 
     const renderTitle = () => {

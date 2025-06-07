@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Carousel, Container } from 'react-bootstrap'; // 引入 Carousel
+import { useNavigate } from 'react-router-dom'; // 引入 useNavigate
 import { BannerSlide } from '../../types/home';
 import { getTopBannerActivities } from '../../api/frontpage';
 
@@ -9,6 +10,7 @@ const TopBannerActivities: React.FC = () => {
     const [slides, setSlides] = useState<BannerSlide[]>([]);
     const [loading, setLoading] = useState<boolean>(true); // Add loading state
     const [error, setError] = useState<string | null>(null); // Add error state
+    const navigate = useNavigate(); // 初始化 useNavigate hook
 
     useEffect(() => {
         const fetchTopBannerActivities = async () => {
@@ -35,6 +37,12 @@ const TopBannerActivities: React.FC = () => {
         return <div className="text-danger">Error: {error}</div>; // Display error message
     }
 
+    const handleBannerClick = (activityId: number) => {
+        const targetPath = `/activity/${activityId}`;
+        console.log('點擊 Banner，導航至:', targetPath); // 方便調試
+        navigate(targetPath);
+    };
+
     // You can customize the layout here if "popular" section needs a different one
     // For now, it reuses the generic ActivitySection
     return (
@@ -47,7 +55,8 @@ const TopBannerActivities: React.FC = () => {
                                 className="d-block w-100"
                                 src={slide.cover_image}
                                 alt={slide.name}
-                                style={{ maxHeight: '450px', objectFit: 'cover' }} // 控制圖片高度
+                                style={{ maxHeight: '450px', objectFit: 'cover', cursor: 'pointer' }} // 控制圖片高度
+                                onClick={() => handleBannerClick(slide.id)}
                             />
                             <Carousel.Caption className="text-start">
                                 {/* <a href={slide.link || '#'} style={{ textDecoration: 'none', color: 'inherit' }}>
