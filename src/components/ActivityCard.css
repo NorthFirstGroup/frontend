@@ -1,0 +1,159 @@
+/* ActivityCard.css */
+
+/* card / product */
+.card-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    isolation: isolate;
+
+    width: 100%;
+    min-width: 320px;
+    height: 397px;
+    /* flex, order, flex-grow from "Inside auto layout" */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+/* event (image container) */
+.card-image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+
+    width: 100%; /* Use 100% to fill parent width */
+    height: 277px;
+
+    border-radius: 24px;
+    overflow: hidden; /* Ensure rounded corners clip content */
+    position: relative; /* For absolute positioning of overlay badge */
+
+    /* flex, order, align-self, flex-grow, z-index from "Inside auto layout" */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 0;
+}
+
+/* image */
+.card-image {
+    width: 100%; /* Fill container */
+    height: 100%; /* Fill container */
+    object-fit: cover; /* Maintain aspect ratio and cover the area */
+    border-radius: 24px; /* Apply border-radius directly if image is the only content */
+    /* flex, order, flex-grow from "Inside auto layout" */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+/* event-info */
+.card-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 0px;
+    gap: 8px;
+
+    width: 100%; /* Fill parent width */
+    height: 120px; /* Fixed height for info section */
+    /* flex, order, align-self, flex-grow, z-index from "Inside auto layout" */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 1;
+}
+
+/* badge */
+.card-badge {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 8px;
+
+    width: auto;
+    min-width: 56px;
+    height: 32px;
+
+    background: #f6f6f6; /* Gray/50 */
+    border-radius: 1000px;
+    white-space: nowrap; /* Prevent badge text from wrapping */
+    /* flex, order, flex-grow from "Inside auto layout" */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+/* title */
+.card-title {
+    width: 100%; /* Fill parent width */
+    /* height: 24px; /* Line height will control this with text wrapping */
+    color: #121212; /* Gray/950 */
+    /* flex, order, align-self, flex-grow from "Inside auto layout" */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    margin-top: 0; /* Override default h5 margin */
+    margin-bottom: 0; /* Override default h5 margin */
+    /* --- 新增的文字截斷樣式 --- */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    overflow: hidden; /* Hide any overflowing content */
+    text-overflow: ellipsis; /* Show an ellipsis (...) for hidden content */
+}
+
+/* date */
+.card-date {
+    width: 100%; /* Fill parent width */
+    /* height: 24px; /* Line height will control this */
+    font-family: 'Noto Sans TC', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%; /* identical to box height, or 24px */
+    letter-spacing: 0.014em;
+    color: #4f4f4f; /* Gray/700 */
+    /* flex, order, align-self, flex-grow from "Inside auto layout" */
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+    margin-bottom: 0; /* Override default p margin */
+}
+
+/* overlay badge (for "開賣倒數中") */
+.card-overlay-badge {
+    display: none; /* Keep display: none as per your spec, or change to flex/block when visible */
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 8px;
+    position: absolute; /* Position relative to .card-image-container */
+    right: 8px;
+    top: 8px;
+    background: linear-gradient(145.98deg, rgba(229, 84, 11, 0.8) 2.61%, rgba(204, 59, 2, 0.8) 97.76%);
+    border-radius: 1000px;
+    width: auto; /* Let content define width */
+    min-width: 56px;
+    height: 32px;
+    color: white; /* Text color for contrast */
+    font-family: 'Noto Sans TC', sans-serif; /* Apply font styles */
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 120%;
+    /* flex, order, flex-grow, z-index from "Inside auto layout" */
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+    z-index: 2;
+    white-space: nowrap; /* Prevent text wrapping */
+}
