@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom'; // <<< 導入 useNavigate
-import { FrontpageActivity } from '../types/home';
+import { FrontpageActivity } from '../../types/home';
 import './ActivityCard.css';
 
 interface ActivityCardProps {
@@ -10,38 +10,20 @@ interface ActivityCardProps {
     hasBorder?: boolean;
     borderColor?: string;
     hasShadow?: boolean;
+    showRemainingSeats?: boolean;
 }
 
 const ActivityCard: React.FC<ActivityCardProps> = ({
     activity,
     hasBorder = false,
     borderColor = '#E0E0E0',
-    hasShadow = true
+    hasShadow = true,
+    showRemainingSeats = false
 }) => {
     const navigate = useNavigate(); // <<< 初始化 useNavigate hook
 
-    const getRemainingTime = (saleStartDate: string) => {
-        const now = new Date();
-        const saleStart = new Date(saleStartDate);
-        const diff = saleStart.getTime() - now.getTime(); // 毫秒差
-
-        if (diff <= 0) return '已開賣';
-
-        const seconds = Math.floor((diff / 1000) % 60);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-        let countdownString = '';
-        if (days > 0) countdownString += `${days}天`;
-        if (hours > 0) countdownString += `${hours}小時`;
-        if (minutes > 0) countdownString += `${minutes}分`;
-        // 只有在天、小時、分鐘都為0時才顯示秒，避免過於精確
-        if (seconds > 0 && days === 0 && hours === 0 && minutes === 0) countdownString += `${seconds}秒`;
-        if (!countdownString) return '即將開賣';
-
-        return countdownString;
-    };
+    // 隨機生成剩餘席位數（1 到 30）- test only
+    const remainingSeats = showRemainingSeats ? Math.floor(Math.random() * 30) + 1 : 0;
 
     const formatActivityDate = (startDate: string | undefined, endDate: string | undefined): string => {
         if (!startDate) return '';
@@ -67,8 +49,6 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
         return startDateString;
     };
 
-    const isComingSoon = activity.sales_start_time && new Date(activity.sales_start_time) > new Date();
-
     const cardWrapperStyle: React.CSSProperties = {
         border: hasBorder ? `1px solid ${borderColor}` : 'none',
         cursor: 'pointer'
@@ -91,10 +71,18 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             <div className="card-image-container">
                 <img className="card-image" src={activity.cover_image} alt={activity.name} />
                 {/* Apply overlay badge only when it's coming soon */}
-                {isComingSoon && (
-                    <div className="card-overlay-badge" style={{ display: 'flex' }}>
-                        開賣倒數：{getRemainingTime(activity.sales_start_time!.toString())}
-                    </div>
+                {showRemainingSeats && remainingSeats > 0 && (
+                    <span
+                        className="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1 rounded-pill"
+                        style={{
+                            fontSize: '0.85em',
+                            fontWeight: 'bold',
+                            borderRadius: '0.25rem',
+                            zIndex: 10
+                        }}
+                    >
+                        剩 {remainingSeats} 席
+                    </span>
                 )}
             </div>
             <div className="card-info">

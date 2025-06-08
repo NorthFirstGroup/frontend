@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap'; // 引入 React-Bootstrap 組件
 import { Category, getCategories } from '../api/category';
-import TopBannerActivities from '../components/Home/Banner';
-import HotTopicActivitiesSection from '../components/Home/HotTopicActivitiesSection';
+const TopBannerActivities = React.lazy(() => import('../components/Home/Banner'));
+const HotTopicActivitiesSection = React.lazy(() => import('../components/Home/HotTopicActivitiesSection'));
+const SellingOutActivitiesSection = React.lazy(() => import('../components/Home/SellingOutActivitySection'));
+const CountdownActivitiesSection = React.lazy(() => import('../components/Home/CountdownActivitiesSection'));
 import IconWrapper from '../components/IconWrapper';
 import { useActivityFilterNavigation } from '../utils/navigationUtils';
 
@@ -21,7 +23,10 @@ const Home: React.FC = () => {
     return (
         <div className="home-page">
             <main>
-                <TopBannerActivities />
+                <Suspense fallback={<div>載入 TopBannerActivities 中...</div>}>
+                    <TopBannerActivities />
+                </Suspense>
+
                 {/* 活動分類 Icons */}
                 <Container className="my-5">
                     <Row className="justify-content-center g-3">
@@ -44,11 +49,19 @@ const Home: React.FC = () => {
                     </Row>
                 </Container>
 
-                <HotTopicActivitiesSection />
+                <Suspense fallback={<div>載入 HotTopicActivitiesSection 中...</div>}>
+                    <HotTopicActivitiesSection />
+                </Suspense>
+
+                <Suspense fallback={<div>載入 SellingOutActivitiesSection 中...</div>}>
+                    <SellingOutActivitiesSection />
+                </Suspense>
+
+                <Suspense fallback={<div>載入 CountdownActivitiesSection 中...</div>}>
+                    <CountdownActivitiesSection />
+                </Suspense>
                 {/*
                 <ActivitySection title="發燒主題" activities={trendingActivities} />
-                <ActivitySection title="即將完售" activities={sellingOutActivities} />
-                <ActivitySection title="開賣倒數中" activities={countdownActivities} />
                 */}
             </main>
         </div>
