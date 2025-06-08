@@ -9,9 +9,15 @@ interface ActivityCardProps {
     activity: FrontpageActivity;
     hasBorder?: boolean;
     borderColor?: string;
+    hasShadow?: boolean;
 }
 
-const ActivityCard: React.FC<ActivityCardProps> = ({ activity, hasBorder = false, borderColor = '#E0E0E0' }) => {
+const ActivityCard: React.FC<ActivityCardProps> = ({
+    activity,
+    hasBorder = false,
+    borderColor = '#E0E0E0',
+    hasShadow = true
+}) => {
     const navigate = useNavigate(); // <<< 初始化 useNavigate hook
 
     const getRemainingTime = (saleStartDate: string) => {
@@ -77,7 +83,11 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity, hasBorder = false
     };
 
     return (
-        <Card className="card-wrapper shadow-sm" style={cardWrapperStyle} onClick={handleCardClick}>
+        <Card
+            className={`card-wrapper ${hasShadow ? 'shadow-sm' : ''}`}
+            style={cardWrapperStyle}
+            onClick={handleCardClick}
+        >
             <div className="card-image-container">
                 <img className="card-image" src={activity.cover_image} alt={activity.name} />
                 {/* Apply overlay badge only when it's coming soon */}
