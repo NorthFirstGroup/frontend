@@ -12,7 +12,7 @@ export interface Order {
     eventDate: Date;
     location: string;
     organizer: string;
-    status?: string; // TODO: change to not nullable
+    status: string;
     ticketType: string;
     ticketCount: number;
     totalPrice: number;

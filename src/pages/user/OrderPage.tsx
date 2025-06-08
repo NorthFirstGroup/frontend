@@ -53,6 +53,9 @@ const OrderPage = () => {
                             <strong>實付金額</strong>：
                             <span className="text-danger fw-bold">NT$ {order.totalPrice}</span>
                         </div>
+                        <div>
+                            <strong>付款狀態</strong>：{order.status}
+                        </div>
                     </Col>
                     <Col xs={12} md={6}>
                         <div>
