@@ -4,6 +4,7 @@ import Register from '@pages/Register';
 import Profile from '@pages/user/Profile';
 import Point from '@pages/user/Point';
 import MyOrders from '@pages/user/MyOrders';
+import OrderPage from '@pages/user/OrderPage';
 import OrganizerApplyForm from '@pages/organizer/Apply';
 import ActivityForm from '@pages/organizer/Activity';
 import ValidateEntry from '@pages/organizer/ValidateEntry';
@@ -27,6 +28,11 @@ export const routeConfigs = [
         path: '/user/orders',
         element: <MyOrders />,
         roles: ['USER', 'ORGANIZER'] //我的訂單
+    },
+    {
+        path: '/user/orders/:orderNumber',
+        element: <OrderPage />,
+        roles: ['USER', 'ORGANIZER'] //單一訂單
     },
     {
         path: '/organizer/apply',
