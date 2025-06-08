@@ -1,0 +1,17 @@
+@import '../abstract/_mixins.scss';
+
+/* 應用 mixin 到你的按鈕類別 */
+.button-text-icon-style.btn-link {
+    /* 增加 .btn-link 增加權重 */
+    @include button-text-icon(#454545); /* 使用指定顏色 */
+    padding: 0;
+    min-height: auto;
+    font-size: 1rem; // 確保文字大小與 '看更多' 搭配
+    font-weight: 400; // 調整字重
+}
+
+/* 確保標題容器有足夠的空間讓按鈕在右側 */
+.section-title-text {
+    /* 如果你的標題文字可能很長，確保它不會擠壓到按鈕 */
+    margin-right: auto; /* 讓標題文字自動佔據左側空間，將按鈕推到右邊 */
+}

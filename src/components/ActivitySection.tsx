@@ -3,9 +3,12 @@ import React from 'react';
 // import { useNavigate } from 'react-router-dom';
 import { useActivityFilterNavigation } from '../utils/navigationUtils'; // Adjust path as needed
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { FaArrowRight } from 'react-icons/fa';
 import ActivityCard from './ActivityCard';
 import IconWrapper from './IconWrapper';
 import { FrontpageActivity } from '../types/home';
+
+import './ActivitySection.scss';
 
 interface ActivitySectionProps {
     title: string;
@@ -87,30 +90,27 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
         <section className="activity-section my-5">
             <Container>
                 {renderTitle()}
-                {subtitle && (
-                    <p className="text-start fs-5 mb-4">{subtitle}</p>
-                    // You could also use: <p className="text-start lead mb-5">{subtitle}</p>
-                    // 'lead' makes the paragraph slightly larger and bolder. 'fs-4' is just font-size.
+                {(subtitle || hasMore) && (
+                    <div className="d-flex justify-content-between align-items-center mt-2">
+                        <p className="text-start fs-5 mb-4">{subtitle}</p>
+                        {hasMore && (
+                            <Button
+                                variant="link" // 使用 Bootstrap 的 link 變體來移除預設樣式
+                                onClick={handleViewMoreClick}
+                                className="button-text-icon-style"
+                            >
+                                看更多 <FaArrowRight className="icon-arrow" />
+                            </Button>
+                        )}
+                    </div>
                 )}
                 <Row xs={1} md={2} lg={cardsPerRow} className="g-4 justify-content-center">
                     {displayedActivities.map(activity => (
                         <Col key={activity.id} className="d-flex">
-                            <ActivityCard activity={activity} hasBorder={false} />
+                            <ActivityCard activity={activity} hasBorder={false} hasShadow={false} />
                         </Col>
                     ))}
                 </Row>
-
-                {hasMore && ( // Only show the button if there are more activities
-                    <div className="d-flex justify-content-center mt-4">
-                        <Button
-                            variant="outline-primary"
-                            onClick={handleViewMoreClick} // Use the new handler
-                            className="px-5 py-2"
-                        >
-                            看更多
-                        </Button>
-                    </div>
-                )}
             </Container>
         </section>
     );
