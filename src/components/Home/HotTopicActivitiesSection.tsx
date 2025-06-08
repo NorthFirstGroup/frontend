@@ -1,6 +1,6 @@
 // src/components/PopularActivitiesSection.tsx
 import React, { useState, useEffect } from 'react';
-import ActivitySection from '../ActivitySection';
+import ActivitySection from './ActivitySection';
 import { ApiResponse } from '../../types/ApiResponse';
 import { FrontpageActivity } from '../../types/home';
 import { getHotTopicActivities } from '../../api/frontpage';
@@ -29,18 +29,17 @@ const HotTopicActivitiesSection: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading popular activities...</div>; // Or a more sophisticated spinner
+        return <div>載入熱門推薦活動中...</div>; // Or a more sophisticated spinner
     }
 
     if (error) {
         return <div className="text-danger">Error: {error}</div>; // Display error message
     }
 
-    // You can customize the layout here if "popular" section needs a different one
-    // For now, it reuses the generic ActivitySection
-    {
-        /* 熱門推薦 section */
+    if (activities.length === 0) {
+        return null;
     }
+
     return (
         <ActivitySection
             title="熱門推薦"
@@ -49,7 +48,8 @@ const HotTopicActivitiesSection: React.FC = () => {
             iconSvg={FaThumbsUp}
             initialRows={2}
             cardsPerRow={3}
-            categoryKeyword="熱門" // Pass the keyword for this section
+            searchKeyword="熱門"
+            showRemainingSeats={false}
         />
     );
 };

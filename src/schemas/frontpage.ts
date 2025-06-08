@@ -21,9 +21,10 @@ export const GetFrontpageActivity = z.object({
     name: z.string(),
     cover_image: z.string(),
     category: GetActivityCategorySchema,
-    start_time: z.string().optional(),
-    end_time: z.string().optional(),
-    sales_start_time: z.string().optional()
+    start_time: z.string().datetime().optional(),
+    end_time: z.string().datetime().optional(),
+    sales_start_time: z.string().datetime().optional(),
+    capacity: z.number().optional()
 });
 
 export const GetFrontpageResponseData = z.object({

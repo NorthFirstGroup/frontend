@@ -1,0 +1,12 @@
+/* src/App.css 或您的自定義 CSS 檔案 */
+
+/* 確保 Card 內的圖片容器有定義高度，以便 object-fit: cover 正常工作 */
+/* 這是為了解決 flex-item 內部圖片高度問題 */
+.card-image-container {
+    overflow: hidden; /* 確保內容不會溢出圓角或固定尺寸 */
+}
+
+.countdown-card-title {
+    white-space: normal !important; /* 或 unset */
+    order: 0 !important; /* 或 order: unset !important; */
+}
