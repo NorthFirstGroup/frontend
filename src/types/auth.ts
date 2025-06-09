@@ -2,7 +2,7 @@ export interface User {
     email: string;
     nickname?: string;
     role?: string;
-    avatar?: string;
+    profile_url?: string;
     id?: string;
 }
 
@@ -13,4 +13,5 @@ export interface AuthContextType {
     token: string | null;
     login: (token: string, user: User) => void;
     logout: () => void;
+    updateUser: (updatedUserData: Partial<User>) => void;
 }

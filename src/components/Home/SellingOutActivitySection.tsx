@@ -1,0 +1,58 @@
+// src/components/SellingOutActivitiesSection.tsx
+
+import React, { useState, useEffect } from 'react';
+import ActivitySection from './ActivitySection';
+import { ApiResponse } from '../../types/ApiResponse';
+import { FrontpageActivity } from '../../types/home';
+import { getLowStockActivities } from '../../api/frontpage';
+import { BsLightningChargeFill } from 'react-icons/bs';
+
+const SellingOutActivitiesSection: React.FC = () => {
+    const [activities, setActivities] = useState<FrontpageActivity[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchLowStockActivities = async () => {
+            try {
+                const response: ApiResponse<FrontpageActivity[]> = await getLowStockActivities();
+                if (response.data) {
+                    setActivities(response.data);
+                }
+            } catch (err) {
+                console.error('Error fetching selling out activities:', err);
+                setError('Failed to load selling out activities.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchLowStockActivities();
+    }, []);
+
+    if (loading) {
+        return <div>載入即將完售活動中...</div>;
+    }
+
+    if (error) {
+        return <div className="text-danger">錯誤：{error}</div>;
+    }
+
+    if (activities.length === 0) {
+        return null;
+    }
+
+    return (
+        <ActivitySection
+            title="即將完售"
+            subtitle="剩下不多啦！這些活動快要賣光，手刀搶票別猶豫！"
+            activities={activities}
+            iconSvg={BsLightningChargeFill}
+            initialRows={2}
+            cardsPerRow={3}
+            searchKeyword="即將完售" // fix later
+            showRemainingSeats={true}
+        />
+    );
+};
+
+export default SellingOutActivitiesSection;

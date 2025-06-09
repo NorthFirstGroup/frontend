@@ -92,7 +92,8 @@ const Register: React.FC = () => {
                     email,
                     nickname: name,
                     role: decodedData?.role || 'USER',
-                    id: decodedData?.id
+                    id: decodedData?.id,
+                    profile_url: ''
                 });
             }
         } catch (error: unknown) {

@@ -101,12 +101,49 @@
 }
 
 // Content Types Mixins (這些是你按鈕佈局特有的，保留)
-@mixin button-icon-text() {
+@mixin button-icon-text($text-color: $primary-500) {
     flex-direction: row;
+    color: $text-color;
 }
-@mixin button-text-icon() {
-    flex-direction: row-reverse;
+@mixin button-text-icon($text-color: $primary-500) {
+    flex-direction: row; // 這是標準的文字在左，圖標在右
+    color: $text-color;
+    padding: 0; // 移除 button-base 帶來的 padding
+    min-height: auto; // 移除 button-base 帶來的最小高度
+    font-size: 1rem; // 確保文字大小
+    font-weight: 400; // 調整字重
+    background: transparent; // 確保背景透明
+    border: none; // 確保沒有邊框
+    text-decoration: none; // 確保沒有下劃線
+
+    &:hover {
+        text-decoration: underline;
+        // Using Sass's darken function is why we need a preprocessor like Sass
+        color: darken($text-color, 10%);
+    }
+
+    &:focus,
+    &:focus-visible {
+        outline: 0; // 移除預設的 outline，使用 box-shadow
+        box-shadow: 0 0 0 0.25rem rgba($text-color, 0.25); // 25% 透明度
+        // box-shadow: var(--bs-focus-ring-shadow); // 如果之前有定義 CSS 變數
+        // box-shadow: 0 0 0 $focus-ring-width rgba($text-color, $focus-ring-opacity);
+    }
+
+    &:active {
+        color: darken($text-color, 20%) !important; // 點擊時顏色再深一點
+        // box-shadow: 0 0 0 0.25rem rgba($text-color, 0.25);
+        text-decoration: underline !important; // 點擊時也顯示下劃線
+    }
+
+    .icon-arrow {
+        // 為箭頭圖標設定間距
+        margin-left: 5px;
+        vertical-align: middle;
+        font-size: 0.9em;
+    }
 }
+
 @mixin button-icon-only() {
     padding: 0; // 覆寫 Bootstrap 的 padding，確保 icon-only 按鈕是正方形
     width: auto; // 確保它能適應內容寬度
@@ -117,6 +154,28 @@
     // 如果需要特定尺寸，可以再定義一個 $button-icon-only-size 變數，然後應用 width/height
     // 例如：width: $button-icon-only-size; height: $button-icon-only-size;
 }
-@mixin button-text-only() {
-    /* 如果沒有特殊樣式，可留空 */
+
+@mixin button-text-only($text-color: $primary-500) {
+    /* <<< HERE: Add ($color: #007bff) */
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: $text-color;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+        // Using Sass's darken function is why we need a preprocessor like Sass
+        color: darken($text-color, 10%);
+    }
+
+    .icon-arrow {
+        margin-left: 5px;
+        vertical-align: middle;
+        font-size: 0.9em;
+    }
 }

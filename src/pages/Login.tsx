@@ -46,7 +46,8 @@ const Login: React.FC = () => {
                     email,
                     nickname: response.data.user.name,
                     role: decodedData?.role || 'USER',
-                    id: decodedData?.id
+                    id: decodedData?.id,
+                    profile_url: response.data.user?.profile_url
                 });
             }
         } catch (error: unknown) {

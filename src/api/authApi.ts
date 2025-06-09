@@ -7,6 +7,7 @@ export interface LogInAndUpResponseData {
     user: {
         name: string;
         role: string;
+        profile_url?: string;
     };
 }
 export const signIn = async (email: string, password: string): Promise<ApiResponse<LogInAndUpResponseData>> => {
