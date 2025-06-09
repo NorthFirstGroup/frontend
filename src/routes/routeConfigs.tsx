@@ -53,7 +53,7 @@ export const routeConfigs = [
     {
         path: '/search',
         element: <SearchPage />,
-        roles: ['USER', 'ORGANIZER']
+        roles: []
     }
     // {
     //     path: '/activity/:activityId',
