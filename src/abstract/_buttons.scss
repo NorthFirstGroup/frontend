@@ -69,7 +69,9 @@ $button-style-types: (
 .btn-primary {
     @include button-primary-filled();
     @include button-text-only();
-
+    color: #fff !important;
+    border-radius: 12px !important;
+    padding: 8px 16px !important;
     // *** 新增這裡，定義 .btn-primary 的 hover 效果 ***
     &:hover {
         @include custom-gradient($gradient-hover-start, $gradient-hover-end, 145.98deg);
