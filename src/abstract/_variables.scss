@@ -22,6 +22,7 @@ $primary-950: #461104;
 // 這會直接影響 Bootstrap 的 .btn-primary, .text-primary 等
 $primary: $primary-500;
 // @debug 'DEBUG1: My $primary is: #{$primary}';
+$primary-text: var(--bs-gray-950); // 使用 Bootstrap 的灰色950作為主要文字顏色
 
 $gray-50: #f6f6f6;
 $gray-100: #e7e7e7;
@@ -75,6 +76,7 @@ $theme-colors: map-merge(
             // <-- 這會讓 .text-primary 等使用您的 $primary-500
             'secondary': $gray-600,
             // 使用您定義的 $gray-600
+            'danger': #cc0202,
             'success': #198754,
             'error': #dc3545,
             'warning': #ffc107,
@@ -118,6 +120,9 @@ $theme-colors: map-merge(
 // @debug 'DEBUG2: My $primary is: #{$primary}';
 // --- 新增：將您自定義的 SCSS 變數輸出為 CSS Custom Properties ---
 :root {
+    --bs-white: #{map-get($theme-colors, 'white')};
+    --bs-primary: #{map-get($theme-colors, 'primary')};
+    --bs-danger: #{map-get($theme-colors, 'danger')};
     // 自定義字體家族 (如果 Bootstrap 沒有自動生成對應的 CSS 變數，或者您想直接控制)
     --gt-font-family-base: #{$font-family-base};
     --gt-font-family-roboto-mono: #{$font-family-roboto-mono};
@@ -225,4 +230,13 @@ $theme-colors: map-merge(
 .tooltip.bs-tooltip-start .tooltip-arrow::before {
     // 對應 left 放置
     border-left-color: var(--bs-gray-700); // 或使用 border-left-color
+}
+// 強制覆蓋 nav 顏色
+.nav-underline .nav-link {
+    color: var(--bs-gray-950) !important; // 使用灰色950
+    &.active,
+    &:hover,
+    &:focus {
+        border-bottom-color: $primary !important;
+    }
 }

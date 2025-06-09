@@ -9,7 +9,7 @@ import OrganizerApplyForm from '@pages/organizer/Apply';
 import ActivityForm from '@pages/organizer/Activity';
 import ValidateEntry from '@pages/organizer/ValidateEntry';
 import SearchPage from '@pages/searchEngine/SearchPage';
-// import ActivityPage from '@pages/activity/ActivityPage';
+import ActivityDetailPage from '@pages/activity/ActivityDetailPage';
 
 export const routeConfigs = [
     { path: '/', element: <Home />, roles: [] },
@@ -54,10 +54,10 @@ export const routeConfigs = [
         path: '/search',
         element: <SearchPage />,
         roles: []
+    },
+    {
+        path: '/activity/:activityId',
+        element: <ActivityDetailPage />,
+        roles: [] // 單一活動詳情
     }
-    // {
-    //     path: '/activity/:activityId',
-    //     element: <ActivityPage />,
-    //     roles: [] // 單一活動詳情
-    // }
 ];
