@@ -52,7 +52,7 @@ const ActivityDetailPage = () => {
     useEffect(() => {
         getActivityDetail();
         getActivityShowtime();
-    }, [getActivityDetail]);
+    }, [getActivityDetail, getActivityShowtime]);
 
     useEffect(() => {
         if (showTimesList) {
