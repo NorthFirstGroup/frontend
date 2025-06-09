@@ -79,7 +79,7 @@ const ActivityDetailPage = () => {
                         <Block className="mb-3">
                             <Row>
                                 <Col md={6}>
-                                    <DesktopImg src="https://goticket-bucket.s3.ap-northeast-1.amazonaws.com/public/images/05a89316-9e32-4f33-9fe6-264f21e58923.png" />
+                                    <DesktopImg src={activityDetail.coverImage} />
                                 </Col>
                                 <Col>
                                     <Stack>
