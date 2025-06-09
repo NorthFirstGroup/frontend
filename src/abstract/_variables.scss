@@ -230,6 +230,7 @@ $theme-colors: map-merge(
 .tooltip.bs-tooltip-start .tooltip-arrow::before {
     // 對應 left 放置
     border-left-color: var(--bs-gray-700); // 或使用 border-left-color
+}
 // 強制覆蓋 nav 顏色
 .nav-underline .nav-link {
     color: var(--bs-gray-950) !important; // 使用灰色950
