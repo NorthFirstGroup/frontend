@@ -24,7 +24,7 @@ export const GetFrontpageActivity = z.object({
     start_time: z.string().datetime().optional(),
     end_time: z.string().datetime().optional(),
     sales_start_time: z.string().datetime().optional(),
-    capacity: z.number().optional()
+    vacancy: z.number().nullable().optional()
 });
 
 export const GetFrontpageResponseData = z.object({

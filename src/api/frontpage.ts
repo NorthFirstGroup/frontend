@@ -33,7 +33,7 @@ export const getHotTopicActivities = async (): Promise<ApiResponse<FrontpageActi
 
     return {
         ...res.data,
-        data: parsed.data.results
+        data: parsed.data.results.filter(activity => activity.vacancy !== null)
     };
 };
 
