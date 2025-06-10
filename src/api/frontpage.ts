@@ -70,3 +70,20 @@ export const getCountdownActivities = async (): Promise<ApiResponse<FrontpageAct
         data: parsed.data.results
     };
 };
+
+export const getNewArrivalActivities = async (): Promise<ApiResponse<FrontpageActivity[]>> => {
+    const res = await publicApiClient.get<ApiResponse<FrontpageActivity[]>>('/v1/frontpage/new-arrivals');
+    const parsed = GetFrontpageResponseData.safeParse(res.data.data);
+    if (!parsed.success) {
+        console.error('GET - /v1/frontpage/new-arrivals 驗證錯誤', parsed.error.format());
+        return {
+            ...res.data, // Keep original status/message
+            data: []
+        };
+    }
+
+    return {
+        ...res.data,
+        data: parsed.data.results
+    };
+};

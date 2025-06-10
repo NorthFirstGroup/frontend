@@ -5,6 +5,7 @@ const TopBannerActivities = React.lazy(() => import('../components/Home/Banner')
 const HotTopicActivitiesSection = React.lazy(() => import('../components/Home/HotTopicActivitiesSection'));
 const SellingOutActivitiesSection = React.lazy(() => import('../components/Home/SellingOutActivitySection'));
 const CountdownActivitiesSection = React.lazy(() => import('../components/Home/CountdownActivitiesSection'));
+const NewActivitiesSection = React.lazy(() => import('../components/Home/NewActivitiesSection'));
 import IconWrapper from '../components/IconWrapper';
 import { useActivityFilterNavigation } from '../utils/navigationUtils';
 
@@ -51,6 +52,10 @@ const Home: React.FC = () => {
 
                 <Suspense fallback={<div>載入 HotTopicActivitiesSection 中...</div>}>
                     <HotTopicActivitiesSection />
+                </Suspense>
+
+                <Suspense fallback={<div>載入 SellingOutActivitiesSection 中...</div>}>
+                    <NewActivitiesSection />
                 </Suspense>
 
                 <Suspense fallback={<div>載入 SellingOutActivitiesSection 中...</div>}>
