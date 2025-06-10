@@ -2,6 +2,7 @@ import { apiClient } from './client';
 import { ApiResponse } from '../types/ApiResponse';
 
 export interface Seat {
+    id: string;
     status: string;
     seatNumber: string;
 }

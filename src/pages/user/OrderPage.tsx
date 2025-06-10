@@ -2,12 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { Order, getOrderByNumber } from '@api/order';
-
-// TODO:
-// 1. add order status
-// 2. add ticket status
-// 3. generate qrcode image with ticket id
-const qrcodeApi = 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=';
+import { QRCodeSVG } from 'qrcode.react';
 
 const OrderPage = () => {
     const [order, setOrder] = useState<Order>();
@@ -85,8 +80,7 @@ const OrderPage = () => {
                                 </div>
                             </div>
                             <div className="text-center">
-                                {/* TODO: replace ticket.seatNumber with ticket id */}
-                                <img src={qrcodeApi + ticket.seatNumber} alt="QRCode" width={100} height={100} />
+                                <QRCodeSVG value={ticket.id} size={100} />
                             </div>
                         </Card.Body>
                     </Card>
