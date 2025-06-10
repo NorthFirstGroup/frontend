@@ -54,8 +54,8 @@ const ActivityShowTimes = (props: ActivityShowtimeProps) => {
     const navigate = useNavigate();
     const { activityId } = useParams<{ activityId: string }>();
 
-    const handleOnBuyTicket = (seatId: string) => {
-        navigate(`/activity/${activityId}/${seatId}`);
+    const handleOnBuyTicket = (showTimeId: string) => {
+        navigate(`/seatmap/activity/${activityId}/${showTimeId}`);
     };
     return (
         <ContentWrapper>
@@ -80,7 +80,7 @@ const ActivityShowTimes = (props: ActivityShowtimeProps) => {
                                         <td>${price}</td>
                                         <ColoredTd vacancy={vacancy}>{vacancy ? `${vacancy} 席` : '完售'}</ColoredTd>
                                         <td className="text-end">
-                                            <Button variant="primary" onClick={() => handleOnBuyTicket(seat.id)}>
+                                            <Button variant="primary" onClick={() => handleOnBuyTicket(showTime.id)}>
                                                 系統配位
                                             </Button>
                                         </td>

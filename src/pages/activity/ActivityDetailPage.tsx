@@ -66,7 +66,7 @@ const ActivityDetailPage = () => {
             setStartTimeRange([TimeUtils.timeFormatter(early), TimeUtils.timeFormatter(late)]);
             setLocations(locations);
         }
-    }, [showTimesList]);
+    }, [showTimesList, getTimeRange]);
 
     useEffect(() => {
         // document.body.style.backgroundColor = '#FCFCFC'; // 背景顏色
