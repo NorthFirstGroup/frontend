@@ -17,7 +17,21 @@ const SellingOutActivitiesSection: React.FC = () => {
             try {
                 const response: ApiResponse<FrontpageActivity[]> = await getLowStockActivities();
                 if (response.data) {
-                    setActivities(response.data);
+                    // TODO: 目前 API 取得的資料可能會有重複的活動
+                    // setActivities(response.data);
+
+                    // TODO: 目前先手動移除重複資料，並用 activity.id 降幂排序
+                    //       等後端 API 修正後再移除這段程式碼
+                    const dataSet = response.data.reduce((acc: { [key: string]: FrontpageActivity }, activity) => {
+                        const id = activity.id;
+                        if (!acc[id]) {
+                            acc[id] = activity;
+                        }
+                        return acc;
+                    }, {});
+                    const result = Object.values(dataSet);
+                    const sortedResult = result.sort((a, b) => b.id - a.id);
+                    setActivities(sortedResult);
                 }
             } catch (err) {
                 console.error('Error fetching selling out activities:', err);

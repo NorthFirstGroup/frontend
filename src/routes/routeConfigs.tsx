@@ -8,7 +8,8 @@ import OrderPage from '@pages/user/OrderPage';
 import OrganizerApplyForm from '@pages/organizer/Apply';
 import ActivityForm from '@pages/organizer/Activity';
 import ValidateEntry from '@pages/organizer/ValidateEntry';
-// import ActivityPage from '@pages/activity/ActivityPage';
+import SearchPage from '@pages/searchEngine/SearchPage';
+import ActivityDetailPage from '@pages/activity/ActivityDetailPage';
 
 export const routeConfigs = [
     { path: '/', element: <Home />, roles: [] },
@@ -48,10 +49,15 @@ export const routeConfigs = [
         path: '/organizer/validate-entry',
         element: <ValidateEntry />,
         roles: ['ORGANIZER'] // 入場資格驗證
+    },
+    {
+        path: '/search',
+        element: <SearchPage />,
+        roles: []
+    },
+    {
+        path: '/activity/:activityId',
+        element: <ActivityDetailPage />,
+        roles: [] // 單一活動詳情
     }
-    // {
-    //     path: '/activity/:activityId',
-    //     element: <ActivityPage />,
-    //     roles: [] // 單一活動詳情
-    // }
 ];

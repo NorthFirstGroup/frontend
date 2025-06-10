@@ -2,6 +2,7 @@ import { apiClient } from './client';
 import { ApiResponse } from '../types/ApiResponse';
 
 export interface Seat {
+    id: string;
     status: string;
     seatNumber: string;
 }
@@ -12,7 +13,7 @@ export interface Order {
     eventDate: Date;
     location: string;
     organizer: string;
-    status?: string; // TODO: change to not nullable
+    status: string;
     ticketType: string;
     ticketCount: number;
     totalPrice: number;

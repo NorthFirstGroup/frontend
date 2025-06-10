@@ -32,6 +32,7 @@ const MyOrders = () => {
                                 訂單編號：
                                 <Link to={`/user/orders/${order.orderNumber}`}>{order.orderNumber}</Link>
                             </div>
+                            <div>訂單狀態：{order.status}</div>
                             <div>活動名稱：{order.eventName}</div>
                         </Col>
                     </Row>
