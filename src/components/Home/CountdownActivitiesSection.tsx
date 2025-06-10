@@ -17,14 +17,13 @@ const CountdownActivitiesSection: React.FC = () => {
             try {
                 const response: ApiResponse<FrontpageActivity[]> = await getCountdownActivities();
                 console.log(response.data);
-                if (response.data) {
-                    setActivities(response.data);
+                if (!response.message) {
+                    // 只篩選有 sales_start_time 且尚未開賣的活動
+                    const comingSoon = (response.data || []).filter(
+                        activity => activity.sales_start_time && new Date(activity.sales_start_time) > new Date()
+                    );
+                    setActivities(comingSoon);
                 }
-                // 只篩選有 sales_start_time 且尚未開賣的活動
-                const comingSoon = (response.data || []).filter(
-                    activity => activity.sales_start_time && new Date(activity.sales_start_time) > new Date()
-                );
-                setActivities(comingSoon);
             } catch (err) {
                 console.error('Error fetching countdown activities:', err);
                 setError('Failed to load countdown activities.');

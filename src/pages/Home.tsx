@@ -54,7 +54,7 @@ const Home: React.FC = () => {
                     <HotTopicActivitiesSection />
                 </Suspense>
 
-                <Suspense fallback={<div>載入 SellingOutActivitiesSection 中...</div>}>
+                <Suspense fallback={<div>載入 NewActivitiesSection 中...</div>}>
                     <NewActivitiesSection />
                 </Suspense>
 
@@ -65,9 +65,6 @@ const Home: React.FC = () => {
                 <Suspense fallback={<div>載入 CountdownActivitiesSection 中...</div>}>
                     <CountdownActivitiesSection />
                 </Suspense>
-                {/*
-                <ActivitySection title="發燒主題" activities={trendingActivities} />
-                */}
             </main>
         </div>
     );
