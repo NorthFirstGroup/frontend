@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './IconWrapper.css'; // Or adjust path to your global CSS file
 
 interface IconWrapperProps {
@@ -11,14 +11,21 @@ interface IconWrapperProps {
 
 const IconWrapper: React.FC<IconWrapperProps> = ({ children, onClick, className, size = 40, bgColor = '#FFEDD3' }) => {
     // Dynamically apply styles based on props
+    const [isHovered, setIsHovered] = useState(false);
     const wrapperStyles: React.CSSProperties = {
         width: `${size}px`,
         height: `${size}px`,
-        backgroundColor: bgColor
+        backgroundColor: isHovered ? '#ffb96d' : bgColor
     };
 
     return (
-        <div className={`icon-background-circle ${className || ''}`} onClick={onClick} style={wrapperStyles}>
+        <div
+            className={`icon-background-circle ${className || ''}`}
+            onClick={onClick}
+            style={wrapperStyles}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
             {children}
         </div>
     );

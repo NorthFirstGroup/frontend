@@ -196,6 +196,11 @@ $theme-colors: map-merge(
     color: var(--bs-gray-950) !important; /* 使用 !important 確保覆蓋性 */
 }
 
+.form-control:focus {
+    border-color: rgba(var(--bs-primary-rgb), 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
 .form-check-input:checked {
     background-color: var(--bs-primary); /* 強制使用您的 primary 顏色 */
     border-color: var(--bs-primary); /* 強制使用您的 primary 顏色 */
