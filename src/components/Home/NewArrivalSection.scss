@@ -1,0 +1,58 @@
+/* 隱藏滾動條 */
+.activity-carousel-container::-webkit-scrollbar {
+    display: none; /* 對於 Webkit 瀏覽器 (Chrome, Safari, Edge) */
+}
+
+.activity-carousel-container {
+    /* 確保內容在單行顯示並可水平滾動 */
+    display: flex;
+    flex-wrap: nowrap; /* 阻止換行 */
+    overflow-x: auto; /* 允許水平滾動 */
+    scroll-behavior: smooth; /* 平滑滾動效果 */
+
+    /* 為了箭頭定位，需要設置 position */
+    position: relative;
+
+    padding-right: 16px !important;
+}
+
+.activity-carousel-item {
+    // This will provide a consistent gap between cards
+    margin-right: 16px !important; // Adjust this value (e.g., 24px, 32px) for your desired gap
+    flex-shrink: 0; // Prevent items from shrinking, important for consistent width
+}
+
+/* 箭頭按鈕樣式 */
+.carousel-nav-button {
+    position: absolute;
+    top: 50%; /* 垂直居中 */
+    transform: translateY(-50%); /* 精確居中 */
+    background-color: rgba(var(--bs-primary-rgb), 1);
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10; /* 確保箭頭在卡片上方 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s;
+}
+
+.carousel-nav-button.left {
+    left: 0;
+    margin-left: -50px; /* 將按鈕部分推出容器，讓其居中顯示在邊緣 */
+}
+
+.carousel-nav-button.right {
+    right: 0;
+    margin-right: -50px; /* 將按鈕部分推出容器 */
+}
+
+/* 當按鈕被禁用時的樣式 */
+.carousel-nav-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
