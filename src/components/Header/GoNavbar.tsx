@@ -56,10 +56,7 @@ const Header = () => {
 
     const renderUserMenuItems = () => (
         <>
-            <div
-                className="d-flex align-items-center p-3"
-                style={{ cursor: 'default', borderBottom: '1px solid #e0e0e0' }}
-            >
+            <div className="d-flex align-items-center p-3" style={{ cursor: 'default' }}>
                 <Image
                     src={user?.profile_url || avatarPng}
                     alt="User Avatar"

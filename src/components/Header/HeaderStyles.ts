@@ -111,8 +111,8 @@ export const StyledNavDropdownItem = styled(NavDropdown.Item)`
     text-decoration: none;
 
     &:hover {
-        background-color: var(--gt-color-dropdown-item-hover-background, #e9ecef);
-        color: var(--gt-color-text-default, #121212);
+        /* background-color: var(--gt-color-dropdown-item-hover-background, #e9ecef); */
+        color: var(--gt-primary-700, #cc3b02);
         text-decoration: none;
     }
 
