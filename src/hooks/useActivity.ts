@@ -1,6 +1,17 @@
 import { useCallback, useState } from 'react';
 import activityAPI, { ActivityDetail, ActivityShowtimeResp } from '@api/activityAPI';
 
+const getTimeRange = (startTimes: number[]) => {
+    // 檢查輸入是否為有效陣列
+    if (!Array.isArray(startTimes) || startTimes.length === 0) {
+        return [];
+    }
+    // 找出最早和最晚的時間戳
+    const earliestTimestamp = Math.min(...startTimes);
+    const latestTimestamp = Math.max(...startTimes);
+    return [earliestTimestamp, latestTimestamp];
+};
+
 const useActivity = (activityId?: number | string) => {
     const [isLoading, setIsLoading] = useState(false);
     const [activityDetail, setActivityDetail] = useState<ActivityDetail | null>(null);
@@ -40,17 +51,6 @@ const useActivity = (activityId?: number | string) => {
         },
         [activityId]
     );
-
-    const getTimeRange = (startTimes: number[]) => {
-        // 檢查輸入是否為有效陣列
-        if (!Array.isArray(startTimes) || startTimes.length === 0) {
-            return [];
-        }
-        // 找出最早和最晚的時間戳
-        const earliestTimestamp = Math.min(...startTimes);
-        const latestTimestamp = Math.max(...startTimes);
-        return [earliestTimestamp, latestTimestamp];
-    };
 
     return {
         getActivityDetail,
