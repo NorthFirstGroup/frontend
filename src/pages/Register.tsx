@@ -126,7 +126,13 @@ const Register: React.FC = () => {
                     {errors.email && <Form.Text className="text-danger">{errors.email}</Form.Text>}
                 </Form.Group>
 
-                <UserNameInput value={name} onChange={handleInputChange} error={errors.name} />
+                <UserNameInput
+                    inputLabel="暱稱"
+                    inputName="name"
+                    value={name}
+                    onChange={handleInputChange}
+                    error={errors.name}
+                />
 
                 <PasswordFields onChange={handlePasswordChange} />
 

@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { Container, Button, Form } from 'react-bootstrap';
-
-interface OrganizerApplyData {
-    name: string;
-    ubn: string;
-    president: string;
-    phone: string;
-    address: string;
-}
+import { Container, Button, Form, Alert } from 'react-bootstrap';
+import { ApiResponse } from '../../types/ApiResponse';
+import { OrganizerApplyData, setOrganizerData } from '../../api/organizer';
+import UserNameInput from '../../components/UserNameInput';
+import PhoneNumberInput from '../../components/PhoneNumberInput';
 
 const OrganizerApplyForm: React.FC = () => {
+    //const [loading, setLoading] = useState<boolean>(false);
+    const [errors, setErrors] = useState({
+        name: '',
+        ubn: '',
+        president: '',
+        phone: '',
+        address: ''
+    });
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
     const [formData, setFormData] = useState<OrganizerApplyData>({
         name: '',
         ubn: '',
@@ -17,45 +23,145 @@ const OrganizerApplyForm: React.FC = () => {
         phone: '',
         address: ''
     });
+    const MAX_LENGTH = 50;
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // useEffect(() => {
+    //     const fetchOrganizerData = async () => {
+    //         setLoading(true);
+    //         setError(null);
+    //         try {
+    //             const response: ApiResponse<OrganizerApplyData> = await getOrganizerData();
+    //             if (response.data) setFormData(response.data);
+    //         } catch (err: unknown) {
+    //             setError(err instanceof Error ? err.message : '無法取得廠商資料');
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchOrganizerData();
+    // }, []);
+    const validateTraditionalChineseName = (name: string) => {
+        let errorMsg = '';
+
+        // 1. 必填檢查
+        if (!name || name.trim() === '') {
+            errorMsg = '單位名稱不能為空。';
+        }
+
+        // 2. 字數限制檢查
+        if (name.length > MAX_LENGTH) {
+            errorMsg += `\r\n單位名稱長度不能超過 ${MAX_LENGTH} 個字。`;
+        }
+
+        // 4. 特殊字元檢查 (可根據需求定義允許或不允許的字元)
+        // 允許中文、數字、英文字母，以及一些常見的標點符號如 - , . ()
+        const validCharsRegex = /^[\u4e00-\u9fa50-9a-zA-Z\s\-,.()]$/; // [\u4e00-\u9fa5] 是中文範圍
+        if (name.length > 0 && ![...name].every(char => validCharsRegex.test(char))) {
+            errorMsg += '\r\n單位名稱包含不允許的特殊字元。';
+        }
+
+        return errorMsg;
+    };
+
+    const validateTraditionalChineseAddress = (address: string) => {
+        let errorMsg = '';
+
+        // 1. 必填檢查
+        if (!address || address.trim() === '') {
+            errorMsg = '住址不能為空。';
+        }
+
+        // 2. 字數限制檢查
+        if (address.length > MAX_LENGTH) {
+            errorMsg += `\r\n住址長度不能超過 ${MAX_LENGTH} 個字。`;
+        }
+
+        // 3. 基礎格式檢查 (可根據需求增加更多判斷)
+        const commonAddressKeywords = ['路', '街', '段', '巷', '弄', '號', '樓', '室', '縣', '市', '區'];
+        const hasKeyword = commonAddressKeywords.some(keyword => address.includes(keyword));
+
+        if (address.length > 0 && !hasKeyword) {
+            errorMsg += '\r\n住址似乎缺少常見的地址資訊（例如：路、街、段、號等）。';
+        }
+
+        // 4. 特殊字元檢查 (可根據需求定義允許或不允許的字元)
+        // 允許中文、數字、英文字母，以及一些常見的標點符號如 - , . ()
+        const validCharsRegex = /^[\u4e00-\u9fa50-9a-zA-Z\s\-,.()號樓室棟層]$/; // [\u4e00-\u9fa5] 是中文範圍
+        if (address.length > 0 && ![...address].every(char => validCharsRegex.test(char))) {
+            errorMsg += '\r\n住址包含不允許的特殊字元。';
+        }
+
+        return errorMsg;
+    };
+
+    const validateField = (name: string, value: string) => {
+        let errorMsg = '';
+
+        if (name === 'president') {
+            if (value.length < 2 || value.length > 10) {
+                errorMsg = '負責人姓名需為 2-10 字，且不可包含特殊符號';
+            }
+        }
+
+        if (name === 'ubn') {
+            const phoneRegex = /^\d{8}$/;
+            if (!phoneRegex.test(value)) {
+                errorMsg = '統一編號為 8 位數字';
+            }
+        }
+
+        if (name === 'phone') {
+            const phoneRegex = /^09\d{8}$/;
+            if (!phoneRegex.test(value)) {
+                errorMsg = '聯絡電話需為 09 開頭的 10 位數字';
+            }
+        }
+        if (name === 'name') errorMsg = validateTraditionalChineseName(value);
+        if (name === 'address') errorMsg = validateTraditionalChineseAddress(value);
+
+        setErrors(prev => ({ ...prev, [name]: errorMsg }));
+        return errorMsg === '';
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setFormData(prevData => ({
             ...prevData,
             [name]: value
         }));
+        if (name === 'president' || name === 'ubn' || name === 'phone') {
+            validateField(name, value);
+        }
+    };
+
+    const isFormValid = () => {
+        return !errors.ubn && !errors.phone && !errors.president;
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        setSubmitError('');
+        setSubmitSuccess('');
         console.log('送出的資料:', formData);
 
         try {
-            const response = await fetch('/api/v1/organizer/apply', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                console.log('成功回傳:', responseData);
-                // 在這裡處理成功回傳的資訊，例如顯示成功訊息或導向其他頁面
+            const response: ApiResponse<null> = await setOrganizerData(formData);
+            if (response.status_code !== 2000) {
+                setSubmitError(`申請失敗: ${response.message}`);
             } else {
-                console.error('申請失敗:', response.status);
-                // 在這裡處理錯誤情況，例如顯示錯誤訊息
+                setSubmitSuccess('會員資料已更新');
             }
         } catch (error) {
             console.error('發生錯誤:', error);
-            // 處理網路錯誤或其他異常
         }
     };
 
     return (
         <Container className="mt-5" style={{ maxWidth: '600px' }}>
             <h3>廠商資料</h3>
+            {submitError && <Alert variant="danger">{submitError}</Alert>}
+            {submitSuccess && <Alert variant="success">{submitSuccess}</Alert>}
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="formName">
                     <Form.Label>單位名稱</Form.Label>
@@ -65,8 +171,10 @@ const OrganizerApplyForm: React.FC = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        maxLength={MAX_LENGTH}
                         required
                     />
+                    {errors.name && <Form.Text className="text-danger">{errors.name}</Form.Text>}
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formUbn">
@@ -77,49 +185,43 @@ const OrganizerApplyForm: React.FC = () => {
                         name="ubn"
                         value={formData.ubn}
                         onChange={handleChange}
+                        pattern="^\d{8}$"
                         required
                     />
+                    {errors.ubn && <Form.Text className="text-danger">{errors.ubn}</Form.Text>}
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formPresident">
-                    <Form.Label>負責人姓名</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="請輸入負責人姓名"
-                        name="president"
-                        value={formData.president}
-                        onChange={handleChange}
-                        required
-                    />
-                </Form.Group>
+                <UserNameInput
+                    inputLabel="負責人姓名"
+                    inputName="president"
+                    value={formData.president}
+                    onChange={handleChange}
+                    error={errors.president}
+                />
 
-                <Form.Group className="mb-3" controlId="formPhone">
-                    <Form.Label>聯絡電話</Form.Label>
-                    <Form.Control
-                        type="tel"
-                        placeholder="請輸入聯絡電話"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                    />
-                </Form.Group>
+                <PhoneNumberInput
+                    inputLabel="聯絡電話"
+                    inputName="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    error={errors.phone}
+                />
 
                 <Form.Group className="mb-3" controlId="formAddress">
                     <Form.Label>地址</Form.Label>
                     <Form.Control
-                        as="textarea"
-                        rows={3}
+                        type="text"
                         placeholder="請輸入地址"
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
+                        maxLength={MAX_LENGTH}
                         required
                     />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" disabled>
-                    送出申請(還沒好)
+                <Button variant="primary" type="submit" disabled={!isFormValid()}>
+                    送出申請
                 </Button>
             </Form>
         </Container>

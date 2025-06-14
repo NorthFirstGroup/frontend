@@ -242,9 +242,21 @@ const Profile: React.FC = () => {
                     <Form.Control type="email" value={email} readOnly plaintext disabled />
                 </Form.Group>
 
-                <UserNameInput value={formData.name} onChange={handleInputChange} error={errors.name} />
+                <UserNameInput
+                    inputLabel="暱稱"
+                    inputName="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    error={errors.name}
+                />
 
-                <PhoneNumberInput value={formData.phone_num} onChange={handleInputChange} error={errors.phone_num} />
+                <PhoneNumberInput
+                    inputLabel="手機號碼"
+                    inputName="phone_num"
+                    value={formData.phone_num}
+                    onChange={handleInputChange}
+                    error={errors.phone_num}
+                />
 
                 <Form.Group className="mb-3">
                     <Form.Label>出生年月日</Form.Label>
