@@ -1,64 +1,25 @@
+import { FrontpageActivity } from '@/types/home';
+import { getHotTopicActivities, getRecommendActivities } from '@api/frontpage';
 import { useState, useEffect, useCallback } from 'react';
 import { Row, Col } from 'react-bootstrap';
 
-type Activity = {
-    id: number;
-    title: string;
-    date: string;
-    location: string;
-    img: string;
-    tag: string;
-};
-
-type Recommend = {
-    id: number;
-    title: string;
-    date: string;
-    img: string;
-    tag: string;
-};
-
-// 假設你有 API 可以取得活動與推薦資料
-// import { getActivityList, getRecommendList } from '@api/activity';
-
-const mockData: Activity[] = [
-    {
-        id: 1,
-        title: '星空音樂會',
-        date: '2025/07/12',
-        location: '大安森林公園',
-        img: '../../../src/assets/searchPageMock/search01.svg',
-        tag: '音樂'
-    }
-    // ... 其他活動資料
-];
-
-const recommendData: Recommend[] = [
-    {
-        id: 1,
-        title: '表演 | 脫口秀',
-        date: '2025/03/22 - 2025/03/23',
-        img: '../../../src/assets/searchPageMock/search_side01.svg',
-        tag: '推薦'
-    }
-    // ... 其他推薦資料
-];
-
 const SearchPage = () => {
-    const [activities, setActivities] = useState<Activity[]>([]);
-    const [recommends, setRecommends] = useState<Recommend[]>([]);
+    const [activities, setActivities] = useState<FrontpageActivity[]>([]);
+    const [recommends, setRecommends] = useState<FrontpageActivity[]>([]);
 
     // 若有 API 請改用 API
     const fetchActivities = useCallback(async () => {
-        // const res = await getActivityList();
-        // setActivities(res.results);
-        setActivities(mockData);
+        const response = await getHotTopicActivities();
+        if (response.data) {
+            setActivities(response.data); // 正確做法
+        }
     }, []);
 
     const fetchRecommends = useCallback(async () => {
-        // const res = await getRecommendList();
-        // setRecommends(res.results);
-        setRecommends(recommendData);
+        const response = await getRecommendActivities();
+        if (response.data) {
+            setRecommends(response.data);
+        }
     }, []);
 
     useEffect(() => {
@@ -112,7 +73,7 @@ const SearchPage = () => {
                             <div key={item.id} className="list-group-item mb-3 rounded shadow-sm">
                                 <Row className="g-0 align-items-center">
                                     <Col md={4} style={{ paddingRight: 8 }}>
-                                        <img src={item.img} alt={item.title} className="img-fluid rounded" />
+                                        <img src={item.cover_image} alt={item.name} className="img-fluid rounded" />
                                     </Col>
                                     <Col md={7} style={{ paddingLeft: 8 }}>
                                         <span
@@ -124,10 +85,10 @@ const SearchPage = () => {
                                                 marginBottom: 12
                                             }}
                                         >
-                                            {item.tag}
+                                            {item.category}
                                         </span>
                                         <div className="fw-bold" style={{ marginBottom: 85 }}>
-                                            {item.title}
+                                            {item.name}
                                         </div>
                                         <div
                                             className="text-muted small"
@@ -135,9 +96,9 @@ const SearchPage = () => {
                                                 marginBottom: 8
                                             }}
                                         >
-                                            {item.date}
+                                            {item.start_time}
                                         </div>
-                                        <div className="text-muted small">{item.location}</div>
+                                        <div className="text-muted small">{item.vacancy}</div>
                                     </Col>
                                     <Col md={1} className="text-end">
                                         <button
@@ -154,9 +115,9 @@ const SearchPage = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="text-center mt-3">
+                    {/* <div className="text-center mt-3">
                         <button className="btn btn-outline-primary">看更多</button>
-                    </div>
+                    </div> */}
                 </Col>
                 {/* 右側推薦與歷史 */}
                 <Col lg={3}>
@@ -166,13 +127,17 @@ const SearchPage = () => {
                             <div key={item.id} className="card mb-2">
                                 <Row className="g-0 align-items-center">
                                     <Col xs={4} md={12}>
-                                        <img src={item.img} alt={item.title} className="img-fluid rounded-start" />
+                                        <img
+                                            src={item.cover_image}
+                                            alt={item.category}
+                                            className="img-fluid rounded-start"
+                                        />
                                     </Col>
                                     <Col xs={8} md={12}>
                                         <div className="card-body py-2">
-                                            <div className="small text-muted">{item.tag}</div>
-                                            <div className="fw-bold">{item.title}</div>
-                                            <div className="text-muted small">{item.date}</div>
+                                            <div className="small text-muted">{item.category}</div>
+                                            <div className="fw-bold">{item.name}</div>
+                                            <div className="text-muted small">{item.start_time}</div>
                                         </div>
                                     </Col>
                                 </Row>
