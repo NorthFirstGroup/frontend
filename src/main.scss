@@ -10,3 +10,7 @@
 @import './abstract/buttons';
 @import './utils/helpers';
 // @debug 'DEBUG3: My $primary is: #{$primary}';
+
+// react-date-range 日期選擇器樣式
+@import 'react-date-range/dist/styles.css'; // 主樣式
+@import 'react-date-range/dist/theme/default.css'; // 主題樣式
