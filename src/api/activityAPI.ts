@@ -45,6 +45,12 @@ const activityAPI = {
     getActivityShowtimeSeatMap: async (activityId: string, showtimeId: string) => {
         const response = await apiClient.get(`/v1/activity/${activityId}/showtime/${showtimeId}`);
         return transSnakeToCamel(response.data.data);
+    },
+    getActivitySearch: async (query: any) => {
+        const response = await apiClient.get(`/v1/activity/search`, {
+            params: query
+        });
+        return transSnakeToCamel(response.data.data);
     }
 };
 
