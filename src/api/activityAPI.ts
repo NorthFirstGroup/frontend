@@ -10,6 +10,11 @@ export type ActivityDetail = {
     information: string;
 };
 
+export interface ActivityResp {
+    totalCount: number;
+    results: ActivityDetail[];
+}
+
 export interface ActivityShowtimeResp {
     totalCount: number;
     results: ActivityShowtime[];
@@ -40,6 +45,29 @@ const activityAPI = {
     getActivityShowtimeSeatMap: async (activityId: string, showtimeId: string) => {
         const response = await apiClient.get(`/v1/activity/${activityId}/showtime/${showtimeId}`);
         return transSnakeToCamel(response.data.data);
+    }
+};
+
+export const getOrgActivityList = async (): Promise<ActivityDetail[]> => {
+    try {
+        const status = 2;
+        const limit = 9999;
+        const response = await apiClient.get(`/v1/organizer/activity?status=${status}&limit=${limit}`);
+        const activityResp = response.data.data as ActivityResp;
+        return transSnakeToCamel(activityResp.results);
+    } catch (error) {
+        console.error('Error fetching organizer activity list:', error);
+        return [];
+    }
+};
+
+export const getOrgShowtimeList = async (activityId: number): Promise<ActivityShowtime[]> => {
+    try {
+        const response = await apiClient.get(`/v1/organizer/activity/${activityId}/showtime`);
+        return transSnakeToCamel(response.data.data);
+    } catch (error) {
+        console.error('Error fetching organizer showtime list:', error);
+        return [];
     }
 };
 
