@@ -24,7 +24,7 @@ const Header = () => {
     const [showMobileSearchForm, setShowMobileSearchForm] = useState(false);
 
     const [searchTerm, setSearchTerm] = useState('');
-    const navigateToActivityListWithFilters = useActivityFilterNavigation();
+    const navigateToActivityListWithFilters = useActivityFilterNavigation('search');
 
     const handleLogout = () => {
         logout();
