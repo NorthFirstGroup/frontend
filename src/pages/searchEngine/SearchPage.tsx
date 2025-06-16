@@ -7,12 +7,13 @@ import activityAPI from '../../api/activityAPI';
 import { format } from 'date-fns';
 import { Area, getAvailAreas } from '../../api/availArea';
 import { Category, getCategories } from '../../api/category';
+import SearchFilter from '../../components/searchFilter';
 
 const SearchPage = () => {
     const [activities, setActivities] = useState<any[]>([]);
     const [recommends, setRecommends] = useState<FrontpageActivity[]>([]);
-    const [location, setLocation] = useState<string>(''); // 地區搜尋
-    const [categorie, setCategorie] = useState<string>(''); // 分類搜尋
+    const [location, setLocation] = useState<number[]>([]); // 輸入地區搜尋
+    const [categorie, setCategorie] = useState<string>(''); // 輸入分類搜尋
     const [dateRange, setDateRange] = useState([
         {
             startDate: new Date(),
@@ -23,12 +24,13 @@ const SearchPage = () => {
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false); // 控制日期選擇器顯示
     const [availAreas, setAvailAreas] = useState<Area[]>([]); // 可用地區清單
     const [categories, setCategories] = useState<Category[]>([]); // 可用分類清單
+    const [showLocationFilter, setLocationShowFilter] = useState(false); // 地區搜尋控制顯示
 
     const fetchSearchALL = async () => {
         let searchCondition = {
             keyword: '',
             categorie,
-            location,
+            location: location.join(','), // 轉成字串
             startDate: dateRange[0].startDate.toISOString(),
             endDate: dateRange[0].endDate.toISOString()
         };
@@ -81,7 +83,9 @@ const SearchPage = () => {
         fetchRecommends();
         fetchGetAvailAreas();
         fetchGetCategories();
-        const cleanup = handleClickOutside(datePickerRef, () => setIsDatePickerOpen(false));
+        const cleanup = handleClickOutside(datePickerRef, () => {
+            setIsDatePickerOpen(false);
+        });
         // 清理事件監聽器
         return cleanup;
     }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories]);
@@ -106,23 +110,28 @@ const SearchPage = () => {
             <div className="mb-3">
                 <Row className="g-2 align-items-center">
                     <Col md={4}>
-                        <select
-                            className="form-select"
-                            aria-label="Default select"
-                            value={location} // 綁定到 location 狀態
-                            onChange={e => {
-                                setLocation(e.target.value); // 更新 location 狀態
-                            }}
-                        >
-                            <option value="" disabled>
-                                請選擇地區
-                            </option>
-                            {availAreas.map(item => (
-                                <option key={item.id} value={item.id}>
-                                    {item.name}
-                                </option>
-                            ))}
-                        </select>
+                        <input
+                            className="form-control"
+                            placeholder="請選擇地區"
+                            value={
+                                location.length === 0
+                                    ? ''
+                                    : availAreas
+                                          .filter(a => location.includes(a.id))
+                                          .map(a => a.name)
+                                          .join('、')
+                            }
+                            readOnly
+                            onClick={() => setLocationShowFilter(true)}
+                            style={{ cursor: 'pointer', backgroundColor: '#fff' }}
+                        />
+                        {showLocationFilter && (
+                            <SearchFilter
+                                availAreas={availAreas}
+                                onChange={setLocation}
+                                onConfirm={() => setLocationShowFilter(false)}
+                            />
+                        )}{' '}
                     </Col>
                     <Col md={4}>
                         <select
