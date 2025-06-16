@@ -10,6 +10,8 @@ import ActivityForm from '@pages/organizer/Activity';
 import ValidateEntry from '@pages/organizer/ValidateEntry';
 import SearchPage from '@pages/searchEngine/SearchPage';
 import ActivityDetailPage from '@pages/activity/ActivityDetailPage';
+import SeatMap from '@pages/activity/SeatMap';
+import OrderPayment from '@pages/activity/OrderPayment';
 
 export const routeConfigs = [
     { path: '/', element: <Home />, roles: [] },
@@ -29,6 +31,16 @@ export const routeConfigs = [
         path: '/user/orders',
         element: <MyOrders />,
         roles: ['USER', 'ORGANIZER'] //我的訂單
+    },
+    {
+        path: '/seatmap/activity/:activityId/:showtimeId',
+        element: <SeatMap />,
+        roles: ['USER', 'ORGANIZER'] //購票
+    },
+    {
+        path: '/order/payment/:order_number',
+        element: <OrderPayment />,
+        roles: ['USER', 'ORGANIZER'] //購票支付
     },
     {
         path: '/user/orders/:orderNumber',

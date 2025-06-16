@@ -7,10 +7,24 @@ export interface Seat {
     seatNumber: string;
 }
 
+export interface OrderPayload {
+    activity_id: number;
+    showtime_id: string;
+    tickets: {
+        zone: string;
+        price: number;
+        quantity: number;
+    }[];
+}
+
+export interface OrderResponse {
+    order_number: number;
+}
+
 export interface Order {
     orderNumber: string;
     eventName: string;
-    eventDate: Date;
+    eventDate: string;
     location: string;
     organizer: string;
     status: string;
@@ -18,8 +32,10 @@ export interface Order {
     ticketCount: number;
     totalPrice: number;
     paymentMethod: string;
+    paymentStatus: string;
     coverImage?: string;
     seats: Seat[];
+    paymentFormUrl: string;
 }
 
 export interface Pagination {
@@ -55,6 +71,22 @@ export const getOrderList = async (page = 1, pageSize = 10) => {
         return data ? data : null;
     } catch (error) {
         console.error('Error fetching order list:', error);
+        return null;
+    }
+};
+
+export const postOrder = async (order: OrderPayload) => {
+    try {
+        const res = await apiClient.post<ApiResponse<OrderResponse>>(`v1/user/order`, order);
+        const data = res.data;
+        if (data.status_code !== 2000) {
+            console.error('POST - /v1/user/order 錯誤:', data.message);
+            return null;
+        }
+
+        return data.data;
+    } catch (error) {
+        console.error('postOrder Error:', error);
         return null;
     }
 };

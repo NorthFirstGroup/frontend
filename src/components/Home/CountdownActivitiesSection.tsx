@@ -10,7 +10,7 @@ import { FaClock } from 'react-icons/fa6';
 const CountdownActivitiesSection: React.FC = () => {
     const [activities, setActivities] = useState<FrontpageActivity[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    //const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchCountdownActivities = async () => {
@@ -26,7 +26,7 @@ const CountdownActivitiesSection: React.FC = () => {
                 }
             } catch (err) {
                 console.error('Error fetching countdown activities:', err);
-                setError('Failed to load countdown activities.');
+                //setError('Failed to load countdown activities.');
             } finally {
                 setLoading(false);
             }
@@ -38,14 +38,9 @@ const CountdownActivitiesSection: React.FC = () => {
         return <div>載入開賣倒數活動中...</div>;
     }
 
-    if (error) {
-        return <div className="text-danger">Error: {error}</div>;
-    }
-
-    // 如果沒有活動，則不顯示此區塊
-    if (activities.length === 0) {
-        return null;
-    }
+    // if (error) {
+    //     return <div className="text-danger">Error: {error}</div>;
+    // }
 
     return (
         <section className="activity-section my-5">
@@ -57,15 +52,20 @@ const CountdownActivitiesSection: React.FC = () => {
                     hasMore={false}
                     searchKeyword="開賣"
                 />
-                <Row xs={1} md={2} lg={2} className="g-4">
-                    {' '}
-                    {/* xs=1, md=2, lg=2 確保每排兩張卡片 */}
-                    {activities.map(activity => (
-                        <Col key={activity.id}>
-                            <CountdownActivityCard activity={activity} />
-                        </Col>
-                    ))}
-                </Row>
+
+                {activities.length !== 0 ? (
+                    <Row xs={1} md={2} lg={2} className="g-4">
+                        {' '}
+                        {/* xs=1, md=2, lg=2 確保每排兩張卡片 */}
+                        {activities.map(activity => (
+                            <Col key={activity.id}>
+                                <CountdownActivityCard activity={activity} />
+                            </Col>
+                        ))}
+                    </Row>
+                ) : (
+                    <p>查無此類活動</p>
+                )}
             </Container>
         </section>
     );

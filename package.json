@@ -1,7 +1,7 @@
 {
     "name": "go-ticket-frontend",
     "private": true,
-    "version": "1.0.2",
+    "version": "1.0.4",
     "type": "module",
     "scripts": {
         "clean": "rimraf dist",
@@ -27,16 +27,20 @@
         "axios": "^1.9.0",
         "bootstrap": "^5.3.6",
         "classnames": "^2.5.1",
+        "date-fns": "^4.1.0",
         "dayjs": "^1.11.13",
         "jwt-decode": "^4.0.0",
         "qrcode.react": "^4.2.0",
         "react": "^19.0.0",
         "react-bootstrap": "^2.10.9",
+        "react-date-range": "^2.0.1",
         "react-datepicker": "^8.3.0",
         "react-dom": "^19.0.0",
         "react-hook-form": "^7.56.3",
+        "react-hot-toast": "^2.5.2",
         "react-icons": "^5.5.0",
         "react-router-dom": "^7.5.3",
+        "react-zxing": "^2.1.0",
         "styled-components": "^6.1.18",
         "uuid": "^11.1.0",
         "zod": "^3.25.28"
@@ -44,6 +48,7 @@
     "devDependencies": {
         "@eslint/js": "^9.26.0",
         "@types/react": "^19.1.2",
+        "@types/react-date-range": "^1.4.10",
         "@types/react-dom": "^19.1.2",
         "@typescript-eslint/eslint-plugin": "^8.32.0",
         "@typescript-eslint/parser": "^8.32.0",
