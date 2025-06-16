@@ -1,14 +1,15 @@
 import { FrontpageActivity } from '@/types/home';
 import { getRecommendActivities } from '@api/frontpage';
+import { useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { DateRange } from 'react-date-range';
-import activityAPI from '../../api/activityAPI';
+import activityAPI from '@api/activityAPI';
 import { format } from 'date-fns';
-import { Area, getAvailAreas } from '../../api/availArea';
-import { Category, getCategories } from '../../api/category';
-import SearchFilter from '../../components/searchFilter';
-import CategoryFilter from '../../components/CategoryFilter';
+import { Area, getAvailAreas } from '@api/availArea';
+import { Category, getCategories } from '@api/category';
+import SearchFilter from '@components/searchFilter';
+import CategoryFilter from '@components/categoryFilter';
 
 const SearchPage = () => {
     const [activities, setActivities] = useState<any[]>([]);
@@ -28,9 +29,13 @@ const SearchPage = () => {
     const [showLocationFilter, setLocationShowFilter] = useState(false); // 地區搜尋控制顯示
     const [showCategoryFilter, setShowCategoryFilter] = useState(false);
 
+    // 取得單一參數
+    const [searchParams] = useSearchParams();
+    const keyword = searchParams.get('keyword');
+
     const fetchSearchALL = async () => {
         let searchCondition = {
-            keyword: '',
+            keyword: keyword || '', // 關鍵字搜尋
             category: selectedCategories.join(','), // 多選分類
             location: location.join(','), // 轉成字串
             startDate: dateRange[0].startDate.toISOString(),
@@ -45,7 +50,6 @@ const SearchPage = () => {
     // 分類清單
     const fetchGetCategories = useCallback(async () => {
         const response = await getCategories();
-        console.log(response);
         if (response) {
             setCategories(response);
         }
@@ -88,9 +92,12 @@ const SearchPage = () => {
         const cleanup = handleClickOutside(datePickerRef, () => {
             setIsDatePickerOpen(false);
         });
+        if (keyword) {
+            fetchSearchALL();
+        }
         // 清理事件監聽器
         return cleanup;
-    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories]);
+    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories, keyword]);
 
     return (
         <div className="container py-4">
@@ -102,7 +109,7 @@ const SearchPage = () => {
                     fontSize: '1rem'
                 }}
             >
-                <div>搜尋關鍵字：音樂活動</div>
+                <div>搜尋關鍵字：{keyword}</div>
                 <div>
                     篩選日期：{format(dateRange[0].startDate, 'yyyy/MM/dd')} -{' '}
                     {format(dateRange[0].endDate, 'yyyy/MM/dd')}{' '}
@@ -196,7 +203,7 @@ const SearchPage = () => {
                         <div className="fw-bold ms-3" style={{ marginBottom: 24 }}>
                             找到 <span style={{ color: 'var(--gt-primary-600)' }}>{activities.length}</span> 個項目：
                         </div>
-                        <div className="btn-group ms-3">
+                        {/* <div className="btn-group ms-3">
                             <button className="btn btn-outline-danger" onClick={() => fetchSearchALL()}>
                                 熱門
                             </button>
@@ -206,7 +213,7 @@ const SearchPage = () => {
                             <button className="btn btn-outline-secondary" onClick={() => fetchSearchALL()}>
                                 近期演出
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="list-group">
                         {activities.map(item => (
