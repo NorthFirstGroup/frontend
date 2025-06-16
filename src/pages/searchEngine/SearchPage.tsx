@@ -8,12 +8,13 @@ import { format } from 'date-fns';
 import { Area, getAvailAreas } from '../../api/availArea';
 import { Category, getCategories } from '../../api/category';
 import SearchFilter from '../../components/searchFilter';
+import CategoryFilter from '../../components/CategoryFilter';
 
 const SearchPage = () => {
     const [activities, setActivities] = useState<any[]>([]);
     const [recommends, setRecommends] = useState<FrontpageActivity[]>([]);
     const [location, setLocation] = useState<number[]>([]); // 輸入地區搜尋
-    const [categorie, setCategorie] = useState<string>(''); // 輸入分類搜尋
+    const [selectedCategories, setSelectedCategories] = useState<number[]>([]); // 輸入分類搜尋
     const [dateRange, setDateRange] = useState([
         {
             startDate: new Date(),
@@ -25,11 +26,12 @@ const SearchPage = () => {
     const [availAreas, setAvailAreas] = useState<Area[]>([]); // 可用地區清單
     const [categories, setCategories] = useState<Category[]>([]); // 可用分類清單
     const [showLocationFilter, setLocationShowFilter] = useState(false); // 地區搜尋控制顯示
+    const [showCategoryFilter, setShowCategoryFilter] = useState(false);
 
     const fetchSearchALL = async () => {
         let searchCondition = {
             keyword: '',
-            categorie,
+            category: selectedCategories.join(','), // 多選分類
             location: location.join(','), // 轉成字串
             startDate: dateRange[0].startDate.toISOString(),
             endDate: dateRange[0].endDate.toISOString()
@@ -124,6 +126,7 @@ const SearchPage = () => {
                             readOnly
                             onClick={() => setLocationShowFilter(true)}
                             style={{ cursor: 'pointer', backgroundColor: '#fff' }}
+                            disabled={showCategoryFilter}
                         />
                         {showLocationFilter && (
                             <SearchFilter
@@ -134,23 +137,30 @@ const SearchPage = () => {
                         )}{' '}
                     </Col>
                     <Col md={4}>
-                        <select
-                            className="form-select"
-                            aria-label="Default select"
-                            value={categorie} // 綁定到 location 狀態
-                            onChange={e => {
-                                setCategorie(e.target.value); // 更新 location 狀態
-                            }}
-                        >
-                            <option value="" disabled>
-                                請選擇分類搜尋
-                            </option>
-                            {categories.map(item => (
-                                <option key={item.id} value={item.id}>
-                                    {item.name}
-                                </option>
-                            ))}
-                        </select>
+                        <input
+                            className="form-control"
+                            placeholder="請選擇分類搜尋"
+                            value={
+                                selectedCategories.length === 0
+                                    ? ''
+                                    : categories
+                                          .filter(c => selectedCategories.includes(c.id))
+                                          .map(c => c.name)
+                                          .join('、')
+                            }
+                            readOnly
+                            onClick={() => setShowCategoryFilter(true)}
+                            style={{ cursor: 'pointer', backgroundColor: '#fff' }}
+                            disabled={showLocationFilter}
+                        />
+                        {showCategoryFilter && (
+                            <CategoryFilter
+                                categories={categories}
+                                selected={selectedCategories}
+                                onChange={setSelectedCategories}
+                                onConfirm={() => setShowCategoryFilter(false)}
+                            />
+                        )}
                     </Col>
                     <Col md={4}>
                         <input
