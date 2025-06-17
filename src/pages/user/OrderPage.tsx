@@ -81,9 +81,11 @@ const OrderPage = () => {
                                     <strong>票卷狀態</strong>：{ticket.status}
                                 </div>
                             </div>
-                            <div className="text-center cursor-pointer" onClick={() => setFullscreenQR(ticket.id)}>
-                                <QRCodeSVG value={ticket.id} size={100} />
-                            </div>
+                            {order.status === '已付款' && (
+                                <div className="text-center cursor-pointer" onClick={() => setFullscreenQR(ticket.id)}>
+                                    <QRCodeSVG value={ticket.id} size={100} />
+                                </div>
+                            )}
                         </Card.Body>
                     </Card>
                 ))}
