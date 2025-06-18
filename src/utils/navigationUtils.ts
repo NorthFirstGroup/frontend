@@ -15,7 +15,7 @@ interface ActivityFilterParams {
  * Custom hook to provide a reusable function for navigating to activity search results.
  * @returns {function(string): void} A function that takes a keyword and navigates.
  */
-export const useActivityFilterNavigation = () => {
+export const useActivityFilterNavigation = (category: string = 'activity') => {
     const navigate = useNavigate();
 
     const navigateToActivityListWithFilters = (params: ActivityFilterParams) => {
@@ -36,7 +36,7 @@ export const useActivityFilterNavigation = () => {
 
         const queryString = queryParams.toString();
         // 如果有查詢字串，則添加 '?'
-        const targetPath = `/activity${queryString ? `?${queryString}` : ''}`;
+        const targetPath = `/${category}${queryString ? `?${queryString}` : ''}`;
 
         let decodedPathForLog = targetPath;
         try {

@@ -3,10 +3,12 @@ import { Row, Col, Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { Order, getOrderByNumber } from '@api/order';
 import { QRCodeSVG } from 'qrcode.react';
+import './OrderPage.css';
 
 const OrderPage = () => {
     const [order, setOrder] = useState<Order>();
     const [dateStr, setDateStr] = useState('');
+    const [fullscreenQR, setFullscreenQR] = useState<string | null>(null);
     const { orderNumber } = useParams<{ orderNumber: string }>();
 
     const fetchOrder = useCallback(async () => {
@@ -79,13 +81,22 @@ const OrderPage = () => {
                                     <strong>票卷狀態</strong>：{ticket.status}
                                 </div>
                             </div>
-                            <div className="text-center">
-                                <QRCodeSVG value={ticket.id} size={100} />
-                            </div>
+                            {order.status === '已付款' && (
+                                <div className="text-center cursor-pointer" onClick={() => setFullscreenQR(ticket.id)}>
+                                    <QRCodeSVG value={ticket.id} size={100} />
+                                </div>
+                            )}
                         </Card.Body>
                     </Card>
                 ))}
             </Card>
+
+            {/* Fullscreen QR code overlay */}
+            {fullscreenQR && (
+                <div className="fullscreen-qr" onClick={() => setFullscreenQR(null)}>
+                    <QRCodeSVG value={fullscreenQR} size={300} />
+                </div>
+            )}
         </div>
     ) : (
         <h3>找不到訂單或未經授權</h3>
