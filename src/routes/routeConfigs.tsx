@@ -6,7 +6,7 @@ import Point from '@pages/user/Point';
 import MyOrders from '@pages/user/MyOrders';
 import OrderPage from '@pages/user/OrderPage';
 import OrganizerApplyForm from '@pages/organizer/Apply';
-import ActivityForm from '@pages/organizer/Activity';
+import ActivityList from '@pages/organizer/Activity';
 import ValidateEntry from '@pages/organizer/ValidateEntry';
 import SearchPage from '@pages/searchEngine/SearchPage';
 import ActivityDetailPage from '@pages/activity/ActivityDetailPage';
@@ -54,7 +54,7 @@ export const routeConfigs = [
     },
     {
         path: '/organizer/activity',
-        element: <ActivityForm />,
+        element: <ActivityList />,
         roles: ['ORGANIZER'] // 活動管理
     },
     {

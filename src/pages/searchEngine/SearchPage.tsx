@@ -35,31 +35,39 @@ const SearchPage = () => {
     // 取得單一參數
     const [searchParams] = useSearchParams();
     const keyword = searchParams.get('keyword') || '';
+    // Get categoryId from URL
+    const categoryIdFromUrl = searchParams.get('categoryId');
 
-    const fetchSearchALL = useCallback(
-        async (keyword: string) => {
-            let searchCondition = {
-                keyword: keyword || '', // 關鍵字搜尋
-                category: selectedCategories.join(','), // 多選分類
-                location: location.join(','), // 轉成字串
-                startDate: dateRange[0].startDate.toISOString(),
-                endDate: dateRange[0].endDate.toISOString()
-            };
-            const response = await activityAPI.getActivitySearch(searchCondition);
-            if (response.results) {
-                setActivities(response.results);
-            }
-        },
-        [dateRange, location, selectedCategories]
-    );
+    //首頁會傳入 categoryId, 不使用 useCallback
+    const fetchSearchALL = useCallback(async () => {
+        console.log('執行 fetchSearchALL，當前 selectedCategories:', selectedCategories);
+        let searchCondition = {
+            keyword: keyword || '', // 關鍵字搜尋
+            category: selectedCategories.join(','), // 多選分類
+            location: location.join(','), // 轉成字串
+            startDate: dateRange[0].startDate.toISOString(),
+            endDate: dateRange[0].endDate.toISOString()
+        };
+        const response = await activityAPI.getActivitySearch(searchCondition);
+        if (response.results) {
+            setActivities(response.results);
+        }
+    }, [keyword, selectedCategories, location, dateRange]);
 
     // 分類清單
     const fetchGetCategories = useCallback(async () => {
         const response = await getCategories();
         if (response) {
             setCategories(response);
+            if (categoryIdFromUrl) {
+                const preSelectedCategory = response.find(cat => cat.id === parseInt(categoryIdFromUrl));
+                if (preSelectedCategory && !selectedCategories.includes(preSelectedCategory.id)) {
+                    // Only update if it's not already selected to prevent infinite loop on re-renders
+                    setSelectedCategories([preSelectedCategory.id]);
+                }
+            }
         }
-    }, []);
+    }, [categoryIdFromUrl, selectedCategories]);
 
     // 地區清單
     const fetchGetAvailAreas = useCallback(async () => {
@@ -96,6 +104,7 @@ const SearchPage = () => {
         navigate(`/activity/${activity_id}`);
     };
 
+    // First useEffect for fetching static data and initial URL parameter handling
     useEffect(() => {
         fetchRecommends();
         fetchGetAvailAreas();
@@ -103,12 +112,19 @@ const SearchPage = () => {
         const cleanup = handleClickOutside(datePickerRef, () => {
             setIsDatePickerOpen(false);
         });
-        if (keyword) {
-            fetchSearchALL(keyword);
-        }
         // 清理事件監聽器
         return cleanup;
-    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories, fetchSearchALL, keyword]);
+    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories]);
+
+    // Second useEffect to trigger search when keyword or filter states change
+    useEffect(() => {
+        // This useEffect will run when `keyword`, `selectedCategories`, `location`, or `dateRange` change.
+        // It ensures fetchSearchALL uses the most up-to-date filter states.
+        if (categories.length > 0) {
+            // Ensure categories are loaded before attempting to search with category filter
+            fetchSearchALL();
+        }
+    }, [keyword, selectedCategories, location, dateRange, categories, fetchSearchALL, categoryIdFromUrl]); // Added categories to dependency
 
     return (
         <div className="container py-4">
@@ -201,7 +217,7 @@ const SearchPage = () => {
                     </Col>
                 </Row>
                 <div className="text-end mt-3">
-                    <button className="btn btn-primary" onClick={() => fetchSearchALL(keyword)}>
+                    <button className="btn btn-primary" onClick={() => fetchSearchALL()}>
                         搜尋
                     </button>
                 </div>
