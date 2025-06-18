@@ -1,7 +1,9 @@
 // src/components/ActivityCard.tsx
 import React from 'react';
-import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // <<< 導入 useNavigate
+import { Card, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+
 import { FrontpageActivity } from '../../types/home';
 import './ActivityCard.css';
 
@@ -11,6 +13,10 @@ interface ActivityCardProps {
     borderColor?: string;
     hasShadow?: boolean;
     showRemainingSeats?: boolean;
+
+    isEditable?: boolean;
+    onEdit?: (activityId: number) => void;
+    onDelete?: (activityId: number) => void;
 }
 
 const ActivityCard: React.FC<ActivityCardProps> = ({
@@ -18,9 +24,12 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     hasBorder = false,
     borderColor = '#E0E0E0',
     hasShadow = true,
-    showRemainingSeats = false
+    showRemainingSeats = false,
+    isEditable = false, // Default to false
+    onEdit,
+    onDelete
 }) => {
-    const navigate = useNavigate(); // <<< 初始化 useNavigate hook
+    const navigate = useNavigate();
 
     // 隨機生成剩餘席位數（1 到 30）- test only
     const remainingSeats = showRemainingSeats ? Math.floor(Math.random() * 30) + 1 : 0;
@@ -58,8 +67,27 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
     const handleCardClick = () => {
         // 導航到 /Activity/{activity.id} 路徑
-        console.log('點擊 ActivityCard，導航至:', `/activity/${activity.id}`); // 方便調試
-        navigate(`/activity/${activity.id}`);
+        if (!isEditable) {
+            // Only navigate if not in editable mode
+            console.log('點擊 ActivityCard，導航至:', `/activity/${activity.id}`); // 方便調試
+            navigate(`/activity/${activity.id}`);
+        }
+    };
+
+    const handleEditClick = (event: React.MouseEvent) => {
+        event.stopPropagation(); // Prevent the card's onClick from firing
+        console.log('編輯活動 ID:', activity.id);
+        if (onEdit) {
+            onEdit(activity.id);
+        } else {
+            // Default navigation if no onEdit handler is provided
+            navigate(`/organizer/activity-management/${activity.id}`);
+        }
+    };
+
+    const handleDeleteClick = (event: React.MouseEvent) => {
+        event.stopPropagation(); // Prevent the card's onClick from firing
+        onDelete && onDelete(activity.id); // Call if handler exists
     };
 
     return (
@@ -86,9 +114,37 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
                 )}
             </div>
             <div className="card-info">
-                <div className="card-badge">
-                    {/* <span className="card-badge-text">{activity.category}</span> */}
-                    <label className="text-sm-start">{activity.category}</label>
+                <div className="card-top-row">
+                    <div className="card-badge">
+                        {/* <span className="card-badge-text">{activity.category}</span> */}
+                        <label className="text-sm-start">{activity.category}</label>
+                    </div>
+                    {isEditable && ( // Conditionally render buttons
+                        <div className="card-action-buttons">
+                            {activity?.status && (
+                                <div className="card-badge">
+                                    {/* <span className="card-badge-text">{activity.category}</span> */}
+                                    <label className="text-sm-start">{activity.status}</label>
+                                </div>
+                            )}
+                            <Button
+                                variant="outline-secondary"
+                                size="sm"
+                                className="action-btn"
+                                onClick={handleEditClick}
+                            >
+                                <FaEdit />
+                            </Button>
+                            <Button
+                                variant="outline-danger"
+                                size="sm"
+                                className="action-btn"
+                                onClick={handleDeleteClick}
+                            >
+                                <FaTrash />
+                            </Button>
+                        </div>
+                    )}
                 </div>
                 {/* 使用 OverlayTrigger 包裹 h3，並在 Tooltip 中顯示完整的活動名稱 */}
                 <OverlayTrigger

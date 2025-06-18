@@ -1,6 +1,7 @@
 import { ApiResponse } from '../types/ApiResponse';
 import { apiClient } from './client';
 import { OrganizerApplySchema } from '../schemas/organizer';
+import { ActivityCategory } from '../types/home';
 
 export interface OrganizerApplyData {
     name: string;
@@ -10,6 +11,51 @@ export interface OrganizerApplyData {
     address: string;
 }
 
+export const activityStatusMap = ['', '未上架或草稿', '已上架', '取消', '結束'];
+
+export interface organizerSearchParams {
+    name?: string;
+    status?: number;
+    category?: number;
+    limit?: number;
+    offset?: number;
+}
+
+export interface OrganizerActivitieCategory {
+    id: number;
+    name: ActivityCategory;
+    media: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+    is_deleted: boolean;
+}
+
+export interface OrganizerOneActivityData {
+    id: number;
+    name: string;
+    organizer_id: number;
+    category_id: number;
+    status: number;
+    description: string;
+    information: string;
+    start_time: string;
+    end_time: string;
+    sales_start_time: string;
+    sales_end_time: string;
+    cover_image: string;
+    banner_image: string;
+    tags: number[];
+    created_at: string;
+    updated_at: string;
+    is_deleted: boolean;
+    category: OrganizerActivitieCategory;
+}
+
+export interface OrganizerActivities {
+    total_count: number;
+    results: OrganizerOneActivityData[];
+}
 /**
  * 取得會員資料
  */
@@ -46,5 +92,60 @@ export const setOrganizerData = async (updatedData: OrganizerApplyData): Promise
     } catch (error) {
         console.error('Error setOrganizerData:', error);
         throw new Error('Failed to set organizer data');
+    }
+};
+
+//取得該廠商活動清單(含搜尋)
+export const getOrganizerActivities = async (
+    get_params: organizerSearchParams
+): Promise<ApiResponse<OrganizerActivities>> => {
+    try {
+        const response = await apiClient.get<ApiResponse<OrganizerActivities>>('/v1/organizer/activity', {
+            params: get_params
+        });
+
+        if (response.data) {
+            return {
+                status_code: response.data.status_code,
+                message: response.data.message,
+                data: response.data?.data
+            };
+        } else {
+            console.error('POST - /v1/organizer/activity 錯誤');
+            return {
+                status_code: 500,
+                message: 'Internal client error: Empty response data from server.',
+                data: {
+                    total_count: 0,
+                    results: []
+                }
+            };
+        }
+    } catch (error) {
+        console.error('Error getOrganizerActivities:', error);
+        throw new Error('Failed to get organizer activities');
+    }
+};
+
+//該廠商刪除活動
+export const deleteOrganizerActivities = async (activityId: number): Promise<ApiResponse<null>> => {
+    try {
+        const response = await apiClient.delete<ApiResponse<null>>(`/v1/organizer/activity/${activityId}`);
+
+        if (response.data) {
+            return {
+                status_code: response.data.status_code,
+                message: response.data.message
+            };
+        } else {
+            console.error(`DELETE - /v1/organizer/activity/${activityId} 錯誤`);
+            return {
+                status_code: 500,
+                message: 'Internal client error: Empty response data from server.'
+            };
+        }
+    } catch (error) {
+        console.error('Error getOrganizerActivities:', error);
+        throw new Error('Failed to get organizer activities');
     }
 };

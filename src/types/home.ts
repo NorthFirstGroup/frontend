@@ -20,6 +20,7 @@ export interface FrontpageActivity {
     end_time?: string; // Optional
     sales_start_time?: string; // Specific to 'coming-soon'
     vacancy?: number | null;
+    status?: string;
 }
 
 /** 輪播圖物件的介面 */
