@@ -70,6 +70,17 @@
     z-index: 1;
 }
 
+.card-top-row {
+    display: flex;
+    flex-direction: row; /* Align items in a row */
+    align-items: center; /* Vertically center items */
+    justify-content: space-between; /* Push category to left, buttons to right */
+    width: 100%; /* Take full width of card-info */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
 /* badge */
 .card-badge {
     display: flex;
@@ -90,6 +101,96 @@
     flex: none;
     order: 0;
     flex-grow: 0;
+}
+
+.card-badge label {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    /* Add specific font styles if necessary */
+    font-size: 0.85em; /* Example font size, adjust as needed */
+    line-height: 1; /* Ensure single line height */
+}
+
+/* NEW: Container for the three action buttons */
+.card-action-buttons {
+    display: flex;
+    gap: 8px; /* Space between buttons */
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+/* Style for the individual action buttons */
+.card-action-buttons .action-btn {
+    height: 32px;
+    width: 32px;
+    display: flex;
+    .card-badge label {
+        margin: 0; /* Remove default margin */
+        padding: 0; /* Remove default padding */
+        /* Add specific font styles if necessary */
+        font-size: 0.85em; /* Example font size, adjust as needed */
+        line-height: 1; /* Ensure single line height */
+    }
+
+    /* NEW: Container for the three action buttons */
+    .card-action-buttons {
+        display: flex;
+        gap: 8px; /* Space between buttons */
+        flex-shrink: 0; /* Prevent buttons from shrinking */
+        flex: none;
+        order: 1;
+        flex-grow: 0;
+    }
+
+    /* Style for the individual action buttons */
+    .card-action-buttons .action-btn {
+        height: 32px;
+        width: 32px;
+        display: flex;
+        .card-badge label {
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            /* Add specific font styles if necessary */
+            font-size: 0.85em; /* Example font size, adjust as needed */
+            line-height: 1; /* Ensure single line height */
+        }
+
+        /* NEW: Container for the three action buttons */
+        .card-action-buttons {
+            display: flex;
+            gap: 8px; /* Space between buttons */
+            flex-shrink: 0; /* Prevent buttons from shrinking */
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        /* Style for the individual action buttons */
+        .card-action-buttons .action-btn {
+            height: 32px;
+            width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 0.8em;
+            border-radius: 1000px;
+        }
+        /* Use flexbox to center icon */
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        font-size: 0.8em;
+        border-radius: 1000px;
+    }
+    /* Use flexbox to center icon */
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 0.8em;
+    border-radius: 1000px;
 }
 
 /* title */
