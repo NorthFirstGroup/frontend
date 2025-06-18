@@ -34,21 +34,24 @@ const SearchPage = () => {
 
     // 取得單一參數
     const [searchParams] = useSearchParams();
-    const keyword = searchParams.get('keyword');
+    const keyword = searchParams.get('keyword') || '';
 
-    const fetchSearchALL = async () => {
-        let searchCondition = {
-            keyword: keyword || '', // 關鍵字搜尋
-            category: selectedCategories.join(','), // 多選分類
-            location: location.join(','), // 轉成字串
-            startDate: dateRange[0].startDate.toISOString(),
-            endDate: dateRange[0].endDate.toISOString()
-        };
-        const response = await activityAPI.getActivitySearch(searchCondition);
-        if (response.results) {
-            setActivities(response.results);
-        }
-    };
+    const fetchSearchALL = useCallback(
+        async (keyword: string) => {
+            let searchCondition = {
+                keyword: keyword || '', // 關鍵字搜尋
+                category: selectedCategories.join(','), // 多選分類
+                location: location.join(','), // 轉成字串
+                startDate: dateRange[0].startDate.toISOString(),
+                endDate: dateRange[0].endDate.toISOString()
+            };
+            const response = await activityAPI.getActivitySearch(searchCondition);
+            if (response.results) {
+                setActivities(response.results);
+            }
+        },
+        [dateRange, location, selectedCategories]
+    );
 
     // 分類清單
     const fetchGetCategories = useCallback(async () => {
@@ -101,11 +104,11 @@ const SearchPage = () => {
             setIsDatePickerOpen(false);
         });
         if (keyword) {
-            fetchSearchALL();
+            fetchSearchALL(keyword);
         }
         // 清理事件監聽器
         return cleanup;
-    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories, keyword]);
+    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories, fetchSearchALL, keyword]);
 
     return (
         <div className="container py-4">
@@ -198,7 +201,7 @@ const SearchPage = () => {
                     </Col>
                 </Row>
                 <div className="text-end mt-3">
-                    <button className="btn btn-primary" onClick={() => fetchSearchALL()}>
+                    <button className="btn btn-primary" onClick={() => fetchSearchALL(keyword)}>
                         搜尋
                     </button>
                 </div>
