@@ -38,6 +38,25 @@ export interface Order {
     paymentFormUrl: string;
 }
 
+export interface OrderRecords {
+    orderNumber: string;
+    createdAt: string;
+    eventName: string;
+    eventDate: string;
+    location: string;
+    organizer: string;
+    status: string;
+    ticketType: string;
+    ticketCount: number;
+    totalPrice: number;
+    coverImage?: string;
+    paymentMethod: string;
+    paymentStatus: string;
+    paymentDate?: string;
+    seats: Seat[];
+    paymentFormUrl: string;
+}
+
 export interface Pagination {
     total: number;
     page: number;
@@ -46,7 +65,7 @@ export interface Pagination {
 export interface OrderListData {
     sort_by: string;
     order: string;
-    results: Order[];
+    results: OrderRecords[];
     pagination: Pagination;
 }
 

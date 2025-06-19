@@ -1,0 +1,48 @@
+/* frontend/src/components/MemberPanelNav/MemberPanelNav.module.css */
+
+.memberPanelNav {
+  /* 這裡不再需要 margin: 0 !important; 因為由 Bootstrap 類別控制 */
+  /* 也不需要 padding: 0; 因為由內部 Container 控制 */
+  padding-top: 0.5rem;   /* 導航條本身的頂部內邊距 */
+  padding-bottom: 0.5rem; /* 導航條本身的底部內邊距 */
+
+  /* 添加底部分隔線 */
+  border-bottom: 1px solid var(--bs-gray-300);
+
+  /* 移除這些，因為 d-flex 和內部的 Container 會處理 */
+  /* justify-content: flex-start; */
+  /* width: 100%; */
+
+  /* 確保沒有背景色，以免遮擋 */
+  background-color: transparent;
+}
+
+/* 調整 Nav.Item 和 Nav.Link 的樣式保持不變 */
+.memberPanelNav .nav-item {
+  margin: 0;
+  padding: 0;
+}
+
+.memberPanelNav .nav-link {
+  text-align: left;
+  padding-left: 0;
+  padding-right: 1.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+
+  color: var(--bs-body-color);
+  font-size: 1.1em;
+  font-weight: 500;
+
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  transition: border-bottom-color 0.25s ease-in-out, color 0.25s ease-in-out;
+}
+
+.memberPanelNav .nav-link.active,
+.memberPanelNav .nav-link:hover,
+.memberPanelNav .nav-link:focus {
+  border-bottom-color: var(--bs-orange) !important;
+  color: var(--bs-body-color) !important;
+}
