@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Button, Form, Alert } from 'react-bootstrap';
-import { ApiResponse } from '../../types/ApiResponse';
-import { OrganizerApplyData, setOrganizerData } from '../../api/organizer';
-import UserNameInput from '../../components/UserNameInput';
-import PhoneNumberInput from '../../components/PhoneNumberInput';
+import { ApiResponse } from '@/types/ApiResponse';
+import { useAuth } from '@hooks/useAuth';
+import { OrganizerData, getOrganizerData, applyAsOrganizer, putOrganizerData } from '@api/organizer';
+import UserNameInput from '@components/UserNameInput';
+import PhoneNumberInput from '@components/PhoneNumberInput';
 
 const OrganizerApplyForm: React.FC = () => {
-    //const [loading, setLoading] = useState<boolean>(false);
+    const { user } = useAuth();
     const [errors, setErrors] = useState({
         name: '',
         ubn: '',
@@ -14,9 +15,9 @@ const OrganizerApplyForm: React.FC = () => {
         phone: '',
         address: ''
     });
-    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [errMsg, setErrMsg] = useState<string | null>(null);
     const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
-    const [formData, setFormData] = useState<OrganizerApplyData>({
+    const [formData, setFormData] = useState<OrganizerData>({
         name: '',
         ubn: '',
         president: '',
@@ -25,22 +26,22 @@ const OrganizerApplyForm: React.FC = () => {
     });
     const MAX_LENGTH = 50;
 
-    // useEffect(() => {
-    //     const fetchOrganizerData = async () => {
-    //         setLoading(true);
-    //         setError(null);
-    //         try {
-    //             const response: ApiResponse<OrganizerApplyData> = await getOrganizerData();
-    //             if (response.data) setFormData(response.data);
-    //         } catch (err: unknown) {
-    //             setError(err instanceof Error ? err.message : '無法取得廠商資料');
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchOrganizerData = async () => {
+            setErrMsg(null);
+            try {
+                if (user?.role === 'ORGANIZER') {
+                    const response: ApiResponse<OrganizerData> = await getOrganizerData();
+                    if (response.data) setFormData(response.data);
+                }
+            } catch (err: unknown) {
+                setErrMsg(err instanceof Error ? err.message : '無法取得廠商資料');
+            }
+        };
 
-    //     fetchOrganizerData();
-    // }, []);
+        fetchOrganizerData();
+    }, [user]);
+
     const validateTraditionalChineseName = (name: string) => {
         let errorMsg = '';
 
@@ -139,30 +140,46 @@ const OrganizerApplyForm: React.FC = () => {
         return !errors.ubn && !errors.phone && !errors.president;
     };
 
-    const handleSubmit = async (event: React.FormEvent) => {
+    const handleApply = async (event: React.FormEvent) => {
         event.preventDefault();
-        setSubmitError('');
+        setErrMsg('');
         setSubmitSuccess('');
-        console.log('送出的資料:', formData);
-
         try {
-            const response: ApiResponse<null> = await setOrganizerData(formData);
-            if (response.status_code !== 2000) {
-                setSubmitError(`申請失敗: ${response.message}`);
+            const response: ApiResponse<null> = await applyAsOrganizer(formData);
+            if (response.status_code === 2000) {
+                setSubmitSuccess('申請成功，請重新登入。');
             } else {
-                setSubmitSuccess('會員資料已更新');
+                setErrMsg(`申請失敗: ${response.message}`);
             }
         } catch (error) {
             console.error('發生錯誤:', error);
+            setErrMsg('申請失敗，請稍後再試。');
+        }
+    };
+
+    const handleUpdate = async (event: React.FormEvent) => {
+        event.preventDefault();
+        setErrMsg('');
+        setSubmitSuccess('');
+        try {
+            const response: ApiResponse<null> = await putOrganizerData(formData);
+            if (response.status_code === 2000) {
+                setSubmitSuccess('資料更新成功。');
+            } else {
+                setErrMsg(`更新失敗: ${response.message}`);
+            }
+        } catch (error) {
+            console.error('發生錯誤:', error);
+            setErrMsg('更新失敗，請稍後再試。');
         }
     };
 
     return (
         <Container className="mt-5" style={{ maxWidth: '600px' }}>
             <h3>廠商資料</h3>
-            {submitError && <Alert variant="danger">{submitError}</Alert>}
+            {errMsg && <Alert variant="danger">{errMsg}</Alert>}
             {submitSuccess && <Alert variant="success">{submitSuccess}</Alert>}
-            <Form onSubmit={handleSubmit}>
+            <Form>
                 <Form.Group className="mb-3" controlId="formName">
                     <Form.Label>單位名稱</Form.Label>
                     <Form.Control
@@ -220,9 +237,16 @@ const OrganizerApplyForm: React.FC = () => {
                     />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" disabled={!isFormValid()}>
-                    送出申請
-                </Button>
+                {user?.role === 'USER' && (
+                    <Button variant="primary" type="submit" disabled={!isFormValid()} onClick={handleApply}>
+                        送出申請
+                    </Button>
+                )}
+                {user?.role === 'ORGANIZER' && (
+                    <Button variant="primary" type="submit" disabled={!isFormValid()} onClick={handleUpdate}>
+                        更新資料
+                    </Button>
+                )}
             </Form>
         </Container>
     );
