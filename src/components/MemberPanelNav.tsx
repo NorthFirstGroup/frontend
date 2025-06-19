@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { routeConfigs } from '../routes/routeConfigs';
 import styles from './MemberPanelNav.module.css';
 
-const navPathNames: { [key: string]: string } = {
+const NAV_PATH_NAMES: { [key: string]: string } = {
   '/user/profile': '帳號設定',
   '/user/point': '點數資訊', 
   '/user/orders': '訂單紀錄',
@@ -22,12 +22,12 @@ const MemberPanelNav: React.FC = () => {
       return [];
     }
     return routeConfigs
-      .filter(route => navPathNames.hasOwnProperty(route.path))
+      .filter(route => Object.prototype.hasOwnProperty.call(NAV_PATH_NAMES, route.path))
       .map(route => {
-        const name = navPathNames[route.path];
+        const name = NAV_PATH_NAMES[route.path];
         return { path: route.path, name: name, roles: route.roles };
       });
-  }, [routeConfigs, navPathNames]);
+  }, []);
 
 
   return (
