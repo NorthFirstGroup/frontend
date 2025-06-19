@@ -2,13 +2,12 @@
     "compilerOptions": {
         "baseUrl": ".", // 基礎路徑
         "paths": {
-            "@/*": ["src/*"], // 路徑別名設定
-            "@components/*": ["src/components/*"],
+            "@components/*": ["src/components/*"], // 路徑別名設定
             "@utils/*": ["src/utils/*"],
             "@assets/*": ["src/assets/*"],
             "@pages/*": ["src/pages/*"],
             "@hooks/*": ["src/hooks/*"],
-            "@context/*": ["src/context/*"],
+            "@contexts/*": ["src/contexts/*"],
             "@api/*": ["src/api/*"],
             "@types/*": ["src/types/*"]
         },

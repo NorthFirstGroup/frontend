@@ -16,7 +16,7 @@ interface ActivityFilterParams {
  * Custom hook to provide a reusable function for navigating to activity search results.
  * @returns {function(string): void} A function that takes a keyword and navigates.
  */
-export const useActivityFilterNavigation = (category: string = 'activity') => {
+export const useActivityFilterNavigation = (_category: string = 'activity') => {
     const navigate = useNavigate();
 
     const navigateToActivityListWithFilters = (params: ActivityFilterParams) => {
