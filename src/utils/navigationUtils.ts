@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 interface ActivityFilterParams {
     keyword?: string; // 搜尋關鍵字
     category?: string; // 活動類別
+    categoryId?: number;
+    // locationId?: number; // 地點
     // 未來如果需要，可以添加更多參數，例如：
-    // location?: string; // 地點
     // date?: string;     // 日期
     // minPrice?: number; // 最小價格
 }
@@ -15,28 +16,29 @@ interface ActivityFilterParams {
  * Custom hook to provide a reusable function for navigating to activity search results.
  * @returns {function(string): void} A function that takes a keyword and navigates.
  */
-export const useActivityFilterNavigation = (category: string = 'activity') => {
+export const useActivityFilterNavigation = () => {
     const navigate = useNavigate();
 
     const navigateToActivityListWithFilters = (params: ActivityFilterParams) => {
         const queryParams = new URLSearchParams(); // 使用 URLSearchParams 構建查詢字串
-
+        console.log(queryParams);
         // 檢查並添加 keyword 參數
         if (params.keyword) {
             queryParams.append('keyword', params.keyword);
         }
         // 檢查並添加 category 參數
-        if (params.category) {
-            queryParams.append('category', params.category);
+        if (params.categoryId) {
+            // Add categoryId to search params
+            queryParams.append('categoryId', params.categoryId.toString());
         }
         // 未來可以在這裡添加更多參數的處理邏輯
-        // if (params.location) {
-        //     queryParams.append('location', params.location);
+        // if (params.locationId) {
+        //     queryParams.append('locationId', params.locationId.toString());
         // }
 
         const queryString = queryParams.toString();
         // 如果有查詢字串，則添加 '?'
-        const targetPath = `/${category}${queryString ? `?${queryString}` : ''}`;
+        const targetPath = `/search${queryString ? `?${queryString}` : ''}`;
 
         let decodedPathForLog = targetPath;
         try {
