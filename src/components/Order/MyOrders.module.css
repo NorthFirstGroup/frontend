@@ -7,11 +7,12 @@
   --gt-light-bg: #f8f9fa;
   --gt-shadow: rgba(0, 0, 0, 0.075);
   --gt-orange-darken: #cc5200;
+  --cover-image-max-width: 180px; 
 }
 
 .myOrdersContainer {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 h1 {
@@ -22,29 +23,32 @@ h1 {
 
 /* --- 訂單卡片樣式 --- */
 .orderCard {
-  border: 1px solid var(--gt-border-color);
+  border: 1px solid var(--gt-gray-100);
   border-radius: 0.5rem;
   overflow: hidden;
   margin-bottom: 1.5rem; /* 卡片之間更大的間距 */
-  box-shadow: 0 0.25rem 0.5rem var(--gt-shadow); /* 更明顯的陰影 */
+  box-shadow: 0 0.25rem 0.5rem var(--gt-gray-200); /* 更明顯的陰影 */
   background-color: white; /* 確保背景為白色 */
 }
 
 .orderCardHeader {
   padding: 1.5rem;
   background-color: white;
-  border-bottom: 1px solid var(--gt-border-color); /* 上半部分底部邊框 */
+  border-bottom: 1px solid var(--gt-gray-100); /* 上半部分底部邊框 */
 }
 
 /* 左側圖片列 */
 .imageCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding-right: 1.5rem; /* 與右側內容的間距 */
 }
 
 .coverImage {
   height: 120px; /* 圖片固定高度 */
   width: 100%; /* 確保圖片寬度適應列 */
-  max-width: 180px; /* 限制圖片最大寬度 */
+  max-width: var(--cover-image-max-width);; /* 限制圖片最大寬度 */
   object-fit: cover;
   border-radius: 0.25rem;
   margin-bottom: 0.5rem; /* 圖片與按鈕間距 */
@@ -55,11 +59,13 @@ h1 {
   text-decoration: none;
   display: block; /* 讓按鈕獨佔一行 */
   width: 100%; 
+  /* max-width: var(--cover-image-max-width); */
+  margin: 0 auto;
 }
 
 .viewVoucherBtn {
-  border-color: var(--gt-orange) !important;
-  color: var(--gt-orange) !important;
+  border-color: var(--gt-primary-600) !important;
+  color: var(--gt-primary-600) !important;
   font-size: 0.85rem;
   padding: 0.35rem 0.8rem;
   border-radius: 0.3rem;
@@ -71,9 +77,9 @@ h1 {
 }
 
 .viewVoucherBtn:hover {
-  background-color: var(--gt-orange) !important;
+  background-color: var(--gt-primary-600) !important;
   color: white !important;
-  border-color: var(--gt-orange) !important;
+  border-color: var(--gt-primary-600) !important;
 }
 
 /* 中間活動資訊網格 */
@@ -81,10 +87,11 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 自動適應兩列或單列 */
   gap: 0.5rem 1rem; /* 行間距 列間距 */
+  margin-top: 15px;
 }
 
 .infoItem {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   display: flex; /* 讓 label 和 value 排列 */
   align-items: baseline;
   line-height: 1.4;
@@ -92,14 +99,14 @@ h1 {
 
 .infoItem .label {
   font-weight: bold;
-  color: #212529;
+  color: var(--gt-gray-800);
   flex-shrink: 0; /* 不壓縮 */
-  margin-right: 0.5rem;
+  margin-right: 0.75rem;
   min-width: 65px; /* 確保標籤對齊 */
 }
 
 .infoItem .value {
-  color: #495057;
+  color: var(--gt-gray-500);
   word-break: break-word; /* 防止長文字溢出 */
 }
 
@@ -121,7 +128,7 @@ h1 {
 .customAccordionHeader {
   width: 100%; /* 確保按鈕在任何尺寸下都佔滿其父容器 (accordionBlock) 的寬度 */
   border-radius: 0.25rem; /* 匹配 Bootstrap 的圓角 */
-  background-color: var(--gt-light-bg); /* 可以添加一個淺色背景 */
+  background-color: var(--gt-gray-300); /* 可以添加一個淺色背景 */
   cursor: pointer; /* 顯示為可點擊 */
   display: flex !important;
   justify-content: center !important;
@@ -154,15 +161,8 @@ h1 {
 }
 
 .customAccordionHeader .arrowIcon {
-  color: var(--gt-orange);
+  color: var(--gt-primary-600);
   font-size: 1em;
-  color: white; 
-}
-
-.arrowIcon {
-  color: var(--gt-orange);
-  font-size: 1em;
-  transition: transform 0.3s ease-in-out;
 }
 
 .customAccordionHeader.collapsed .arrowIcon {
@@ -178,8 +178,8 @@ h1 {
 /* --- 摺疊內容 (Accordion Body) 樣式 --- */
 .accordionBody {
   padding: 1rem var(--card-horizontal-padding) 1.5rem 1rem; /* 上右下左填充 */
-  border: 1px solid var(--gt-border-color);
-  background-color: var(--gt-light-bg); /* 淺色背景，與卡片上半部分區分 */
+  border: 1px solid var(--gt-gray-50);
+  background-color: var(--gt-gray-50); /* 淺色背景，與卡片上半部分區分 */
   border-top: none; 
   border-radius: 0 0 0.25rem 0.25rem;
   /* display: flex; */
@@ -197,22 +197,29 @@ h1 {
 
 .detailLabel {
     font-weight: bold;
-    color: #212529;
+    color: var(--gt-gray-800);
     flex-shrink: 0;
-    margin-right: 1.5rem;
+    margin-right: 0.75rem;
     min-width: 65px; /* 確保標籤對齊 */
     text-align: left;
 }
 
+.orderNumberAndCopy {
+    display: flex; /* 讓值和圖標在內部水平排列 */
+    align-items: center; /* 垂直居中對齊值和圖標 */
+    flex-grow: 1; /* 讓這個容器佔據剩餘的所有空間，將複製圖標推到值旁邊 */
+    min-width: 0; /* 允許此容器在必要時縮小 */
+}
+
 .detailValue {
-    color: #495057;
+    color: var(--gt-gray-500);
     word-break: break-word;
     text-align: right;
 }
 
 .copyIcon {
     cursor: pointer;
-    color: #6c757d;
+    color: var(--gt-gray-500);
     font-size: 0.8em;
     vertical-align: middle;
     margin-left: 0.5rem;
@@ -220,6 +227,13 @@ h1 {
 }
 .copyIcon:hover {
     color: var(--gt-orange);
+}
+
+.noOrdersAlert {
+  /* 比 Bootstrap light (#f8f9fa) 稍微深一點的淺灰色 */
+  background-color: var(--gt-gray-100) !important; /* 常用作非常淺的背景色 */
+  color: var(--gt-gray-900) !important; /* 確保文字顏色仍然可讀 */
+  border-color: var(--gt-gray-100) !important; /* 匹配邊框顏色，使其看起來協調 */
 }
 
 /* --- 響應式調整 --- */
@@ -268,14 +282,18 @@ h1 {
         padding: 1rem; /* 小螢幕填充減小 */
     }
     .detailRow {
-        flex-direction: column; /* 小螢幕下改為垂直排列 */
-        align-items: flex-start; /* 內容靠左對齊 */
+        /* flex-direction: column; /* 小螢幕下改為垂直排列 */
+        display: flex;
+        flex-wrap: nowrap; /* <-- 關鍵：強制不換行 */
+        align-items: center; /* 垂直居中 */
+        justify-content: flex-start; /* 內容靠左對齊 */
         padding: 0.5rem 1rem; /* 增加內邊距 */
     }
     .detailLabel {
-        width: 100%; /* 標籤佔滿一行 */
+        width: auto; /* 重置為自動寬度 */
         text-align: left;
-        margin-bottom: 0.25rem; /* 標籤和值之間加點間距 */
+        margin-bottom: 0; /* 標籤和值之間加點間距 */
+        margin-right: 0.25rem; /* 給標籤和值之間添加一點水平間距 */
         font-weight: bold;
     }
     .detailValue {
@@ -309,7 +327,7 @@ h1 {
       /* 在大螢幕下可以根據需求調整，例如可以讓標籤和值在各自的列中 */
       display: flex; /* 仍然使用 flex 確保內容排列 */
       flex-direction: row; /* 標籤在上，值在下，或者保持一行 */
-      align-items: baseline; /* 靠左對齊 */
+      align-items: flex-start; /* 靠左對齊 */
   }
 
   .label {
@@ -319,5 +337,6 @@ h1 {
 
   .value {
       text-align: left; /* 確保值靠左 */
+      word-break: break-word; /* 確保長單詞也能換行 */
   }
 }
