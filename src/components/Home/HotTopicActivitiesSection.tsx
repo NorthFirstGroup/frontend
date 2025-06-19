@@ -1,5 +1,6 @@
 // src/components/PopularActivitiesSection.tsx
 import React, { useState, useEffect } from 'react';
+import { Spinner } from 'react-bootstrap';
 import ActivitySection from './ActivitySection';
 import { ApiResponse } from '../../types/ApiResponse';
 import { FrontpageActivity } from '../../types/home';
@@ -29,7 +30,7 @@ const HotTopicActivitiesSection: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>載入熱門推薦活動中...</div>; // Or a more sophisticated spinner
+        return <Spinner animation="border" variant="primary" />;
     }
 
     if (error) {

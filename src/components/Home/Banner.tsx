@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Carousel, Container } from 'react-bootstrap';
+import { Carousel, Container, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { BannerSlide } from '../../types/home';
 import { getTopBannerActivities } from '../../api/frontpage';
@@ -16,7 +16,7 @@ const TopBannerActivities: React.FC = () => {
             try {
                 const response: ApiResponse<BannerSlide[]> = await getTopBannerActivities();
                 if (response.data) {
-                    setSlides(response.data);
+                    setSlides(response.data.slice(0, 4));
                 }
             } catch (err) {
                 console.error('Error fetching hot-topic activities:', err);
@@ -29,7 +29,7 @@ const TopBannerActivities: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading banner activities...</div>; // Or a more sophisticated spinner
+        return <Spinner animation="border" variant="primary" />;
     }
 
     if (error) {

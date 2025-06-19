@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import ActivitySectionHeader from './ActivitySectionHeader';
 import CountdownActivityCard from './CountdownActivityCard';
 import { ApiResponse } from '../../types/ApiResponse';
@@ -35,7 +35,7 @@ const CountdownActivitiesSection: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>載入開賣倒數活動中...</div>;
+        return <Spinner animation="border" variant="primary" />;
     }
 
     // if (error) {

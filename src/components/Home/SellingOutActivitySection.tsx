@@ -1,6 +1,7 @@
 // src/components/SellingOutActivitiesSection.tsx
 
 import React, { useState, useEffect } from 'react';
+import { Spinner } from 'react-bootstrap';
 import ActivitySection from './ActivitySection';
 import { ApiResponse } from '../../types/ApiResponse';
 import { FrontpageActivity } from '../../types/home';
@@ -44,7 +45,7 @@ const SellingOutActivitiesSection: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>載入即將完售活動中...</div>;
+        return <Spinner animation="border" variant="primary" />;
     }
 
     if (error) {
@@ -63,7 +64,7 @@ const SellingOutActivitiesSection: React.FC = () => {
             iconSvg={BsLightningChargeFill}
             initialRows={2}
             cardsPerRow={3}
-            searchKeyword="即將完售" // fix later
+            searchKeyword="即將完售"
             showRemainingSeats={true}
         />
     );

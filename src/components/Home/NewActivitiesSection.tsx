@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Col } from 'react-bootstrap';
+import { Container, Col, Spinner } from 'react-bootstrap';
 import ActivitySectionHeader from './ActivitySectionHeader';
 import ActivityCard from './ActivityCard';
 import { ApiResponse } from '../../types/ApiResponse';
@@ -80,7 +80,7 @@ const NewActivitiesSection: React.FC = () => {
     }, [activities]); // 當活動數據變化時也重新檢查
 
     if (loading) {
-        return <div>載入全新登場活動中...</div>; // Or a more sophisticated spinner
+        return <Spinner animation="border" variant="primary" />;
     }
 
     if (error) {
