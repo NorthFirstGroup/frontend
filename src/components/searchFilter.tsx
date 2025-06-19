@@ -88,10 +88,10 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ availAreas, onChange, onCon
                 </div>
             ))}
             <div className="d-flex justify-content-end gap-2 mt-4">
-                <button className="btn btn-outline-warning" onClick={clearAll}>
+                <button className="btn btn-outline-primary " onClick={clearAll}>
                     清除設定
                 </button>
-                <button className="btn btn-warning text-white" onClick={onConfirm}>
+                <button className="btn btn-primary text-white" onClick={onConfirm}>
                     確認
                 </button>
             </div>

@@ -62,11 +62,11 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selected, o
                 ))}
             </div>
             <div className="d-flex justify-content-end gap-2 mt-4">
-                <button className="btn btn-outline-warning" onClick={clearAll}>
+                <button className="btn btn-outline-primary" onClick={clearAll}>
                     清除設定
                 </button>
                 <button
-                    className="btn btn-warning text-white"
+                    className="btn btn-primary text-white"
                     onClick={() => {
                         onChange(localSelected);
                         onConfirm();

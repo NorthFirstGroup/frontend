@@ -1,6 +1,6 @@
 import { FrontpageActivity } from '@/types/home';
 import { getRecommendActivities } from '@api/frontpage';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { DateRange } from 'react-date-range';
@@ -10,6 +10,9 @@ import { Area, getAvailAreas } from '@api/availArea';
 import { Category, getCategories } from '@api/category';
 import SearchFilter from '@components/searchFilter';
 import CategoryFilter from '@components/categoryFilter';
+
+import calendarIcon from '../../assets/searchPageMock/calendar.svg';
+import locationIcon from '../../assets/searchPageMock/location.svg';
 
 const SearchPage = () => {
     const [activities, setActivities] = useState<any[]>([]);
@@ -31,9 +34,13 @@ const SearchPage = () => {
 
     // 取得單一參數
     const [searchParams] = useSearchParams();
-    const keyword = searchParams.get('keyword');
+    const keyword = searchParams.get('keyword') || '';
+    // Get categoryId from URL
+    const categoryIdFromUrl = searchParams.get('categoryId');
 
-    const fetchSearchALL = async () => {
+    //首頁會傳入 categoryId, 不使用 useCallback
+    const fetchSearchALL = useCallback(async () => {
+        console.log('執行 fetchSearchALL，當前 selectedCategories:', selectedCategories);
         let searchCondition = {
             keyword: keyword || '', // 關鍵字搜尋
             category: selectedCategories.join(','), // 多選分類
@@ -45,15 +52,22 @@ const SearchPage = () => {
         if (response.results) {
             setActivities(response.results);
         }
-    };
+    }, [keyword, selectedCategories, location, dateRange]);
 
     // 分類清單
     const fetchGetCategories = useCallback(async () => {
         const response = await getCategories();
         if (response) {
             setCategories(response);
+            if (categoryIdFromUrl) {
+                const preSelectedCategory = response.find(cat => cat.id === parseInt(categoryIdFromUrl));
+                if (preSelectedCategory && !selectedCategories.includes(preSelectedCategory.id)) {
+                    // Only update if it's not already selected to prevent infinite loop on re-renders
+                    setSelectedCategories([preSelectedCategory.id]);
+                }
+            }
         }
-    }, []);
+    }, [categoryIdFromUrl, selectedCategories]);
 
     // 地區清單
     const fetchGetAvailAreas = useCallback(async () => {
@@ -85,6 +99,12 @@ const SearchPage = () => {
         };
     };
 
+    const navigate = useNavigate();
+    const handleCardClick = (activity_id: string) => {
+        navigate(`/activity/${activity_id}`);
+    };
+
+    // First useEffect for fetching static data and initial URL parameter handling
     useEffect(() => {
         fetchRecommends();
         fetchGetAvailAreas();
@@ -92,12 +112,19 @@ const SearchPage = () => {
         const cleanup = handleClickOutside(datePickerRef, () => {
             setIsDatePickerOpen(false);
         });
-        if (keyword) {
-            fetchSearchALL();
-        }
         // 清理事件監聽器
         return cleanup;
-    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories, keyword]);
+    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories]);
+
+    // Second useEffect to trigger search when keyword or filter states change
+    useEffect(() => {
+        // This useEffect will run when `keyword`, `selectedCategories`, `location`, or `dateRange` change.
+        // It ensures fetchSearchALL uses the most up-to-date filter states.
+        if (categories.length > 0) {
+            // Ensure categories are loaded before attempting to search with category filter
+            fetchSearchALL();
+        }
+    }, [keyword, selectedCategories, location, dateRange, categories, fetchSearchALL, categoryIdFromUrl]); // Added categories to dependency
 
     return (
         <div className="container py-4">
@@ -243,9 +270,15 @@ const SearchPage = () => {
                                                 marginBottom: 8
                                             }}
                                         >
-                                            {item.startTime}
+                                            <img src={calendarIcon} style={{ verticalAlign: 'sub' }} alt="" />
+                                            {format(new Date(item.startTime), 'yyyy/MM/dd')}
                                         </div>
-                                        <div className="text-muted small">{item.vacancy ?? '123'}</div>
+                                        {item.sites.map((site: any, index: number) => (
+                                            <span key={index}>
+                                                <img src={locationIcon} style={{ verticalAlign: 'sub' }} alt="" />
+                                                {site.name}
+                                            </span>
+                                        ))}
                                     </Col>
                                     <Col md={1} className="text-end">
                                         <button
@@ -255,7 +288,9 @@ const SearchPage = () => {
                                                 color: 'var(--gt-gradient-default-end)'
                                             }}
                                         >
-                                            <span className="fs-4">&rarr;</span>
+                                            <span className="fs-4" onClick={() => handleCardClick(item.id)}>
+                                                &rarr;
+                                            </span>
                                         </button>
                                     </Col>
                                 </Row>
@@ -284,7 +319,11 @@ const SearchPage = () => {
                                         <div className="card-body py-2">
                                             <div className="small text-muted">{item.category}</div>
                                             <div className="fw-bold">{item.name}</div>
-                                            <div className="text-muted small">{item.start_time}</div>
+                                            <div className="text-muted small">
+                                                {format(new Date(item.start_time || ''), 'yyyy/MM/dd') +
+                                                    '- ' +
+                                                    format(new Date(item.end_time || ''), 'yyyy/MM/dd')}
+                                            </div>
                                         </div>
                                     </Col>
                                 </Row>
