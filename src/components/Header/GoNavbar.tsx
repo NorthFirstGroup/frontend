@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, NavDropdown, Form, Image } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@hooks/useAuth';
 import logoPng from '/logo.png';
-import goTicketPng from '../../assets/brand.png';
-import avatarPng from '../../assets/def-avatar.png';
-import searchPng from '../../assets/search.png';
+import goTicketPng from '@assets/brand.png';
+import avatarPng from '@assets/def-avatar.png';
+import searchPng from '@assets/search.png';
 import { CgProfile } from 'react-icons/cg';
 import { BsLightningChargeFill } from 'react-icons/bs';
 import { IoCartOutline } from 'react-icons/io5';
@@ -15,7 +15,7 @@ import { FaTicketAlt } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
 import styles from './Header.module.css';
 import { StyledNavbar, StyledNavDropdown, StyledNavDropdownItem, StyledAuthButton } from './HeaderStyles'; // 引入您的 Styled-Components
-import { useActivityFilterNavigation } from '../../utils/navigationUtils';
+import { useActivityFilterNavigation } from '@utils/navigationUtils';
 
 const Header = () => {
     const { isLoggedIn, user, logout } = useAuth();

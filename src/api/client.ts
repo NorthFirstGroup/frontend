@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
-import { ApiError } from '../types/ApiError';
-// import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
+import { ApiError } from '@type/ApiError';
+// import { ApiResponse } from '@type/ApiResponse'; // 確保路徑正確
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 

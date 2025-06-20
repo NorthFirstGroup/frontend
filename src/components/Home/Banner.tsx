@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Carousel, Container, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { BannerSlide } from '../../types/home';
-import { getTopBannerActivities } from '../../api/frontpage';
+import { BannerSlide } from '@type/home';
+import { getTopBannerActivities } from '@api/frontpage';
 
-import { ApiResponse } from '../../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 
 const TopBannerActivities: React.FC = () => {
     const [slides, setSlides] = useState<BannerSlide[]>([]);

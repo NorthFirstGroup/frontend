@@ -1,5 +1,5 @@
 import { publicApiClient } from './client';
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 import { GetAvailAreas } from '../schemas/availArea';
 
 // 定義地區選項介面

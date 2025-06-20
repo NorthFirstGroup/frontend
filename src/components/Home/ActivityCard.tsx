@@ -4,7 +4,7 @@ import { Card, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
-import { FrontpageActivity } from '../../types/home';
+import { FrontpageActivity } from '@type/home';
 import './ActivityCard.css';
 
 interface ActivityCardProps {

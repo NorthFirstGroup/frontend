@@ -1,5 +1,5 @@
 import { UploadSchema } from '../schemas/uploadApi';
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 import { apiClient } from './client';
 
 export const uploadToS3 = async (userId: string, file: File): Promise<string> => {

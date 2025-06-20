@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner } from 'react-bootstrap';
 import ActivitySection from './ActivitySection';
-import { ApiResponse } from '../../types/ApiResponse';
-import { FrontpageActivity } from '../../types/home';
-import { getHotTopicActivities } from '../../api/frontpage';
+import { ApiResponse } from '@type/ApiResponse';
+import { FrontpageActivity } from '@type/home';
+import { getHotTopicActivities } from '@api/frontpage';
 import { FaThumbsUp } from 'react-icons/fa6';
 
 const HotTopicActivitiesSection: React.FC = () => {

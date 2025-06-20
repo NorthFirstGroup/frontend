@@ -1,5 +1,5 @@
 import { publicApiClient } from './client';
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 import { SignInSchema, SignUpSchema } from '../schemas/authApi';
 
 export interface LogInAndUpResponseData {
