@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap'; // 引入 React-Bootstrap 組件
+import { Container, Row, Col, Spinner } from 'react-bootstrap'; // 引入 React-Bootstrap 組件
 import { Category, getCategories } from '../api/category';
 const TopBannerActivities = React.lazy(() => import('../components/Home/Banner'));
 const HotTopicActivitiesSection = React.lazy(() => import('../components/Home/HotTopicActivitiesSection'));
@@ -24,7 +24,7 @@ const Home: React.FC = () => {
     return (
         <div className="home-page">
             <main>
-                <Suspense fallback={<div>載入 TopBannerActivities 中...</div>}>
+                <Suspense fallback={<Spinner animation="border" variant="primary" />}>
                     <TopBannerActivities />
                 </Suspense>
 
@@ -50,19 +50,19 @@ const Home: React.FC = () => {
                     </Row>
                 </Container>
 
-                <Suspense fallback={<div>載入 HotTopicActivitiesSection 中...</div>}>
+                <Suspense fallback={<Spinner animation="border" variant="primary" />}>
                     <HotTopicActivitiesSection />
                 </Suspense>
 
-                <Suspense fallback={<div>載入 NewActivitiesSection 中...</div>}>
+                <Suspense fallback={<Spinner animation="border" variant="primary" />}>
                     <NewActivitiesSection />
                 </Suspense>
 
-                <Suspense fallback={<div>載入 SellingOutActivitiesSection 中...</div>}>
+                <Suspense fallback={<Spinner animation="border" variant="primary" />}>
                     <SellingOutActivitiesSection />
                 </Suspense>
 
-                <Suspense fallback={<div>載入 CountdownActivitiesSection 中...</div>}>
+                <Suspense fallback={<Spinner animation="border" variant="primary" />}>
                     <CountdownActivitiesSection />
                 </Suspense>
             </main>
