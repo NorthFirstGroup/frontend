@@ -131,19 +131,34 @@ const OrganizerApplyForm: React.FC = () => {
             ...prevData,
             [name]: value
         }));
-        if (name === 'president' || name === 'ubn' || name === 'phone') {
-            validateField(name, value);
-        }
+        validateField(name, value);
     };
 
     const isFormValid = () => {
-        return !errors.ubn && !errors.phone && !errors.president;
+        return Object.values(errors).every(errorMsg => errorMsg === '');
+    };
+
+    const validateAllFields = () => {
+        const newErrors = {
+            name: validateTraditionalChineseName(formData.name),
+            ubn: validateField('ubn', formData.ubn) ? '' : errors.ubn, // Re-validate ubn
+            president: validateField('president', formData.president) ? '' : errors.president, // Re-validate president
+            phone: validateField('phone', formData.phone) ? '' : errors.phone, // Re-validate phone
+            address: validateTraditionalChineseAddress(formData.address)
+        };
+        setErrors(newErrors);
+        // Return true if all errors are empty strings
+        return Object.values(newErrors).every(errorMsg => errorMsg === '');
     };
 
     const handleApply = async (event: React.FormEvent) => {
         event.preventDefault();
         setErrMsg('');
         setSubmitSuccess('');
+        if (!validateAllFields()) {
+            setErrMsg('請修正表單中的錯誤。');
+            return;
+        }
         try {
             const response: ApiResponse<null> = await applyAsOrganizer(formData);
             if (response.status_code === 2000) {
@@ -161,6 +176,10 @@ const OrganizerApplyForm: React.FC = () => {
         event.preventDefault();
         setErrMsg('');
         setSubmitSuccess('');
+        if (!validateAllFields()) {
+            setErrMsg('請修正表單中的錯誤。');
+            return;
+        }
         try {
             const response: ApiResponse<null> = await putOrganizerData(formData);
             if (response.status_code === 2000) {
