@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Form, Alert } from 'react-bootstrap';
-import { ApiResponse } from '@/types/ApiResponse';
+import { ApiResponse } from '../../types/ApiResponse';
 import { useAuth } from '@hooks/useAuth';
 import { OrganizerData, getOrganizerData, applyAsOrganizer, putOrganizerData } from '@api/organizer';
 import UserNameInput from '@components/UserNameInput';
