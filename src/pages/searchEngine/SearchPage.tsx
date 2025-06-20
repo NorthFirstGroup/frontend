@@ -335,7 +335,12 @@ const SearchPage = () => {
                     <div className="mb-4">
                         <div className="fw-bold mb-2">為你推薦</div>
                         {recommends.map(item => (
-                            <div key={item.id} className="card mb-2">
+                            <div
+                                key={item.id}
+                                className="card mb-2"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => handleCardClick(item.id.toString())}
+                            >
                                 <Row className="g-0 align-items-center">
                                     <Col xs={4} md={12}>
                                         <img
