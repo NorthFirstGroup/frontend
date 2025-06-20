@@ -76,13 +76,16 @@ const ActivityList: React.FC = () => {
         fetchActivities();
     }, [fetchActivities]); // fetchActivities is already memoized by useCallback
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filterType, filterStatus, searchName]);
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        setCurrentPage(1);
     };
 
-    const handleDelete = async (activityId: number) => {
-        if (window.confirm(`確定要刪除活動 ID: ${activityId} 嗎？`)) {
+    const handleDelete = async (activityId: number, activityName: string) => {
+        if (window.confirm(`確定要刪除活動: ${activityName} 嗎？`)) {
             const response = await deleteOrganizerActivities(activityId);
             if (response.status_code === 2000) setActivities(prev => prev.filter(act => act.id !== activityId));
         }
@@ -114,6 +117,7 @@ const ActivityList: React.FC = () => {
                                         value={filterType}
                                         onChange={e => setFilterType(Number(e.target.value))}
                                     >
+                                        <option value={0}>全部</option>
                                         {Categories.map((cat: Category) => (
                                             <option key={cat.id} value={cat.id}>
                                                 {cat.name}
@@ -129,6 +133,7 @@ const ActivityList: React.FC = () => {
                                         value={filterStatus}
                                         onChange={e => setFilterStatus(Number(e.target.value))}
                                     >
+                                        <option value={0}>全部</option>
                                         {activityStatusMap.map((value, index) => (
                                             <option key={index} value={index}>
                                                 {value}

@@ -111,6 +111,22 @@
     line-height: 1; /* Ensure single line height */
 }
 
+.status-draft {
+    color: #6d6d6d; /* Grey for Draft */
+}
+
+.status-published {
+    color: #28a745; /* Bootstrap green for Published */
+}
+
+.status-rejected {
+    color: #dc3545; /* Bootstrap red for Rejected */
+}
+
+.status-finished {
+    color: #121212; /* Bootstrap yellow for Finished */
+}
+
 /* NEW: Container for the three action buttons */
 .card-action-buttons {
     display: flex;

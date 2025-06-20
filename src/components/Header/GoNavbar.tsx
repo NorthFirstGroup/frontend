@@ -7,7 +7,7 @@ import goTicketPng from '@assets/brand.png';
 import avatarPng from '@assets/def-avatar.png';
 import searchPng from '@assets/search.png';
 import { CgProfile } from 'react-icons/cg';
-import { BsLightningChargeFill } from 'react-icons/bs';
+// import { BsLightningChargeFill } from 'react-icons/bs';
 import { IoCartOutline } from 'react-icons/io5';
 import { PiIdentificationBadge } from 'react-icons/pi';
 import { FaRegCalendarDays } from 'react-icons/fa6';
@@ -77,10 +77,10 @@ const Header = () => {
                 <CgProfile className={styles.dropdownIcon} />
                 個人資訊
             </StyledNavDropdownItem>
-            <StyledNavDropdownItem as={Link} to="/user/point">
+            {/* <StyledNavDropdownItem as={Link} to="/user/point">
                 <BsLightningChargeFill className={styles.dropdownIcon} />
                 點數資訊
-            </StyledNavDropdownItem>
+            </StyledNavDropdownItem> */}
             <StyledNavDropdownItem as={Link} to="/user/orders">
                 <IoCartOutline className={styles.dropdownIcon} />
                 我的訂單
@@ -212,12 +212,17 @@ const Header = () => {
             {/* 手機版搜尋表單 (根據 showMobileSearchForm 狀態顯示，只在小螢幕顯示) */}
             {showMobileSearchForm && (
                 <Container fluid className="d-lg-none py-2">
-                    <Form className="mx-auto" style={{ maxWidth: '400px' }}>
+                    <Form className="mx-auto" style={{ maxWidth: '400px' }} onSubmit={handleSearchSubmit}>
                         <Form.Control
                             type="search"
                             placeholder="🔍 搜尋活動"
                             className="w-100"
-                            onSubmit={handleSearchSubmit}
+                            aria-label="Search"
+                            value={searchTerm} // Bind input value to state
+                            onChange={e => {
+                                setSearchTerm(e.target.value);
+                                console.log('Input onChange, new value:', e.target.value);
+                            }} // Update state on change
                         />
                     </Form>
                 </Container>
