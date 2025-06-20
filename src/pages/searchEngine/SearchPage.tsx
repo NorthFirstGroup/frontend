@@ -1,4 +1,4 @@
-import { FrontpageActivity } from '@/types/home';
+import { FrontpageActivity } from '../../types/home';
 import { getRecommendActivities } from '@api/frontpage';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
