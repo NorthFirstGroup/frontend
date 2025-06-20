@@ -81,8 +81,8 @@ const ActivityList: React.FC = () => {
         setCurrentPage(1);
     };
 
-    const handleDelete = async (activityId: number) => {
-        if (window.confirm(`確定要刪除活動 ID: ${activityId} 嗎？`)) {
+    const handleDelete = async (activityId: number, activityName: string) => {
+        if (window.confirm(`確定要刪除活動: ${activityName} 嗎？`)) {
             const response = await deleteOrganizerActivities(activityId);
             if (response.status_code === 2000) setActivities(prev => prev.filter(act => act.id !== activityId));
         }

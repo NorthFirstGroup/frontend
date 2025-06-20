@@ -16,7 +16,7 @@ interface ActivityCardProps {
 
     isEditable?: boolean;
     onEdit?: (activityId: number) => void;
-    onDelete?: (activityId: number) => void;
+    onDelete?: (activityId: number, activityName: string) => void;
 }
 
 const ActivityCard: React.FC<ActivityCardProps> = ({
@@ -87,7 +87,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
     const handleDeleteClick = (event: React.MouseEvent) => {
         event.stopPropagation(); // Prevent the card's onClick from firing
-        onDelete && onDelete(activity.id); // Call if handler exists
+        onDelete && onDelete(activity.id, activity.name); // Call if handler exists
     };
 
     return (
