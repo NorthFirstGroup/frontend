@@ -6,6 +6,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 
 import { FrontpageActivity } from '../../types/home';
 import './ActivityCard.css';
+import { activityStatusMap } from '../../api/organizer';
 
 interface ActivityCardProps {
     activity: FrontpageActivity;
@@ -124,7 +125,21 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
                             {activity?.status && (
                                 <div className="card-badge">
                                     {/* <span className="card-badge-text">{activity.category}</span> */}
-                                    <label className="text-sm-start">{activity.status}</label>
+                                    <label
+                                        className={`text-sm-start ${
+                                            activity.status === activityStatusMap[1]
+                                                ? 'status-draft'
+                                                : activity.status === activityStatusMap[2]
+                                                  ? 'status-published'
+                                                  : activity.status === activityStatusMap[3]
+                                                    ? 'status-rejected'
+                                                    : activity.status === activityStatusMap[4]
+                                                      ? 'status-finished'
+                                                      : '' // Default or no specific color if status doesn't match
+                                        }`}
+                                    >
+                                        {activity.status}
+                                    </label>
                                 </div>
                             )}
                             <Button
