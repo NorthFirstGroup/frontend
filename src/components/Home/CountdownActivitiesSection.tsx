@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import ActivitySectionHeader from './ActivitySectionHeader';
 import CountdownActivityCard from './CountdownActivityCard';
-import { ApiResponse } from '../../types/ApiResponse';
-import { FrontpageActivity } from '../../types/home';
-import { getCountdownActivities } from '../../api/frontpage';
+import { ApiResponse } from '@type/ApiResponse';
+import { FrontpageActivity } from '@type/home';
+import { getCountdownActivities } from '@api/frontpage';
 import { FaClock } from 'react-icons/fa6';
 
 const CountdownActivitiesSection: React.FC = () => {

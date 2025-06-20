@@ -1,4 +1,4 @@
-import { FrontpageActivity } from '../../types/home';
+import { FrontpageActivity } from '@type/home';
 import { getRecommendActivities } from '@api/frontpage';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -11,8 +11,8 @@ import { Category, getCategories } from '@api/category';
 import SearchFilter from '@components/searchFilter';
 import CategoryFilter from '@components/categoryFilter';
 
-import calendarIcon from '../../assets/searchPageMock/calendar.svg';
-import locationIcon from '../../assets/searchPageMock/location.svg';
+import calendarIcon from '@assets/searchPageMock/calendar.svg';
+import locationIcon from '@assets/searchPageMock/location.svg';
 
 const SearchPage = () => {
     const [activities, setActivities] = useState<any[]>([]);
@@ -335,7 +335,12 @@ const SearchPage = () => {
                     <div className="mb-4">
                         <div className="fw-bold mb-2">為你推薦</div>
                         {recommends.map(item => (
-                            <div key={item.id} className="card mb-2">
+                            <div
+                                key={item.id}
+                                className="card mb-2"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => handleCardClick(item.id.toString())}
+                            >
                                 <Row className="g-0 align-items-center">
                                     <Col xs={4} md={12}>
                                         <img

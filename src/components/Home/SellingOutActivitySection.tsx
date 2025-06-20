@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner } from 'react-bootstrap';
 import ActivitySection from './ActivitySection';
-import { ApiResponse } from '../../types/ApiResponse';
-import { FrontpageActivity } from '../../types/home';
-import { getLowStockActivities } from '../../api/frontpage';
+import { ApiResponse } from '@type/ApiResponse';
+import { FrontpageActivity } from '@type/home';
+import { getLowStockActivities } from '@api/frontpage';
 import { BsLightningChargeFill } from 'react-icons/bs';
 
 const SellingOutActivitiesSection: React.FC = () => {

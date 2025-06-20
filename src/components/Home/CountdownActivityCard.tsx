@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { FrontpageActivity } from '../../types/home';
+import { FrontpageActivity } from '@type/home';
 import './CountdownActivityCard.css';
 
 interface CountdownActivityCardProps {

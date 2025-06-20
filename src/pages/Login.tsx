@@ -3,8 +3,8 @@ import { useAuth } from '../hooks/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
 import { signIn, LogInAndUpResponseData } from '../api/authApi';
-import { ApiResponse } from '../types/ApiResponse'; // 確保路徑正確
-import { ApiError } from '../types/ApiError';
+import { ApiResponse } from '@type/ApiResponse'; // 確保路徑正確
+import { ApiError } from '@type/ApiError';
 import { handleApiError } from '../utils/errorHandling';
 import { decodeToken } from '../utils/jwt';
 

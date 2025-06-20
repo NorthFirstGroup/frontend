@@ -1,4 +1,4 @@
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 import { apiClient } from './client';
 import { uploadToS3 } from './uploadApi';
 import { GetProfileSchema } from '../schemas/profile';

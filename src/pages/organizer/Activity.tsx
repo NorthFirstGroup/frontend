@@ -2,16 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Pagination, Spinner } from 'react-bootstrap';
 import { FaRegPlusSquare } from 'react-icons/fa';
-import ActivityCard from '../../components/Home/ActivityCard';
-import { FrontpageActivity } from '../../types/home'; // Adjust path if necessary
+import ActivityCard from '@components/Home/ActivityCard';
+import { FrontpageActivity } from '@type/home'; // Adjust path if necessary
 import {
     activityStatusMap,
     organizerSearchParams,
     OrganizerOneActivityData,
     getOrganizerActivities,
     deleteOrganizerActivities
-} from '../../api/organizer';
-import { Categories, Category } from '../../api/category';
+} from '@api/organizer';
+import { Categories, Category } from '@api/category';
 
 const ActivityList: React.FC = () => {
     const [filterType, setFilterType] = useState(0);

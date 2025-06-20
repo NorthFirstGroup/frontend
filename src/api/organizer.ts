@@ -1,7 +1,7 @@
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 import { apiClient } from './client';
 import { OrganizerApplySchema } from '../schemas/organizer';
-import { ActivityCategory } from '../types/home';
+import { ActivityCategory } from '@type/home';
 
 export interface OrganizerData {
     name: string;

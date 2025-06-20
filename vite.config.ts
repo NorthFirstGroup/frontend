@@ -20,7 +20,7 @@ export default defineConfig({
             '@contexts': path.resolve(__dirname, 'src/contexts'),
             '@routes': path.resolve(__dirname, 'src/routes'),
             '@api': path.resolve(__dirname, 'src/api'),
-            '@types': path.resolve(__dirname, 'src/types')
+            '@type': path.resolve(__dirname, 'src/type')
         }
     }
 });

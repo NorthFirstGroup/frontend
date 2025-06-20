@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getProfile, updateProfile, GetProfileData, SetProfileData, UpdateProfileResponseData } from '../api/profile';
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 import { handleApiError } from '../utils/errorHandling';
 
 export const useUserProfileData = () => {

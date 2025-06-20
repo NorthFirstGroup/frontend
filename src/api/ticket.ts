@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 import { transSnakeToCamel } from '@utils/transSnakeToCamel';
 
 export interface Ticket {

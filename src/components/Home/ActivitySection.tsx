@@ -1,11 +1,11 @@
 // src/components/ActivitySection.tsx
 import React from 'react';
 // import { useNavigate } from 'react-router-dom';
-import { useActivityFilterNavigation } from '../../utils/navigationUtils';
+import { useActivityFilterNavigation } from '@utils/navigationUtils';
 import { Container, Row, Col } from 'react-bootstrap';
 import ActivitySectionHeader from './ActivitySectionHeader';
 import ActivityCard from './ActivityCard';
-import { FrontpageActivity } from '../../types/home';
+import { FrontpageActivity } from '@type/home';
 
 interface ActivitySectionProps {
     title: string;

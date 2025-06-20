@@ -1,7 +1,7 @@
 import { publicApiClient } from './client';
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 import { GetFrontpageResponseData, GetTopBannerResponseData } from '../schemas/frontpage';
-import { BannerSlide, FrontpageActivity } from '../types/home';
+import { BannerSlide, FrontpageActivity } from '@type/home';
 
 export const getSearchActivities = async (query: any): Promise<ApiResponse<BannerSlide[]>> => {
     const res = await publicApiClient.get<ApiResponse<BannerSlide[]>>('/v1/frontpage/search', {
