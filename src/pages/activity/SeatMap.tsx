@@ -51,7 +51,7 @@ const SeatMap = () => {
 
     const handleQuantityChange = (index: number, delta: number) => {
         setQuantities(prev =>
-            prev.map((q, i) => (i === index ? Math.max(0, q + delta) : q))
+            prev.map((q, i) => (i === index ? Math.min(4, Math.max(0, q + delta)) : q))
         );
     };
 
