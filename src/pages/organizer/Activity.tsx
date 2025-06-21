@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button, Pagination, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Pagination, Spinner, Modal } from 'react-bootstrap';
 import { FaRegPlusSquare } from 'react-icons/fa';
 import ActivityCard from '@components/Home/ActivityCard';
 import { FrontpageActivity } from '@type/home'; // Adjust path if necessary
@@ -22,6 +22,9 @@ const ActivityList: React.FC = () => {
     const [totalPages, setTotalPages] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(true); // Loading state
     const [error, setError] = useState<string | null>(null); // Error state
+
+    const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+    const [activityToDelete, setActivityToDelete] = useState<{ id: number; name: string } | null>(null);
 
     const itemsPerPage = 6;
 
@@ -84,11 +87,36 @@ const ActivityList: React.FC = () => {
         e.preventDefault();
     };
 
-    const handleDelete = async (activityId: number, activityName: string) => {
-        if (window.confirm(`確定要刪除活動: ${activityName} 嗎？`)) {
-            const response = await deleteOrganizerActivities(activityId);
-            if (response.status_code === 2000) setActivities(prev => prev.filter(act => act.id !== activityId));
+    const confirmDelete = (activityId: number, activityName: string) => {
+        setActivityToDelete({ id: activityId, name: activityName });
+        setShowDeleteConfirmModal(true);
+    };
+
+    // Function to handle the actual deletion after modal confirmation
+    const executeDelete = async () => {
+        if (activityToDelete) {
+            const response = await deleteOrganizerActivities(activityToDelete.id); // Assuming deleteOrganizerActivities exists
+            if (response.status_code === 2000) {
+                setActivities(prev => prev.filter(act => act.id !== activityToDelete.id));
+                // Optional: show a success toast/message
+            } else {
+                // Handle error: show an error toast/message
+            }
+            setActivityToDelete(null); // Clear pending deletion
+            setShowDeleteConfirmModal(false); // Hide the modal
         }
+    };
+
+    // Function to close the modal without deleting
+    const cancelDelete = () => {
+        setActivityToDelete(null);
+        setShowDeleteConfirmModal(false);
+    };
+
+    // Replace your handleDelete with this
+    // This is called directly by your delete button onClick
+    const handleDeleteButtonClick = (activityId: number, activityName: string) => {
+        confirmDelete(activityId, activityName);
     };
 
     const handleEdit = (activityId: number) => {
@@ -197,7 +225,7 @@ const ActivityList: React.FC = () => {
                                         hasShadow={true}
                                         isEditable={true}
                                         onEdit={handleEdit} // Pass if you defined a custom handler in ActivityList
-                                        onDelete={handleDelete}
+                                        onDelete={handleDeleteButtonClick}
                                     />
                                 </Col>
                             ))}
@@ -231,6 +259,22 @@ const ActivityList: React.FC = () => {
                         </Row>
                     )}
                 </div>
+                <Modal show={showDeleteConfirmModal} onHide={cancelDelete} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>確認刪除</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        確定要刪除活動: <strong>{activityToDelete?.name}</strong> 嗎？此操作無法復原。
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={cancelDelete}>
+                            取消
+                        </Button>
+                        <Button variant="danger" onClick={executeDelete}>
+                            確定刪除
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </Container>
         </Container>
     );
