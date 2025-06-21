@@ -1,41 +1,40 @@
 import { useCallback, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Accordion, Button, Image, Spinner, Alert} from 'react-bootstrap';
+import { Row, Col, Accordion, Button, Image, Spinner, Alert } from 'react-bootstrap';
 import { OrderRecords, Pagination, getOrderList } from '@api/order';
-import { FaCopy, FaUpRightFromSquare, FaLocationDot  } from 'react-icons/fa6'; // 引入複製和外連圖示
+import { FaCopy, FaUpRightFromSquare, FaLocationDot } from 'react-icons/fa6'; // 引入複製和外連圖示
 
-import styles from '@components/Order/MyOrders.module.css'; 
+import styles from '@components/Order/MyOrders.module.css';
 import { Toaster } from 'react-hot-toast';
 import { showToast } from '@utils/customToast';
-import MemberPanelNav from '@components/MemberPanelNav'; // 引入新的組件名和路徑
-
+// import MemberPanelNav from '@components/MemberPanelNav'; // 引入新的組件名和路徑
 
 const formatDateTime = (dateInput: Date | string | null | undefined): string => {
     if (!dateInput) {
-      return '';
+        return '';
     }
-  
+
     const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-  
+
     if (!(date instanceof Date) || isNaN(date.getTime())) {
-      console.error("Invalid Date object provided to formatDateTime:", dateInput);
-      return 'N/A';
+        console.error('Invalid Date object provided to formatDateTime:', dateInput);
+        return 'N/A';
     }
-  
+
     const formattedDate = date.toLocaleDateString('zh-TW', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
     });
-  
+
     const formattedTime = date.toLocaleTimeString('zh-TW', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
     });
-  
+
     return `${formattedDate} ${formattedTime}`;
-  };
+};
 
 const MyOrders = () => {
     const [orders, setOrders] = useState<OrderRecords[]>([]);
@@ -52,19 +51,18 @@ const MyOrders = () => {
             // console.log(res);
             if (res) {
                 // 先在這裡對付款方式與狀態等進行資料處理跟轉換
-                const orders: OrderRecords[] = res.results
+                const orders: OrderRecords[] = res.results;
                 setOrders(orders);
                 _setPagination(res.pagination); // 更新 pagination 狀態
             } else {
                 setError('無法載入訂單列表。');
             }
         } catch (err: any) {
-            console.error("載入訂單列表失敗:", err);
+            console.error('載入訂單列表失敗:', err);
             setError(err.message || '載入訂單時發生網路錯誤。');
         } finally {
             setLoading(false); // 結束載入
         }
-
     }, []);
 
     useEffect(() => {
@@ -74,9 +72,9 @@ const MyOrders = () => {
     // 顯示 Toast 訊息的函數
     const showCustomToast = (message: string, variant: 'success' | 'danger' = 'success') => {
         if (variant === 'success') {
-            showToast(message, 'success'); 
+            showToast(message, 'success');
         } else {
-            showToast(message, 'error'); 
+            showToast(message, 'error');
         }
     };
 
@@ -84,7 +82,7 @@ const MyOrders = () => {
     const copyToClipboard = async (text: string) => {
         if (navigator.clipboard && window.isSecureContext) {
             try {
-                await navigator.clipboard.writeText(text)
+                await navigator.clipboard.writeText(text);
                 showCustomToast('複製到剪貼簿');
             } catch (err) {
                 console.error('複製失敗:', err);
@@ -134,39 +132,45 @@ const MyOrders = () => {
                 <i className="fa-solid fa-circle-exclamation me-2"></i> {error}
             </Alert>
         );
-    }    
-
+    }
 
     return (
         <div className={`container container-xl ${styles.myOrdersContainer}`}>
-            
-            <MemberPanelNav />  
-
-            <h1 className="mb-4 text-center">訂單記錄</h1> {/* 標題改為「訂單記錄」並居中 */} 
-                  
+            {/* <MemberPanelNav /> */}
+            <h1 className="mb-4 text-center">訂單記錄</h1> {/* 標題改為「訂單記錄」並居中 */}
             {orders.length === 0 ? (
                 // 沒有訂單時的提示訊息
                 <Alert variant="light" className={`text-center ${styles.noOrdersAlert}`}>
                     <i className="fa-solid fa-info-circle me-2"></i> 您目前沒有任何訂單。
-                    <Link to="/" className="alert-link ms-2">去逛逛活動吧！</Link>
+                    <Link to="/" className="alert-link ms-2">
+                        去逛逛活動吧！
+                    </Link>
                 </Alert>
             ) : (
                 // 遍歷訂單列表，為每個訂單渲染一個卡片區塊
-                <Accordion defaultActiveKey={['0']} alwaysOpen> {/* defaultActiveKey 讓第一個預設展開，alwaysOpen 允許多個同時展開 */}
-                    {orders.map((order) => {
+                <Accordion defaultActiveKey={['0']} alwaysOpen>
+                    {' '}
+                    {/* defaultActiveKey 讓第一個預設展開，alwaysOpen 允許多個同時展開 */}
+                    {orders.map(order => {
                         // 格式化活動日期時間
                         const date = new Date(order.eventDate);
-                        const formattedEventDate = formatDateTime(date)
+                        const formattedEventDate = formatDateTime(date);
 
                         // 每個訂單卡片的唯一 eventKey
                         const eventKey = order.orderNumber; // 使用訂單編號作為唯一的 eventKey
 
                         return (
                             <Accordion.Item eventKey={eventKey} key={order.orderNumber} className={styles.orderCard}>
-                                <div className={styles.orderCardHeader}> {/* 非 Accordion.Header 的部分，用於包裝卡片上半部 */}
+                                <div className={styles.orderCardHeader}>
+                                    {' '}
+                                    {/* 非 Accordion.Header 的部分，用於包裝卡片上半部 */}
                                     <Row className="w-100 align-items-start mb-3">
                                         {/* 左側：活動圖片 + 查看憑證按鈕 */}
-                                        <Col xs={12} md={3} className={`d-flex flex-column align-items-center justify-content-center justify-content-md-start mb-3 mb-md-0 ${styles.imageCol}`}>
+                                        <Col
+                                            xs={12}
+                                            md={3}
+                                            className={`d-flex flex-column align-items-center justify-content-center justify-content-md-start mb-3 mb-md-0 ${styles.imageCol}`}
+                                        >
                                             <Image
                                                 src={order.coverImage}
                                                 alt={order.eventName}
@@ -176,9 +180,22 @@ const MyOrders = () => {
                                             />
                                             {/* 調整為只有已完成付款的訂單才顯示憑證 */}
                                             {order.paymentStatus === '已付款' && (
-                                                <div className="mt-2" style={{ width: '100%', maxWidth: 'var(--cover-element-fixed-width)' }}>
-                                                    <Link to={`/user/orders/${order.orderNumber}`} className={styles.viewVoucherLink}>
-                                                        <Button variant="outline-primary" size="sm" className={styles.viewVoucherBtn}>
+                                                <div
+                                                    className="mt-2"
+                                                    style={{
+                                                        width: '100%',
+                                                        maxWidth: 'var(--cover-element-fixed-width)'
+                                                    }}
+                                                >
+                                                    <Link
+                                                        to={`/user/orders/${order.orderNumber}`}
+                                                        className={styles.viewVoucherLink}
+                                                    >
+                                                        <Button
+                                                            variant="outline-primary"
+                                                            size="sm"
+                                                            className={styles.viewVoucherBtn}
+                                                        >
                                                             <FaUpRightFromSquare className="me-1" /> 查看憑證
                                                         </Button>
                                                     </Link>
@@ -199,7 +216,9 @@ const MyOrders = () => {
                                                 </div>
                                                 <div className={styles.infoItem}>
                                                     <span className={styles.label}>實付金額</span>
-                                                    <span className={`${styles.value} text-danger fw-bold`}>NT$ {order.totalPrice.toLocaleString()}</span>
+                                                    <span className={`${styles.value} text-danger fw-bold`}>
+                                                        NT$ {order.totalPrice.toLocaleString()}
+                                                    </span>
                                                 </div>
                                                 <div className={styles.infoItem}>
                                                     <span className={styles.label}>活動日期</span>
@@ -208,8 +227,12 @@ const MyOrders = () => {
                                                 <div className={styles.infoItem}>
                                                     <span className={styles.label}>活動地點</span>
                                                     <span className={styles.value}>{order.location}</span>
-                                                    <Link to={`http://maps.google.com/?q=${encodeURIComponent(order.location)}`}
-                                                          target="_blank" rel="noopener noreferrer" className="ms-2 text-primary">
+                                                    <Link
+                                                        to={`http://maps.google.com/?q=${encodeURIComponent(order.location)}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="ms-2 text-primary"
+                                                    >
                                                         <FaLocationDot size={18} />
                                                     </Link>
                                                 </div>
@@ -221,7 +244,7 @@ const MyOrders = () => {
                                         </Col>
                                     </Row>
                                     <hr className={styles.divider} />
-                                        {/* 右側：訂單明細摺疊按鈕 */}
+                                    {/* 右側：訂單明細摺疊按鈕 */}
                                     <div className={styles.accordionBlock}>
                                         <Accordion.Header className={styles.customAccordionHeader}>
                                             <span className={styles.headerText}>訂單明細</span>
@@ -229,8 +252,8 @@ const MyOrders = () => {
                                             <i className={`fa-solid fa-chevron-down ${styles.arrowIcon}`}></i>
                                         </Accordion.Header>
                                     </div>
-                                </div> {/* End of orderCardHeader */}
-
+                                </div>{' '}
+                                {/* End of orderCardHeader */}
                                 {/* 訂單明細摺疊內容 */}
                                 <Accordion.Body className={styles.accordionBody}>
                                     <Row className="mb-2">
@@ -241,16 +264,21 @@ const MyOrders = () => {
                                                     <span className={styles.detailValue}>{order.orderNumber}</span>
                                                     <FaCopy
                                                         className={`${styles.copyIcon}`}
-                                                        onClick={(e) => { e.stopPropagation(); copyToClipboard(order.orderNumber); }}
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            copyToClipboard(order.orderNumber);
+                                                        }}
                                                         title="複製訂單編號"
                                                     />
-                                                 </div>
+                                                </div>
                                             </div>
                                         </Col>
                                         <Col xs={12} md={4}>
                                             <div className={styles.detailRow}>
                                                 <span className={styles.detailLabel}>訂單建立</span>
-                                                <span className={styles.detailValue}>{formatDateTime(order.createdAt)}</span>
+                                                <span className={styles.detailValue}>
+                                                    {formatDateTime(order.createdAt)}
+                                                </span>
                                             </div>
                                         </Col>
                                         <Col xs={12} md={4}>
@@ -274,7 +302,9 @@ const MyOrders = () => {
                                         <Col xs={12} md={4}>
                                             <div className={styles.detailRow}>
                                                 <span className={styles.detailLabel}>付款時間</span>
-                                                <span className={styles.detailValue}>{formatDateTime(order.paymentDate) || ''}</span>
+                                                <span className={styles.detailValue}>
+                                                    {formatDateTime(order.paymentDate) || ''}
+                                                </span>
                                             </div>
                                         </Col>
                                     </Row>
@@ -284,10 +314,8 @@ const MyOrders = () => {
                     })}
                 </Accordion>
             )}
-            <Toaster
-                position="bottom-center"
-            />
-            </div>
+            <Toaster position="bottom-center" />
+        </div>
     );
 };
 
