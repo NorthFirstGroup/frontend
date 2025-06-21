@@ -82,3 +82,40 @@ $button-style-types: (
         box-shadow: 0 0 0 0.25rem rgba($primary-500, 0.5); // 如果你需要自定義 focus 陰影
     }
 }
+// 針對 React Bootstrap 的 .secondary-outlined 覆蓋
+.btn-secondary {
+    @include button-secondary-outlined();
+    @include button-text-only();
+    color: $primary-500 !important;
+    border: 1px solid $primary-500 !important;
+    border-radius: 12px !important;
+    padding: 8px 16px !important;
+
+    // *** 新增這裡，定義 .btn-secondary 的 hover 效果 ***
+    &:hover {
+        background: $primary-500;
+        color: #fff !important;
+        text-decoration: none !important;
+        // @include custom-gradient($gradient-hover-start, $gradient-hover-end, 145.98deg);
+        .icon {
+            fill: gray;
+            transition: fill 0.3s ease;
+        }
+    }
+    // 如果還有其他交互效果，例如 focus, active，也應該在這裡處理
+    &:focus,
+    &.focus {
+        border: 1px solid $primary-500;
+        box-shadow: 0 0 0 0.25rem rgba($primary-500, 0.5); // 如果你需要自定義 focus 陰影
+    }
+}
+
+.btn-light {
+    &:focus,
+    &.focus,
+    &:hover {
+        background-color: transparent !important;
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+}
