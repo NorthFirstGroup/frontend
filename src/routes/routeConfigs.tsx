@@ -13,6 +13,7 @@ import SeatMap from '@pages/activity/SeatMap';
 import OrderPayment from '@pages/activity/OrderPayment';
 import ManageActivityPage from '@pages/organizer/manageActivity/ManageActivityPage';
 import ActivityList from '@pages/organizer/Activity';
+import VenueForm from '@pages/organizer/VenueForm';
 
 export const routeConfigs = [
     { path: '/', element: <Home />, roles: [] },
@@ -67,6 +68,11 @@ export const routeConfigs = [
         path: '/organizer/activity/manage/:activityId',
         element: <ManageActivityPage />,
         roles: ['ORGANIZER'] // 活動管理
+    },
+    {
+        path: '/organizer/activity/site/:activityId',
+        element: <VenueForm />,
+        roles: ['ORGANIZER'] // 活動場地管理
     },
     {
         path: '/organizer/validate-entry',
