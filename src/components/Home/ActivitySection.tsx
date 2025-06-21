@@ -16,6 +16,8 @@ interface ActivitySectionProps {
     cardsPerRow?: number;
     searchKeyword?: string;
     searchCategoryId?: string;
+    searchTag?: string;
+    searchLevel?: string;
     showRemainingSeats: boolean;
 }
 
@@ -28,6 +30,8 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
     cardsPerRow = 3,
     searchKeyword,
     searchCategoryId,
+    searchTag,
+    searchLevel,
     showRemainingSeats
 }) => {
     // const navigate = useNavigate(); // Initialize useNavigate hook
@@ -54,8 +58,9 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
         //     navigate('/activity');
         // }
         navigateToActivityListWithFilters({
-            keyword: searchKeyword || '',
-            categoryId: searchCategoryId || ''
+            categoryId: searchCategoryId || '',
+            tag: searchTag || '',
+            level: searchLevel || ''
         });
     };
 

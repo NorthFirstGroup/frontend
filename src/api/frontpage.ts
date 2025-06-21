@@ -74,7 +74,10 @@ export const getLowStockActivities = async (): Promise<ApiResponse<FrontpageActi
 };
 
 export const getCountdownActivities = async (): Promise<ApiResponse<FrontpageActivity[]>> => {
-    const res = await publicApiClient.get<ApiResponse<FrontpageActivity[]>>('/v1/frontpage/coming-soon');
+    const SalesInDays = 30;
+    const res = await publicApiClient.get<ApiResponse<FrontpageActivity[]>>(
+        `/v1/frontpage/coming-soon?sales_in_days=${SalesInDays}`
+    );
     const parsed = GetFrontpageResponseData.safeParse(res.data.data);
     if (!parsed.success) {
         console.error('GET - /v1/frontpage/coming-soon 驗證錯誤', parsed.error.format());

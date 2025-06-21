@@ -7,9 +7,12 @@ import { FrontpageActivity } from '@type/home';
 import { getNewArrivalActivities } from '@api/frontpage';
 import { FaFireAlt } from 'react-icons/fa';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
+import { useActivityFilterNavigation } from '@utils/navigationUtils';
 import './NewArrivalSection.scss';
 
 const NewActivitiesSection: React.FC = () => {
+    const navigateToActivityListWithFilters = useActivityFilterNavigation();
+
     const [activities, setActivities] = useState<FrontpageActivity[]>([]);
     const [loading, setLoading] = useState<boolean>(true); // Add loading state
     const [error, setError] = useState<string | null>(null); // Add error state
@@ -91,6 +94,13 @@ const NewActivitiesSection: React.FC = () => {
         return null;
     }
 
+    const handleViewMoreClick = () => {
+        navigateToActivityListWithFilters({
+            tag: 'NewArrivals',
+            level: '9999'
+        });
+    };
+
     return (
         <section className="activity-section my-5">
             <Container>
@@ -101,6 +111,7 @@ const NewActivitiesSection: React.FC = () => {
                     iconSvg={FaFireAlt}
                     hasMore={true}
                     searchKeyword="全新"
+                    onViewMoreClick={handleViewMoreClick}
                 />
 
                 <div className="position-relative">
