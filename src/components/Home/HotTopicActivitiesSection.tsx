@@ -1,9 +1,10 @@
 // src/components/PopularActivitiesSection.tsx
 import React, { useState, useEffect } from 'react';
+import { Spinner } from 'react-bootstrap';
 import ActivitySection from './ActivitySection';
-import { ApiResponse } from '../../types/ApiResponse';
-import { FrontpageActivity } from '../../types/home';
-import { getHotTopicActivities } from '../../api/frontpage';
+import { ApiResponse } from '@type/ApiResponse';
+import { FrontpageActivity } from '@type/home';
+import { getHotTopicActivities } from '@api/frontpage';
 import { FaThumbsUp } from 'react-icons/fa6';
 
 const HotTopicActivitiesSection: React.FC = () => {
@@ -29,7 +30,7 @@ const HotTopicActivitiesSection: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>載入熱門推薦活動中...</div>; // Or a more sophisticated spinner
+        return <Spinner animation="border" variant="primary" />;
     }
 
     if (error) {
@@ -48,7 +49,7 @@ const HotTopicActivitiesSection: React.FC = () => {
             iconSvg={FaThumbsUp}
             initialRows={2}
             cardsPerRow={3}
-            searchKeyword="熱門"
+            searchCategoryId="1"
             showRemainingSeats={false}
         />
     );

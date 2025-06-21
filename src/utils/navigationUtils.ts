@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // 定義所有可能的篩選參數
 interface ActivityFilterParams {
     keyword?: string; // 搜尋關鍵字
-    category?: string; // 活動類別
-    categoryId?: number;
+    categoryId?: string; // 活動類別
     // locationId?: number; // 地點
     // 未來如果需要，可以添加更多參數，例如：
     // date?: string;     // 日期
@@ -29,7 +28,7 @@ export const useActivityFilterNavigation = () => {
         // 檢查並添加 category 參數
         if (params.categoryId) {
             // Add categoryId to search params
-            queryParams.append('categoryId', params.categoryId.toString());
+            queryParams.append('categoryId', params.categoryId);
         }
         // 未來可以在這裡添加更多參數的處理邏輯
         // if (params.locationId) {

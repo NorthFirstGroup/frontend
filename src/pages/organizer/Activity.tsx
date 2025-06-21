@@ -2,16 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Pagination, Spinner } from 'react-bootstrap';
 import { FaRegPlusSquare } from 'react-icons/fa';
-import ActivityCard from '../../components/Home/ActivityCard';
-import { FrontpageActivity } from '../../types/home'; // Adjust path if necessary
+import ActivityCard from '@components/Home/ActivityCard';
+import { FrontpageActivity } from '@type/home'; // Adjust path if necessary
 import {
     activityStatusMap,
     organizerSearchParams,
     OrganizerOneActivityData,
     getOrganizerActivities,
     deleteOrganizerActivities
-} from '../../api/organizer';
-import { Categories, Category } from '../../api/category';
+} from '@api/organizer';
+import { Categories, Category } from '@api/category';
 
 const ActivityList: React.FC = () => {
     const [filterType, setFilterType] = useState(0);
@@ -76,13 +76,16 @@ const ActivityList: React.FC = () => {
         fetchActivities();
     }, [fetchActivities]); // fetchActivities is already memoized by useCallback
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filterType, filterStatus, searchName]);
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        setCurrentPage(1);
     };
 
-    const handleDelete = async (activityId: number) => {
-        if (window.confirm(`確定要刪除活動 ID: ${activityId} 嗎？`)) {
+    const handleDelete = async (activityId: number, activityName: string) => {
+        if (window.confirm(`確定要刪除活動: ${activityName} 嗎？`)) {
             const response = await deleteOrganizerActivities(activityId);
             if (response.status_code === 2000) setActivities(prev => prev.filter(act => act.id !== activityId));
         }
@@ -114,6 +117,7 @@ const ActivityList: React.FC = () => {
                                         value={filterType}
                                         onChange={e => setFilterType(Number(e.target.value))}
                                     >
+                                        <option value={0}>全部</option>
                                         {Categories.map((cat: Category) => (
                                             <option key={cat.id} value={cat.id}>
                                                 {cat.name}
@@ -129,6 +133,7 @@ const ActivityList: React.FC = () => {
                                         value={filterStatus}
                                         onChange={e => setFilterStatus(Number(e.target.value))}
                                     >
+                                        <option value={0}>全部</option>
                                         {activityStatusMap.map((value, index) => (
                                             <option key={index} value={index}>
                                                 {value}

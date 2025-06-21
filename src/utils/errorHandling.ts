@@ -1,4 +1,4 @@
-import { ApiError } from '../types/ApiError';
+import { ApiError } from '@type/ApiError';
 
 export const handleApiError = (error: unknown, defaultErrorMessage: string): string => {
     if (error instanceof ApiError) {

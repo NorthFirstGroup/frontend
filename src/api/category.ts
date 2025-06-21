@@ -1,5 +1,5 @@
 import { publicApiClient } from './client';
-import { ApiResponse } from '../types/ApiResponse';
+import { ApiResponse } from '@type/ApiResponse';
 
 // 定義地區選項介面
 export interface Category {

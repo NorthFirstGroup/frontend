@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Col } from 'react-bootstrap';
+import { Container, Col, Spinner } from 'react-bootstrap';
 import ActivitySectionHeader from './ActivitySectionHeader';
 import ActivityCard from './ActivityCard';
-import { ApiResponse } from '../../types/ApiResponse';
-import { FrontpageActivity } from '../../types/home';
-import { getNewArrivalActivities } from '../../api/frontpage';
+import { ApiResponse } from '@type/ApiResponse';
+import { FrontpageActivity } from '@type/home';
+import { getNewArrivalActivities } from '@api/frontpage';
 import { FaFireAlt } from 'react-icons/fa';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import './NewArrivalSection.scss';
@@ -80,7 +80,7 @@ const NewActivitiesSection: React.FC = () => {
     }, [activities]); // 當活動數據變化時也重新檢查
 
     if (loading) {
-        return <div>載入全新登場活動中...</div>; // Or a more sophisticated spinner
+        return <Spinner animation="border" variant="primary" />;
     }
 
     if (error) {

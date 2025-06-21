@@ -1,11 +1,11 @@
 // src/components/ActivitySection.tsx
 import React from 'react';
 // import { useNavigate } from 'react-router-dom';
-import { useActivityFilterNavigation } from '../../utils/navigationUtils';
+import { useActivityFilterNavigation } from '@utils/navigationUtils';
 import { Container, Row, Col } from 'react-bootstrap';
 import ActivitySectionHeader from './ActivitySectionHeader';
 import ActivityCard from './ActivityCard';
-import { FrontpageActivity } from '../../types/home';
+import { FrontpageActivity } from '@type/home';
 
 interface ActivitySectionProps {
     title: string;
@@ -15,6 +15,7 @@ interface ActivitySectionProps {
     initialRows?: number;
     cardsPerRow?: number;
     searchKeyword?: string;
+    searchCategoryId?: string;
     showRemainingSeats: boolean;
 }
 
@@ -26,6 +27,7 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
     initialRows = 2,
     cardsPerRow = 3,
     searchKeyword,
+    searchCategoryId,
     showRemainingSeats
 }) => {
     // const navigate = useNavigate(); // Initialize useNavigate hook
@@ -51,7 +53,10 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
         //     // For example, navigate to a general activity listing page
         //     navigate('/activity');
         // }
-        navigateToActivityListWithFilters({ keyword: searchKeyword || '' });
+        navigateToActivityListWithFilters({
+            keyword: searchKeyword || '',
+            categoryId: searchCategoryId || ''
+        });
     };
 
     return (

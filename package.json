@@ -1,7 +1,7 @@
 {
     "name": "go-ticket-frontend",
     "private": true,
-    "version": "1.0.8",
+    "version": "1.0.10",
     "type": "module",
     "scripts": {
         "clean": "rimraf dist",
@@ -47,6 +47,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.26.0",
+        "@types/node": "^24.0.3",
         "@types/react": "^19.1.2",
         "@types/react-date-range": "^1.4.10",
         "@types/react-dom": "^19.1.2",

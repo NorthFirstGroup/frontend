@@ -17,10 +17,10 @@ export default defineConfig({
             '@assets': path.resolve(__dirname, 'src/assets'),
             '@pages': path.resolve(__dirname, 'src/pages'),
             '@hooks': path.resolve(__dirname, 'src/hooks'),
-            '@context': path.resolve(__dirname, 'src/context'),
+            '@contexts': path.resolve(__dirname, 'src/contexts'),
             '@routes': path.resolve(__dirname, 'src/routes'),
             '@api': path.resolve(__dirname, 'src/api'),
-            '@types': path.resolve(__dirname, 'src/types')
+            '@type': path.resolve(__dirname, 'src/type')
         }
     }
 });

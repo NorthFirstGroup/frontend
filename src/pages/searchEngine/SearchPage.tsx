@@ -1,4 +1,4 @@
-import { FrontpageActivity } from '@/types/home';
+import { FrontpageActivity } from '@type/home';
 import { getRecommendActivities } from '@api/frontpage';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -11,8 +11,8 @@ import { Category, getCategories } from '@api/category';
 import SearchFilter from '@components/searchFilter';
 import CategoryFilter from '@components/categoryFilter';
 
-import calendarIcon from '../../assets/searchPageMock/calendar.svg';
-import locationIcon from '../../assets/searchPageMock/location.svg';
+import calendarIcon from '@assets/searchPageMock/calendar.svg';
+import locationIcon from '@assets/searchPageMock/location.svg';
 
 const SearchPage = () => {
     const [activities, setActivities] = useState<any[]>([]);
@@ -34,15 +34,16 @@ const SearchPage = () => {
 
     // 取得單一參數
     const [searchParams] = useSearchParams();
-    const keyword = searchParams.get('keyword') || '';
-    // Get categoryId from URL
-    const categoryIdFromUrl = searchParams.get('categoryId');
+    const urlKeyword = searchParams.get('keyword');
+    const urlCategoryId = searchParams.get('categoryId');
+
+    const [currentKeyword, setCurrentKeyword] = useState<string>(urlKeyword || '');
+    const isInitialLoadComplete = useRef(false);
 
     //首頁會傳入 categoryId, 不使用 useCallback
     const fetchSearchALL = useCallback(async () => {
-        console.log('執行 fetchSearchALL，當前 selectedCategories:', selectedCategories);
         let searchCondition = {
-            keyword: keyword || '', // 關鍵字搜尋
+            keyword: currentKeyword, // 關鍵字搜尋
             category: selectedCategories.join(','), // 多選分類
             location: location.join(','), // 轉成字串
             startDate: dateRange[0].startDate.toISOString(),
@@ -52,22 +53,22 @@ const SearchPage = () => {
         if (response.results) {
             setActivities(response.results);
         }
-    }, [keyword, selectedCategories, location, dateRange]);
+    }, [currentKeyword, selectedCategories, location, dateRange]);
 
     // 分類清單
     const fetchGetCategories = useCallback(async () => {
         const response = await getCategories();
         if (response) {
             setCategories(response);
-            if (categoryIdFromUrl) {
-                const preSelectedCategory = response.find(cat => cat.id === parseInt(categoryIdFromUrl));
-                if (preSelectedCategory && !selectedCategories.includes(preSelectedCategory.id)) {
+            if (urlCategoryId && !isInitialLoadComplete.current) {
+                const preSelectedCategory = response.find(cat => cat.id === parseInt(urlCategoryId));
+                if (preSelectedCategory) {
                     // Only update if it's not already selected to prevent infinite loop on re-renders
                     setSelectedCategories([preSelectedCategory.id]);
                 }
             }
         }
-    }, [categoryIdFromUrl, selectedCategories]);
+    }, [urlCategoryId, isInitialLoadComplete]);
 
     // 地區清單
     const fetchGetAvailAreas = useCallback(async () => {
@@ -106,6 +107,8 @@ const SearchPage = () => {
 
     // First useEffect for fetching static data and initial URL parameter handling
     useEffect(() => {
+        // Initialize currentKeyword from URL ONCE on initial mount
+        setCurrentKeyword(urlKeyword || '');
         fetchRecommends();
         fetchGetAvailAreas();
         fetchGetCategories();
@@ -114,17 +117,28 @@ const SearchPage = () => {
         });
         // 清理事件監聽器
         return cleanup;
-    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories]);
+    }, [fetchRecommends, fetchGetAvailAreas, fetchGetCategories, urlKeyword]);
 
-    // Second useEffect to trigger search when keyword or filter states change
+    // Effect to trigger search when *local* filter states change
+    // This effect is now the primary trigger for searches after initial load.
     useEffect(() => {
-        // This useEffect will run when `keyword`, `selectedCategories`, `location`, or `dateRange` change.
-        // It ensures fetchSearchALL uses the most up-to-date filter states.
-        if (categories.length > 0) {
-            // Ensure categories are loaded before attempting to search with category filter
+        // This condition is crucial:
+        // 1. If we have a urlCategoryId, we wait for 'categories' to be loaded AND 'selectedCategories' to be set.
+        // 2. If no urlCategoryId, we can search immediately.
+        const shouldTriggerInitialSearch = urlCategoryId
+            ? categories.length > 0 && selectedCategories.length > 0
+            : true;
+
+        if (shouldTriggerInitialSearch && !isInitialLoadComplete.current) {
+            // First search: after all initial setup from URL is potentially done
+            // This also handles cases where there's no urlCategoryId, but a keyword.
+            isInitialLoadComplete.current = true; // Mark initial load as complete
+            fetchSearchALL();
+        } else if (isInitialLoadComplete.current) {
+            // Subsequent searches: triggered by user interaction with filters
             fetchSearchALL();
         }
-    }, [keyword, selectedCategories, location, dateRange, categories, fetchSearchALL, categoryIdFromUrl]); // Added categories to dependency
+    }, [currentKeyword, selectedCategories, location, dateRange, categories.length, fetchSearchALL, urlCategoryId]);
 
     return (
         <div className="container py-4">
@@ -136,10 +150,28 @@ const SearchPage = () => {
                     fontSize: '1rem'
                 }}
             >
-                <div>搜尋關鍵字：{keyword}</div>
+                <div>搜尋關鍵字：{currentKeyword || '無'}</div>
                 <div>
                     篩選日期：{format(dateRange[0].startDate, 'yyyy/MM/dd')} -{' '}
                     {format(dateRange[0].endDate, 'yyyy/MM/dd')}{' '}
+                </div>
+                <div>
+                    篩選分類：
+                    {selectedCategories.length === 0
+                        ? '無'
+                        : categories
+                              .filter(c => selectedCategories.includes(c.id))
+                              .map(c => c.name)
+                              .join('、')}
+                </div>
+                <div>
+                    篩選地區：
+                    {location.length === 0
+                        ? '無'
+                        : availAreas
+                              .filter(a => location.includes(a.id))
+                              .map(a => a.name)
+                              .join('、')}
                 </div>
             </div>
             {/* 搜尋條與篩選 */}
@@ -297,16 +329,18 @@ const SearchPage = () => {
                             </div>
                         ))}
                     </div>
-                    {/* <div className="text-center mt-3">
-                        <button className="btn btn-outline-primary">看更多</button>
-                    </div> */}
                 </Col>
                 {/* 右側推薦與歷史 */}
                 <Col lg={3}>
                     <div className="mb-4">
                         <div className="fw-bold mb-2">為你推薦</div>
                         {recommends.map(item => (
-                            <div key={item.id} className="card mb-2">
+                            <div
+                                key={item.id}
+                                className="card mb-2"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => handleCardClick(item.id.toString())}
+                            >
                                 <Row className="g-0 align-items-center">
                                     <Col xs={4} md={12}>
                                         <img
