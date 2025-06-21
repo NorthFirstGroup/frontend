@@ -24,6 +24,7 @@ export interface ActivityShowtime {
     startTime: number;
     location: string;
     address: string;
+    siteId: string;
     seats: {
         id: string;
         section: string;
