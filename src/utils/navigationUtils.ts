@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 interface ActivityFilterParams {
     keyword?: string; // 搜尋關鍵字
     categoryId?: string; // 活動類別
+    tag?: string; // 活動標籤
+    level?: string; // 活動標籤等級
     // locationId?: number; // 地點
     // 未來如果需要，可以添加更多參數，例如：
     // date?: string;     // 日期
@@ -29,6 +31,14 @@ export const useActivityFilterNavigation = () => {
         if (params.categoryId) {
             // Add categoryId to search params
             queryParams.append('categoryId', params.categoryId);
+        }
+        // 檢查並添加 tag 參數
+        if (params.tag) {
+            queryParams.append('tag', params.tag);
+        }
+        // 檢查並添加 level 參數
+        if (params.level) {
+            queryParams.append('level', params.level);
         }
         // 未來可以在這裡添加更多參數的處理邏輯
         // if (params.locationId) {

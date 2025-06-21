@@ -65,6 +65,8 @@ const SellingOutActivitiesSection: React.FC = () => {
             initialRows={2}
             cardsPerRow={3}
             searchKeyword="即將完售"
+            searchTag="LowStock"
+            searchLevel="9999"
             showRemainingSeats={true}
         />
     );

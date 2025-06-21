@@ -36,6 +36,8 @@ const SearchPage = () => {
     const [searchParams] = useSearchParams();
     const urlKeyword = searchParams.get('keyword');
     const urlCategoryId = searchParams.get('categoryId');
+    const urlTag = searchParams.get('tag');
+    const urlLevel = searchParams.get('level');
 
     const [currentKeyword, setCurrentKeyword] = useState<string>(urlKeyword || '');
     const isInitialLoadComplete = useRef(false);
@@ -45,6 +47,8 @@ const SearchPage = () => {
         let searchCondition = {
             keyword: currentKeyword, // 關鍵字搜尋
             category: selectedCategories.join(','), // 多選分類
+            tag: urlTag || '',
+            level: urlLevel || '',
             location: location.join(','), // 轉成字串
             startDate: dateRange[0].startDate.toISOString(),
             endDate: dateRange[0].endDate.toISOString()
@@ -53,7 +57,7 @@ const SearchPage = () => {
         if (response.results) {
             setActivities(response.results);
         }
-    }, [currentKeyword, selectedCategories, location, dateRange]);
+    }, [currentKeyword, selectedCategories, location, urlTag, urlLevel, dateRange]);
 
     // 分類清單
     const fetchGetCategories = useCallback(async () => {

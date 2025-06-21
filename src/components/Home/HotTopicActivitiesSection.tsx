@@ -49,6 +49,7 @@ const HotTopicActivitiesSection: React.FC = () => {
             iconSvg={FaThumbsUp}
             initialRows={2}
             cardsPerRow={3}
+            searchKeyword="熱門"
             searchCategoryId="1"
             showRemainingSeats={false}
         />
