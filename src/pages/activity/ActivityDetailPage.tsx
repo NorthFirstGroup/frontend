@@ -10,6 +10,7 @@ import CalenderIcon from '@assets/icons/calender.png';
 import LocationIcon from '@assets/icons/area.png';
 import TimeUtils from '@utils/TimeUtils';
 import ActivityShowTimes from './ActivityShowTimes';
+import useShowtime from '@hooks/useOrganizerShowtime';
 
 const ActivityPage = styled.div``;
 const PageContent = styled.div``;
@@ -45,14 +46,16 @@ const ActivityDetailPage = () => {
 
     const [startTimeRange, setStartTimeRange] = useState<string[]>([]);
     const [locations, setLocations] = useState<string[]>([]);
-    const { getActivityDetail, getActivityShowtime, getTimeRange, activityDetail, showTimeResult } =
-        useActivity(activityId);
+
+    const numActivityId = Number(activityId);
+    const { getActivityDetail, activityDetail } = useActivity(numActivityId);
+    const { getActivityShowtimeList, showTimeResult } = useShowtime(numActivityId);
     const { results: showTimesList } = showTimeResult || {};
 
     useEffect(() => {
         getActivityDetail();
-        getActivityShowtime();
-    }, [getActivityDetail, getActivityShowtime]);
+        getActivityShowtimeList();
+    }, [getActivityDetail, getActivityShowtimeList]);
 
     useEffect(() => {
         if (showTimesList) {
@@ -62,11 +65,11 @@ const ActivityDetailPage = () => {
                 startTimes.push(item.startTime);
                 locations.push(item.location);
             });
-            const [early, late] = getTimeRange(startTimes);
+            const [early, late] = TimeUtils.getTimeRange(startTimes);
             setStartTimeRange([TimeUtils.timeFormatter(early), TimeUtils.timeFormatter(late)]);
             setLocations(locations);
         }
-    }, [showTimesList, getTimeRange]);
+    }, [showTimesList]);
 
     useEffect(() => {
         // document.body.style.backgroundColor = '#FCFCFC'; // 背景顏色

@@ -36,6 +36,10 @@ export const StyledNavbar = styled(Navbar)`
     min-height: 50px;
     padding: 10px 24px;
     background-color: var(--bs-light, #f8f9fa) !important; /* 使用 Bootstrap 預設的 light 變數 */
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 16px 0 #0000001f;
 
     @media (max-width: 991.98px) {
         padding: 8px 10px;
