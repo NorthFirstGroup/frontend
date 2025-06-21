@@ -55,7 +55,9 @@ const Home: React.FC = () => {
                                 <div
                                     className="category-icon-wrapper p-2 rounded-3 d-flex flex-column align-items-center justify-content-center"
                                     style={{ minHeight: '80px', cursor: 'pointer' }}
-                                    onClick={() => navigateToActivityListWithFilters({ categoryId: category.id })}
+                                    onClick={() =>
+                                        navigateToActivityListWithFilters({ categoryId: category.id.toString() })
+                                    }
                                 >
                                     <IconWrapper size={iconWrapperSize} bgColor="#F6F6F6">
                                         {' '}

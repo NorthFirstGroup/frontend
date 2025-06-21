@@ -15,6 +15,7 @@ interface ActivitySectionProps {
     initialRows?: number;
     cardsPerRow?: number;
     searchKeyword?: string;
+    searchCategoryId?: string;
     showRemainingSeats: boolean;
 }
 
@@ -26,6 +27,7 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
     initialRows = 2,
     cardsPerRow = 3,
     searchKeyword,
+    searchCategoryId,
     showRemainingSeats
 }) => {
     // const navigate = useNavigate(); // Initialize useNavigate hook
@@ -51,7 +53,10 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
         //     // For example, navigate to a general activity listing page
         //     navigate('/activity');
         // }
-        navigateToActivityListWithFilters({ keyword: searchKeyword || '' });
+        navigateToActivityListWithFilters({
+            keyword: searchKeyword || '',
+            categoryId: searchCategoryId || ''
+        });
     };
 
     return (
