@@ -121,3 +121,38 @@
     outline: none;
     display: block; /* 移除圖片下方可能多餘的空間 */
 }
+
+.secondaryNavbar {
+    background-color: #f8f9fa; /* Or any light color for the secondary navbar */
+    border-bottom: 1px solid #e7e7e7; /* Optional: a subtle border */
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Optional: subtle shadow */
+    position: sticky; /* Make it sticky below the main navbar */
+    top: 0; /* Or the height of your main navbar */
+    z-index: 1020; /* Ensure it's above other content but below the main navbar's dropdowns */
+}
+
+.secondaryNavbar .nav-link {
+    padding: 0.5rem 1rem;
+    color: #6c757d; /* Default link color */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.secondaryNavbar .nav-link:hover {
+    color: #cc3b02; /* Hover color */
+}
+
+.activeNavLink {
+    font-weight: bold;
+    color: #cc3b02 !important; /* Active link color */
+    border-bottom: 2px solid #cc3b02; /* Underline active link */
+}
+
+.highlightedNavLink {
+    border-left: 4px solid #b0b0b0;
+}
+
+.highlightedNavLink .nav-link {
+    padding-left: calc(1rem - 4px);
+}
