@@ -12,7 +12,7 @@ import { OrganizerActivitySite } from '@api/organizerAPI';
 import { useParams } from 'react-router-dom';
 import { useSiteContext } from '@contexts/context/SiteContext';
 import { useShowtimeContext } from '@contexts/context/ShowtimeContext';
-import useManageActivityLogic from '@hooks/useMamageActivityLogic';
+import useManageActivityLogic from '@hooks/useManageActivityLogic';
 
 const ManageSiteStack = styled(Stack)`
     position: relative;

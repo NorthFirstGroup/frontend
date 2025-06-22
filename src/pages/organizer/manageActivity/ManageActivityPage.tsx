@@ -4,7 +4,6 @@ import { Button, Col, Container, Form, Row, Stack } from 'react-bootstrap';
 import Icon from '@components/Icon';
 import ArrowLeft from '@assets/icons/arrow-left.png';
 import DatePicker from 'react-datepicker';
-// import AddIcon from '@assets/icons/add2.svg';
 import AddIcon from '@assets/icons/add.png';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -21,9 +20,11 @@ import ShowTimeModal from './ShowTimeModal';
 import ActivitySiteWithActivity from './ActivitySiteWithActivity';
 import toast from 'react-hot-toast';
 import { ShowtimeProvider } from '@contexts/ShowtimeProvider';
-import useManageActivityLogic from '@hooks/useMamageActivityLogic';
 import { useSiteContext } from '@contexts/context/SiteContext';
 import { SiteProvider } from '@contexts/SiteProvider';
+import useManageActivityLogic from '@hooks/useManageActivityLogic';
+import { isMobile } from 'react-device-detect';
+import { is } from 'date-fns/locale';
 
 const ManageActivityHeader = styled.div`
     position: fixed;
@@ -57,6 +58,12 @@ const FormSwitch = styled(Form.Check)`
     }
 `;
 const ManageShowTime = styled.div``;
+const ResponsiveRow = styled(Row)`
+    ${isMobile &&
+    ` flex-direction: column;
+    align-items: flex-center;
+    justify-content: center;`}
+`;
 
 const createActiveSchema = z
     .object({
@@ -469,8 +476,8 @@ export const ManageActivity = () => {
                 </form>
                 {activityId && (
                     <ManageShowTime className="mb-3">
-                        <Row className="align-items-center mb-3">
-                            <Col>
+                        <ResponsiveRow className="align-items-center mb-3">
+                            <Col className={`${isMobile ? 'text-center mb-2' : ''}`}>
                                 <h5>活動場地及場次</h5>
                             </Col>
                             <Col xs="auto">
@@ -483,7 +490,7 @@ export const ManageActivity = () => {
                                     新增場次
                                 </Button>
                             </Col>
-                        </Row>
+                        </ResponsiveRow>
                         {organizerSiteMap &&
                             Array.from(organizerSiteMap.keys()).map(siteId => {
                                 const site = organizerSiteMap.get(siteId);
