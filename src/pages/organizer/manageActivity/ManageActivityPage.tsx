@@ -4,7 +4,6 @@ import { Button, Col, Container, Form, Row, Stack } from 'react-bootstrap';
 import Icon from '@components/Icon';
 import ArrowLeft from '@assets/icons/arrow-left.png';
 import DatePicker from 'react-datepicker';
-import AddIcon from '@assets/icons/add.png';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useManageActivityContext } from '@contexts/context/ManageActivityContext';
@@ -24,6 +23,7 @@ import { useSiteContext } from '@contexts/context/SiteContext';
 import { SiteProvider } from '@contexts/SiteProvider';
 import useManageActivityLogic from '@hooks/useManageActivityLogic';
 import { isMobile } from 'react-device-detect';
+import { FaPlus } from 'react-icons/fa';
 
 const ManageActivityHeader = styled.div`
     position: fixed;
@@ -494,11 +494,11 @@ export const ManageActivity = () => {
                             </Col>
                             <Col xs="auto">
                                 <Button variant="secondary" className="me-2" onClick={handleAddSite}>
-                                    <Icon src={AddIcon} />
+                                    <FaPlus className="me-2" />
                                     新增場地
                                 </Button>
                                 <Button variant="secondary" onClick={handleAddShowTime}>
-                                    <Icon src={AddIcon} />
+                                    <FaPlus className="me-2" />
                                     新增場次
                                 </Button>
                             </Col>

@@ -22,6 +22,7 @@ const useManageActivityLogic = () => {
 
     const manageActivityInit = useCallback(
         (activityId: number | string) => {
+            if (!activityId) return;
             getActivityDetail(activityId);
             getOrganizerShowtimeList(activityId);
             getOrganizerSiteList(activityId);

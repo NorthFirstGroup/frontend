@@ -60,7 +60,7 @@ export const routeConfigs = [
         roles: ['ORGANIZER'] // 活動管理
     },
     {
-        path: '/organizer/activity/manage',
+        path: '/organizer/activity/manage/create',
         element: <ManageActivityPage />,
         roles: ['ORGANIZER'] // 活動管理
     },

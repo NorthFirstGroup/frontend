@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Pagination, Spinner, Modal } from 'react-bootstrap';
-import { FaRegPlusSquare } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import ActivityCard from '@components/Home/ActivityCard';
 import { FrontpageActivity } from '@type/home'; // Adjust path if necessary
 import {
@@ -194,8 +194,8 @@ const ActivityList: React.FC = () => {
                 <div className="activity-list-section">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h4 className="mb-0">活動清單</h4>
-                        <Button variant="outline-primary" onClick={() => alert('新增活動功能待實作')}>
-                            <FaRegPlusSquare className="me-2" />
+                        <Button variant="secondary" onClick={() => navigate('/organizer/activity/manage/create')}>
+                            <FaPlus className="me-2" />
                             新增活動
                         </Button>
                     </div>
