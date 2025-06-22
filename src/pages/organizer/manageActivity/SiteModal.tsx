@@ -105,7 +105,7 @@ const SiteModal = () => {
             seatingMapUrl:
                 'https://goticket-bucket.s3.ap-northeast-1.amazonaws.com/public/images/23752b7e-1ad6-48a4-b905-cdacd1b51544.jpg'
         });
-    }, []);
+    }, [resetFormData]);
 
     useEffect(() => {
         fetchGetAvailAreas();
@@ -130,7 +130,7 @@ const SiteModal = () => {
                 prices: []
             });
         }
-    }, [siteId, organizerSiteList]);
+    }, [siteId, organizerSiteList, resetFormData]);
 
     return (
         <Modal show={!!showSiteModal} onHide={onClose} backdrop="static" keyboard={false} centered scrollable>

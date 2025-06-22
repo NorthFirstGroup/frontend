@@ -34,7 +34,7 @@ const useManageActivityLogic = () => {
     useEffect(() => {
         if (organizerSiteList) {
             let siteMap = new Map<string, ActivityShowtime[]>();
-            if (!!organizerShowTimeList?.length) {
+            if (organizerShowTimeList?.length) {
                 for (const s of organizerShowTimeList ?? []) {
                     siteMap.set(s.siteId, [...(siteMap.get(s.siteId) || []), s]);
                 }
