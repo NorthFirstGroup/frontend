@@ -14,6 +14,7 @@ import OrderPayment from '@pages/activity/OrderPayment';
 import ManageActivityPage from '@pages/organizer/manageActivity/ManageActivityPage';
 import ActivityList from '@pages/organizer/Activity';
 import VenueForm from '@pages/organizer/VenueForm';
+import ResetPassword from '@pages/ResetPassword';
 
 export const routeConfigs = [
     { path: '/', element: <Home />, roles: [] },
@@ -24,6 +25,7 @@ export const routeConfigs = [
         element: <Profile />,
         roles: ['USER', 'ORGANIZER'] //個人資訊
     },
+    { path: '/user/reset-password', element: <ResetPassword />, roles: [] },
     // {
     //     path: '/user/point',
     //     element: <Point />,

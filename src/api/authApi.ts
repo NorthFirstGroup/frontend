@@ -1,6 +1,8 @@
-import { publicApiClient } from './client';
+import { apiClient, publicApiClient } from './client';
 import { ApiResponse } from '@type/ApiResponse';
 import { SignInSchema, SignUpSchema } from '../schemas/authApi';
+import { transSnakeToCamel } from '@utils/transSnakeToCamel';
+import { transCamelToSnake } from '@utils/transCamelToSnake';
 
 export interface LogInAndUpResponseData {
     token: string;
@@ -37,4 +39,12 @@ export const signUp = async (payload: {
         ...res.data,
         data: parsed.data
     };
+};
+
+export const userResetPassword = async (payload: {
+    password: string;
+    newPassword: string;
+}): Promise<ApiResponse<LogInAndUpResponseData>> => {
+    const response = await apiClient.put('/v1/user/password', transCamelToSnake(payload));
+    return transSnakeToCamel(response.data);
 };

@@ -12,11 +12,13 @@ import UserNameInput from '@components/UserNameInput';
 import PhoneNumberInput from '@components/PhoneNumberInput';
 import { useUserProfileData } from '@hooks/useProfileUpdate';
 import defaultAvatar from '@assets/def-avatar.png';
+import { useNavigate } from 'react-router-dom';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const Profile: React.FC = () => {
+    const navigate = useNavigate();
     const { user, updateUser } = useAuth();
     const email = user?.email;
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -240,6 +242,9 @@ const Profile: React.FC = () => {
                 <Form.Group className="mb-3">
                     <Form.Label>會員帳號</Form.Label>
                     <Form.Control type="email" value={email} readOnly plaintext disabled />
+                    <Button variant="primary" className="mt-2" onClick={() => navigate('/user/reset-password')}>
+                        重設密碼
+                    </Button>
                 </Form.Group>
 
                 <UserNameInput
