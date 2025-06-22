@@ -121,7 +121,7 @@ const ActivityList: React.FC = () => {
 
     const handleEdit = (activityId: number) => {
         console.log('編輯活動 ID from ActivityList:', activityId);
-        navigate(`/organizer/activity-management/${activityId}`);
+        navigate(`/organizer/activity/manage/${activityId}`);
     };
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);

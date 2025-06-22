@@ -62,12 +62,12 @@ export const routeConfigs = [
     {
         path: '/organizer/activity/manage/create',
         element: <ManageActivityPage />,
-        roles: ['ORGANIZER'] // 活動管理
+        roles: ['ORGANIZER'] // 新增活動管理
     },
     {
         path: '/organizer/activity/manage/:activityId',
         element: <ManageActivityPage />,
-        roles: ['ORGANIZER'] // 活動管理
+        roles: ['ORGANIZER'] // 編輯活動管理
     },
     {
         path: '/organizer/activity/site/:activityId',
