@@ -195,7 +195,7 @@ const OrganizerApplyForm: React.FC = () => {
 
     return (
         <Container className="mt-5" style={{ maxWidth: '600px' }}>
-            <h3>廠商資料</h3>
+            <h3>廠商資訊</h3>
             {errMsg && <Alert variant="danger">{errMsg}</Alert>}
             {submitSuccess && <Alert variant="success">{submitSuccess}</Alert>}
             <Form>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navbar, Nav, Container, NavDropdown, Form, Image } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@hooks/useAuth';
@@ -6,85 +6,48 @@ import logoPng from '/logo.png';
 import goTicketPng from '@assets/brand.png';
 import avatarPng from '@assets/def-avatar.png';
 import searchPng from '@assets/search.png';
-import { CgProfile } from 'react-icons/cg';
-// import { BsLightningChargeFill } from 'react-icons/bs';
-import { IoCartOutline } from 'react-icons/io5';
-import { PiIdentificationBadge } from 'react-icons/pi';
-import { FaRegCalendarDays } from 'react-icons/fa6';
-import { FaTicketAlt } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
 import styles from './Header.module.css';
 import { StyledNavbar, StyledNavDropdown, StyledNavDropdownItem, StyledAuthButton } from './HeaderStyles'; // 引入您的 Styled-Components
 import { useActivityFilterNavigation } from '@utils/navigationUtils';
 
-interface MenuItem {
-    name: string;
-    path: string;
-    icon: React.ReactElement; // Or a specific type for your icon component
-    role?: 'ORGANIZER' | 'USER'; // Optional: if some items are role-specific
-}
-const secondaryNavbarPaths = [
-    '/user/profile',
-    '/user/orders',
-    '/organizer/apply',
-    '/organizer/activity',
-    '/organizer/validate-entry'
-];
+import { getFullUserMenuItems } from '@components/Header/NavbarItems';
 
-const Header = () => {
+interface HeaderProps {
+    onMainHeaderHeightChange: (height: number) => void; // Renamed prop for clarity
+}
+
+const Header = ({ onMainHeaderHeightChange }: HeaderProps) => {
     const { isLoggedIn, user, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const [showMobileSearchForm, setShowMobileSearchForm] = useState(false);
 
     const [searchTerm, setSearchTerm] = useState('');
-    const [showSecondaryNavbar, setShowSecondaryNavbar] = useState(false);
+
+    const mainNavbarRef = useRef<HTMLElement>(null);
 
     const navigateToActivityListWithFilters = useActivityFilterNavigation();
 
-    const commonMenuItems: MenuItem[] = [
-        { name: '個人資訊', path: '/user/profile', icon: <CgProfile className={styles.dropdownIcon} /> },
-        //{ name: '點數資訊', path: '/user/point', icon: <BsLightningChargeFill className={styles.dropdownIcon} /> }
-        { name: '我的訂單', path: '/user/orders', icon: <IoCartOutline className={styles.dropdownIcon} /> }
-    ];
-
-    // Add role-specific items dynamically
-    if (user?.role === 'ORGANIZER') {
-        commonMenuItems.push(
-            {
-                name: '廠商資訊',
-                path: '/organizer/apply',
-                icon: <PiIdentificationBadge className={styles.dropdownIcon} />,
-                role: 'ORGANIZER'
-            },
-            {
-                name: '活動管理',
-                path: '/organizer/activity',
-                icon: <FaRegCalendarDays className={styles.dropdownIcon} />,
-                role: 'ORGANIZER'
-            },
-            {
-                name: '入場資格驗證',
-                path: '/organizer/validate-entry',
-                icon: <FaTicketAlt className={styles.dropdownIcon} />,
-                role: 'ORGANIZER'
-            }
-        );
-    } else {
-        commonMenuItems.push({
-            name: '申請成為廠商',
-            path: '/organizer/apply',
-            icon: <PiIdentificationBadge className={styles.dropdownIcon} />
-        });
-    }
+    const userMenuItems = getFullUserMenuItems(user?.role);
 
     useEffect(() => {
-        if (secondaryNavbarPaths.includes(location.pathname)) {
-            setShowSecondaryNavbar(true);
-        } else {
-            setShowSecondaryNavbar(false);
-        }
-    }, [location.pathname, user?.role]);
+        console.log('Header useEffect is running!');
+        const calculateAndReportMainHeaderHeight = () => {
+            // 直接在 useEffect 內部定義
+            if (mainNavbarRef.current) {
+                onMainHeaderHeightChange(mainNavbarRef.current.offsetHeight);
+                console.log('Main Header Height:', mainNavbarRef.current.offsetHeight);
+            }
+        };
+
+        calculateAndReportMainHeaderHeight();
+        window.addEventListener('resize', calculateAndReportMainHeaderHeight);
+
+        return () => {
+            window.removeEventListener('resize', calculateAndReportMainHeaderHeight);
+        };
+    }, [onMainHeaderHeightChange]); // 依賴於 onMainHeaderHeightChange
 
     const handleLogout = () => {
         logout();
@@ -103,7 +66,7 @@ const Header = () => {
 
     const handleDropdownItemClick = (path: string) => {
         navigate(path);
-        setShowSecondaryNavbar(true);
+        // setShowSecondaryNavbar(true);
     };
 
     const renderDropdownTitle = (
@@ -137,13 +100,13 @@ const Header = () => {
             </div>
 
             <NavDropdown.Divider className={styles.dropdownDivider} />
-            {commonMenuItems.map((item, index) => (
+            {userMenuItems.map((item, index) => (
                 <React.Fragment key={index}>
-                    {item.path === '/organizer/apply' && user?.role === 'ORGANIZER' && (
+                    {(item.name === '廠商資訊' || item.name === '申請成為廠商') && (
                         <NavDropdown.Divider className={styles.dropdownDivider} />
                     )}
                     <StyledNavDropdownItem onClick={() => handleDropdownItemClick(item.path)}>
-                        {item.icon}
+                        {item.icon && React.cloneElement(item.icon, { className: styles.dropdownIcon })}
                         {item.name}
                     </StyledNavDropdownItem>
                 </React.Fragment>
@@ -156,39 +119,15 @@ const Header = () => {
         </>
     );
 
-    const renderSecondaryNavbar = () => (
-        <Navbar bg="light" className={`${styles.secondaryNavbar} w-100 d-none d-lg-block`}>
-            <Container>
-                <Nav className="me-auto">
-                    {commonMenuItems.map((item, index) => {
-                        const isOrganizerApplyPath = item.path === '/organizer/apply';
-                        const shouldHighlight = isOrganizerApplyPath && user?.role === 'ORGANIZER';
-                        return (
-                            <Nav.Item key={index} className={`${shouldHighlight ? styles.highlightedNavLink : ''}`}>
-                                <Nav.Link
-                                    key={index}
-                                    onClick={() => navigate(item.path)}
-                                    className={location.pathname === item.path ? styles.activeNavLink : ''}
-                                >
-                                    {item.name}
-                                </Nav.Link>
-                            </Nav.Item>
-                        );
-                    })}
-                </Nav>
-            </Container>
-        </Navbar>
-    );
-
     const iconStyle = {
         width: '28px',
         height: '28px',
-        color: '#000000' // Or your desired dark color, e.g., '#333333'
+        color: '#000000'
     };
 
     return (
         <>
-            <StyledNavbar bg="light" expand="lg" className={styles.navbar}>
+            <StyledNavbar bg="light" expand="lg" className={styles.navbar} ref={mainNavbarRef}>
                 <Container className="d-flex flex-wrap align-items-center">
                     <Navbar.Brand as={Link} to="/" className={styles.brand}>
                         <img src={logoPng} alt="Logo" className={styles.logo} />
@@ -293,7 +232,6 @@ const Header = () => {
                     </Container>
                 )}
             </StyledNavbar>
-            {isLoggedIn && showSecondaryNavbar && renderSecondaryNavbar()}
         </>
     );
 };

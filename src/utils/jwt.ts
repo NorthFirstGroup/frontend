@@ -2,7 +2,7 @@ import { jwtDecode } from 'jwt-decode';
 
 interface DecodedToken {
     id: string;
-    role: string;
+    role: 'ORGANIZER' | 'USER' | null;
 }
 
 export const decodeToken = (token: string): DecodedToken | null => {
