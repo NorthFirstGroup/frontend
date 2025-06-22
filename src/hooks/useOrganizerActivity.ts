@@ -1,5 +1,5 @@
 import organizerActivityAPI, { ActivityCreate, OrganizerActivityDetail } from '@api/organizerAPI';
-import { ApiError } from '@types/ApiError';
+import { ApiError } from '@type/ApiError';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 

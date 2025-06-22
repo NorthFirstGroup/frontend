@@ -3,7 +3,7 @@ import { ManageActivityContext } from './context/ManageActivityContext';
 import { useNavigate } from 'react-router-dom';
 import organizerActivityAPI, { ActivityCreate, OrganizerActivityDetail } from '@api/organizerAPI';
 import toast from 'react-hot-toast';
-import { ApiError } from '@types/ApiError';
+import { ApiError } from '@type/ApiError';
 import { ActivityShowtime } from '@api/activityAPI';
 
 export const ManageActivityProvider = ({ children }: { children: ReactNode }) => {

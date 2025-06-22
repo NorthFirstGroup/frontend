@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useState } from 'react';
 import { SiteContext } from './context/SiteContext';
 import organizerActivityAPI, { OrganizerActivitySite } from '@api/organizerAPI';
-import { ApiError } from '@types/ApiError';
+import { ApiError } from '@type/ApiError';
 import toast from 'react-hot-toast';
 
 export const SiteProvider = ({ children }: { children: ReactNode }) => {

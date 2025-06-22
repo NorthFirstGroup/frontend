@@ -2,7 +2,7 @@ import { ReactNode, useCallback, useState } from 'react';
 import { ActivityShowtime } from '@api/activityAPI';
 import { ShowtimeContext } from './context/ShowtimeContext';
 import organizerActivityAPI, { ShowTimeCreate } from '@api/organizerAPI';
-import { ApiError } from '@types/ApiError';
+import { ApiError } from '@type/ApiError';
 import toast from 'react-hot-toast';
 
 export const ShowtimeProvider = ({ children }: { children: ReactNode }) => {

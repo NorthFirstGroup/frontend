@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import activityAPI, { ActivityDetail, ActivityShowtimeResp } from '@api/activityAPI';
 import toast from 'react-hot-toast';
-import { ApiError } from '@types/ApiError';
+import { ApiError } from '@type/ApiError';
 
 const useActivity = (activityId?: number | string) => {
     const [isLoading, setIsLoading] = useState(false);

@@ -1,6 +1,6 @@
 import { ActivityShowtime } from '@api/activityAPI';
 import organizerActivityAPI, { ShowTimeCreate } from '@api/organizerAPI';
-import { ApiError } from '@types/ApiError';
+import { ApiError } from '@type/ApiError';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 
