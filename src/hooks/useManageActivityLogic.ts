@@ -1,6 +1,5 @@
 import { useManageActivityContext } from '@contexts/context/ManageActivityContext';
 import { useCallback, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { ActivityShowtime } from '@api/activityAPI';
 import { useSiteContext } from '@contexts/context/SiteContext';
 import { useShowtimeContext } from '@contexts/context/ShowtimeContext';
