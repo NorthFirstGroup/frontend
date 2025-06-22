@@ -121,7 +121,7 @@ const ActivityList: React.FC = () => {
 
     const handleEdit = (activityId: number) => {
         console.log('編輯活動 ID from ActivityList:', activityId);
-        navigate(`/organizer/activity-management/${activityId}`);
+        navigate(`/organizer/activity/manage/${activityId}`);
     };
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
@@ -194,7 +194,7 @@ const ActivityList: React.FC = () => {
                 <div className="activity-list-section">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h4 className="mb-0">活動清單</h4>
-                        <Button variant="outline-primary" onClick={() => alert('新增活動功能待實作')}>
+                        <Button variant="outline-primary" onClick={() => navigate('/organizer/activity/manage')}>
                             <FaRegPlusSquare className="me-2" />
                             新增活動
                         </Button>

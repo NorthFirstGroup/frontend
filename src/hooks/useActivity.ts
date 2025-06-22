@@ -1,16 +1,7 @@
 import { useCallback, useState } from 'react';
 import activityAPI, { ActivityDetail, ActivityShowtimeResp } from '@api/activityAPI';
-
-const getTimeRange = (startTimes: number[]) => {
-    // 檢查輸入是否為有效陣列
-    if (!Array.isArray(startTimes) || startTimes.length === 0) {
-        return [];
-    }
-    // 找出最早和最晚的時間戳
-    const earliestTimestamp = Math.min(...startTimes);
-    const latestTimestamp = Math.max(...startTimes);
-    return [earliestTimestamp, latestTimestamp];
-};
+import toast from 'react-hot-toast';
+import { ApiError } from '@type/ApiError';
 
 const useActivity = (activityId?: number | string) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -26,24 +17,27 @@ const useActivity = (activityId?: number | string) => {
                 setActivityDetail(response);
                 return response;
             } catch (error) {
-                console.log('Error fetching activity detail:', error);
+                if (error instanceof ApiError) {
+                    toast.error(error.message || '取得活動場次失敗！');
+                }
             } finally {
                 if (loading) setIsLoading(false);
             }
         },
         [activityId]
     );
-    const getActivityShowtime = useCallback(
+    const getActivityShowtimeList = useCallback(
         async (id?: string, loading: boolean = false) => {
             const activityIdNumber = Number(activityId || id);
             try {
                 if (loading) setIsLoading(true);
                 const response = await activityAPI.getActivityShowtime(activityIdNumber);
                 setShowTimeResult(response);
-
                 return response;
             } catch (error) {
-                console.log('Error fetching activity showtime:', error);
+                if (error instanceof ApiError) {
+                    toast.error(error.message || '取得活動場次失敗！');
+                }
             } finally {
                 if (loading) setIsLoading(false);
             }
@@ -54,8 +48,7 @@ const useActivity = (activityId?: number | string) => {
 
     return {
         getActivityDetail,
-        getActivityShowtime,
-        getTimeRange,
+        getActivityShowtimeList,
         showTimeResult,
         isLoading,
         activityDetail

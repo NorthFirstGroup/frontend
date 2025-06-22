@@ -1,4 +1,4 @@
-import { Button, Table } from 'react-bootstrap';
+import { Button, Col, Row, Table } from 'react-bootstrap';
 import { ActivityShowtime } from '@api/activityAPI';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,6 +8,7 @@ import CalenderIcon from '@assets/icons/calender.png';
 import LocationIcon from '@assets/icons/area.png';
 import addressIcon from '@assets/icons/address.png';
 import TimeUtils from '@utils/TimeUtils';
+import { isMobile } from 'react-device-detect';
 
 const ContentWrapper = styled.div``;
 const ShowTimeBlock = styled.div`
@@ -64,31 +65,51 @@ const ActivityShowTimes = (props: ActivityShowtimeProps) => {
                     <IconRow icon={CalenderIcon} text={TimeUtils.timeFormatter(showTime.startTime)} />
                     <IconRow icon={LocationIcon} text={showTime.location} />
                     <IconRow icon={addressIcon} text={showTime.address} />
-                    <CustomTable responsive>
+                    <CustomTable responsive className="mt-2">
                         <thead>
                             <tr>
                                 <th>價格</th>
                                 <th>剩餘座位</th>
+                                <th>區域</th>
                                 <th />
                             </tr>
                         </thead>
                         <tbody>
                             {showTime.seats.map(seat => {
-                                const { price, vacancy } = seat;
+                                const { price, vacancy, section } = seat;
                                 return (
                                     <tr key={seat.id}>
                                         <td>${price}</td>
+                                        <td>{section}</td>
                                         <ColoredTd vacancy={vacancy}>{vacancy ? `${vacancy} 席` : '完售'}</ColoredTd>
-                                        <td className="text-end">
-                                            <Button variant="primary" onClick={() => handleOnBuyTicket(showTime.id)}>
-                                                系統配位
-                                            </Button>
-                                        </td>
+                                        {!isMobile && (
+                                            <td className="text-end">
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() => handleOnBuyTicket(showTime.id)}
+                                                >
+                                                    系統配位
+                                                </Button>
+                                            </td>
+                                        )}
                                     </tr>
                                 );
                             })}
                         </tbody>
                     </CustomTable>
+                    {isMobile && (
+                        <Row className="justify-content-center">
+                            <Col xs={12} sm={6} className="d-flex justify-content-center">
+                                <Button
+                                    variant="primary"
+                                    className="w-100"
+                                    onClick={() => handleOnBuyTicket(showTime.id)}
+                                >
+                                    系統配位
+                                </Button>
+                            </Col>
+                        </Row>
+                    )}
                 </ShowTimeBlock>
             ))}
         </ContentWrapper>

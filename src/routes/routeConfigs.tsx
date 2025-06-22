@@ -6,12 +6,14 @@ import Profile from '@pages/user/Profile';
 import MyOrders from '@pages/user/MyOrders';
 import OrderPage from '@pages/user/OrderPage';
 import OrganizerApplyForm from '@pages/organizer/Apply';
-import ActivityList from '@pages/organizer/Activity';
 import ValidateEntry from '@pages/organizer/ValidateEntry';
 import SearchPage from '@pages/searchEngine/SearchPage';
 import ActivityDetailPage from '@pages/activity/ActivityDetailPage';
 import SeatMap from '@pages/activity/SeatMap';
 import OrderPayment from '@pages/activity/OrderPayment';
+import ManageActivityPage from '@pages/organizer/manageActivity/ManageActivityPage';
+import ActivityList from '@pages/organizer/Activity';
+import VenueForm from '@pages/organizer/VenueForm';
 
 export const routeConfigs = [
     { path: '/', element: <Home />, roles: [] },
@@ -56,6 +58,21 @@ export const routeConfigs = [
         path: '/organizer/activity',
         element: <ActivityList />,
         roles: ['ORGANIZER'] // 活動管理
+    },
+    {
+        path: '/organizer/activity/manage',
+        element: <ManageActivityPage />,
+        roles: ['ORGANIZER'] // 新增活動管理
+    },
+    {
+        path: '/organizer/activity/manage/:activityId',
+        element: <ManageActivityPage />,
+        roles: ['ORGANIZER'] // 編輯活動管理
+    },
+    {
+        path: '/organizer/activity/site/:activityId',
+        element: <VenueForm />,
+        roles: ['ORGANIZER'] // 活動場地管理
     },
     {
         path: '/organizer/validate-entry',

@@ -10,6 +10,7 @@ import CalenderIcon from '@assets/icons/calender.png';
 import LocationIcon from '@assets/icons/area.png';
 import TimeUtils from '@utils/TimeUtils';
 import ActivityShowTimes from './ActivityShowTimes';
+import { isMobile } from 'react-device-detect';
 
 const ActivityPage = styled.div``;
 const PageContent = styled.div``;
@@ -27,6 +28,7 @@ const InfoCard = styled.div`
     padding: 48px;
     background-color: var(--bs-white);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    ${isMobile && 'padding: 16px;'}
 `;
 const InfoCardTitle = styled.div`
     ${fontStyle('32px', '120%', '700')};
@@ -45,14 +47,15 @@ const ActivityDetailPage = () => {
 
     const [startTimeRange, setStartTimeRange] = useState<string[]>([]);
     const [locations, setLocations] = useState<string[]>([]);
-    const { getActivityDetail, getActivityShowtime, getTimeRange, activityDetail, showTimeResult } =
-        useActivity(activityId);
+
+    const numActivityId = Number(activityId);
+    const { getActivityDetail, activityDetail, getActivityShowtimeList, showTimeResult } = useActivity(numActivityId);
     const { results: showTimesList } = showTimeResult || {};
 
     useEffect(() => {
         getActivityDetail();
-        getActivityShowtime();
-    }, [getActivityDetail, getActivityShowtime]);
+        getActivityShowtimeList();
+    }, [getActivityDetail, getActivityShowtimeList]);
 
     useEffect(() => {
         if (showTimesList) {
@@ -62,11 +65,11 @@ const ActivityDetailPage = () => {
                 startTimes.push(item.startTime);
                 locations.push(item.location);
             });
-            const [early, late] = getTimeRange(startTimes);
+            const [early, late] = TimeUtils.getTimeRange(startTimes);
             setStartTimeRange([TimeUtils.timeFormatter(early), TimeUtils.timeFormatter(late)]);
             setLocations(locations);
         }
-    }, [showTimesList, getTimeRange]);
+    }, [showTimesList]);
 
     useEffect(() => {
         // document.body.style.backgroundColor = '#FCFCFC'; // 背景顏色

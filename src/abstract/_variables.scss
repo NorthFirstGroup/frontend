@@ -123,6 +123,7 @@ $theme-colors: map-merge(
     --bs-white: #{map-get($theme-colors, 'white')};
     --bs-primary: #{map-get($theme-colors, 'primary')};
     --bs-danger: #{map-get($theme-colors, 'danger')};
+    --bs-light: #{map-get($theme-colors, 'light')};
     // 自定義字體家族 (如果 Bootstrap 沒有自動生成對應的 CSS 變數，或者您想直接控制)
     --gt-font-family-base: #{$font-family-base};
     --gt-font-family-roboto-mono: #{$font-family-roboto-mono};
