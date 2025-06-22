@@ -44,13 +44,13 @@ const ResetPassword = () => {
     });
 
     const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-        console.log('Submitted data:', data);
-        // password;
         try {
             const { confirmPassword: _confirmPassword, ...payload } = data;
             await userResetPassword(payload);
             toast.success('密碼重設成功！');
-            navigate('user/profile'); //
+            setTimeout(() => {
+                navigate('/user/profile');
+            }, 1500);
         } catch (error: any) {
             toast.error('密碼重設失敗，請稍後再試！');
         }
