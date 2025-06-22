@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { SiteContext } from './context/SiteContext';
 import organizerActivityAPI, { OrganizerActivitySite } from '@api/organizerAPI';
 import { ApiError } from '@type/ApiError';

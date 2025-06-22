@@ -29,14 +29,20 @@ const useManageActivityLogic = () => {
         },
         [getActivityDetail, getOrganizerShowtimeList, getOrganizerSiteList]
     );
+    useEffect(() => {}, [organizerSiteList]);
 
     useEffect(() => {
-        if (organizerSiteList && organizerShowTimeList) {
+        if (organizerSiteList) {
             let siteMap = new Map<string, ActivityShowtime[]>();
-            for (const s of organizerShowTimeList) {
-                siteMap.set(s.siteId, [...(siteMap.get(s.siteId) || []), s]);
+            if (!!organizerShowTimeList?.length) {
+                for (const s of organizerShowTimeList ?? []) {
+                    siteMap.set(s.siteId, [...(siteMap.get(s.siteId) || []), s]);
+                }
+            } else {
+                organizerSiteList.forEach(site => {
+                    if (site?.id) siteMap.set(site?.id, []);
+                });
             }
-
             setOrganizerSiteMap(siteMap);
         }
     }, [organizerSiteList, organizerShowTimeList, setOrganizerSiteMap]);
