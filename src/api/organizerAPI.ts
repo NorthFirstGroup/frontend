@@ -76,7 +76,7 @@ export type ShowTimeCreate = {
 };
 
 export interface OrganizerActivitySite {
-    id: string;
+    id?: string;
     activityId: number;
     areaId: number;
     name: string;
@@ -175,12 +175,18 @@ const organizerActivityAPI = {
         const response = await apiClient.get(`/v1/organizer/activity/${activityId}/site`);
         return transSnakeToCamel(response.data.data);
     },
-    createOrganizerSite: async (activityId: number, data: any): Promise<OrganizerActivitySite> => {
-        const response = await apiClient.post(`/v1/organizer/activity/${activityId}/site`, data);
+    createOrganizerSite: async (activityId: number, data: OrganizerActivitySite): Promise<OrganizerActivitySite> => {
+        const payload = transCamelToSnake(data);
+        const response = await apiClient.post(`/v1/organizer/activity/${activityId}/site`, payload);
         return transSnakeToCamel(response.data.data);
     },
-    updateOrganizerSite: async (activityId: number, siteId: string, data: any): Promise<OrganizerActivitySite> => {
-        const response = await apiClient.put(`/v1/organizer/activity/${activityId}/site${siteId}`, data);
+    updateOrganizerSite: async (
+        activityId: number,
+        siteId: string,
+        data: OrganizerActivitySite
+    ): Promise<OrganizerActivitySite> => {
+        const payload = transCamelToSnake(data);
+        const response = await apiClient.put(`/v1/organizer/activity/${activityId}/site/${siteId}`, payload);
         return transSnakeToCamel(response.data.data);
     },
     deleteOrganizerSite: async (activityId: number, siteId: string): Promise<void> => {

@@ -1,21 +1,16 @@
 import { useManageActivityContext } from '@contexts/context/ManageActivityContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Col, Form, Modal, Stack } from 'react-bootstrap';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import AddIcon from '@assets/icons/add.png';
-
+import { Button, Col, Form, Modal, Row, Stack } from 'react-bootstrap';
+import { Controller, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import z from 'zod';
-import { OrganizerActivitySite } from '@api/organizerAPI';
 import { useParams } from 'react-router-dom';
 import { useSiteContext } from '@contexts/context/SiteContext';
-// import { useShowtimeContext } from '@contexts/context/ShowtimeContext';
 import useManageActivityLogic from '@hooks/useManageActivityLogic';
 import { getAvailAreas } from '@api/availArea';
 import UploadImg from './UploadImg';
-import Icon from '@components/Icon';
-import { FaTrash } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 const ManageSiteStack = styled(Stack)`
     position: relative;
@@ -24,35 +19,23 @@ const ManageSiteStack = styled(Stack)`
 
 const BorderWrapper = styled.div`
     border-radius: 12px;
-    padding: 24px;
+    padding: 16px;
     border: 1px solid var(--bs-border-color);
 `;
 
-const ImageWrapper = styled(BorderWrapper)`
-    aspect-ratio: 3 / 2;
-`;
+const pricesSchema = z.object({
+    section: z.string().min(1, '分區必填'),
+    capacity: z.coerce.number().min(1, '人數上限必填'),
+    price: z.coerce.number().min(1, '金額不可為0')
+});
 
-const SiteImg = styled.img`
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-`;
-
-const createSiteSchema = z
-    .object({
-        siteId: z.string(),
-        areaId: z.number(),
-        name: z.string({ required_error: '地點為必填' }),
-        address: z.string({ required_error: '地址為必填' }),
-        seatingMapUrl: z.string({ required_error: '座位圖為必填' }),
-        prices: z.array(
-            z.object({
-                price: z.number({ required_error: '價格為必填' }),
-                section: z.string({ required_error: '場次為必填' }),
-                capacity: z.number({ required_error: '座位數為必填' })
-            })
-        )
-    });
+const createSiteSchema = z.object({
+    area: z.number({ required_error: '地點為必填' }),
+    name: z.string({ required_error: '名稱為必填' }),
+    address: z.string({ required_error: '地址為必填' }),
+    seatingMapUrl: z.string({ required_error: '座位圖為必填' }),
+    prices: z.array(pricesSchema).min(1, '至少需要一個分區價格設定')
+});
 type FormData = z.infer<typeof createSiteSchema>;
 
 interface RegionOption {
@@ -64,68 +47,33 @@ const SiteModal = () => {
     const { activityId } = useParams<{ activityId: string }>();
     const { showSiteModal } = useManageActivityContext();
     const { toggleSiteModal } = useManageActivityLogic();
-    const { organizerSiteList } = useSiteContext();
-    // const { createOrganizerShowtime, updateOrganizerShowtime } = useShowtimeContext();
-    const [currentSite, setCurrentSite] = useState<OrganizerActivitySite | undefined>(undefined);
-    const siteId = typeof showSiteModal === 'string' ? showSiteModal : undefined;
+    const { createOrganizerSite, updateOrganizerSite, organizerSiteList } = useSiteContext();
     const [regionList, setRegionList] = useState<RegionOption[]>([]);
+    const siteId = typeof showSiteModal === 'string' ? showSiteModal : undefined;
 
     const {
         control,
         handleSubmit,
         formState: { errors },
-        reset: resetFormData,
-        watch
+        reset: resetFormData
     } = useForm<FormData>({
         resolver: zodResolver(createSiteSchema),
         defaultValues: {}
     });
-
-    const siteIdValue = watch('siteId');
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'prices'
+    });
 
     const onClose = () => {
         toggleSiteModal(false);
         resetFormData({
-            siteId: '',
-            areaId: 0,
+            area: 0,
             name: '',
             address: '',
             seatingMapUrl: '',
             prices: []
         });
-        setCurrentSite(undefined);
-    };
-
-    const addZonePrice = () => {
-        if (!currentSite) return;
-
-        const newPrice = {
-            section: '',        // 預設分區名
-            capacity: 0,        // 預設容量
-            price: 0,           // 預設價格
-        };
-
-        const updatedSite: OrganizerActivitySite = {
-            ...currentSite,
-            prices: [...currentSite.prices, newPrice]
-        };
-
-        console.log('updatedSite', updatedSite);
-        setCurrentSite(updatedSite);
-    };
-
-    const removeZonePrice = (index: number) => {
-        if (!currentSite) return;
-
-        const updatedPrices = currentSite.prices.filter((_, i) => i !== index);
-
-        const updatedSite: OrganizerActivitySite = {
-            ...currentSite,
-            prices: updatedPrices,
-            updatedAt: new Date().toISOString()
-        };
-
-        setCurrentSite(updatedSite);
     };
 
     const onFormSubmit = () => {
@@ -134,18 +82,15 @@ const SiteModal = () => {
         })();
     };
 
-    const onSubmit: SubmitHandler<FormData> = async () => {
+    const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
         if (!activityId) return;
-        console.log('Submit', currentSite);
-        // 解析後Date轉換為字串
-        // const transformedData = createSiteSchemaTransformed.parse(data);
-        // if (activityId && siteId) {
-        //     await updateOrganizerShowtime(activityId, siteId, transformedData);
-        //     onClose();
-        //     return;
-        // }
-        // await createOrganizerShowtime(activityId, transformedData);
-        // onClose();
+        if (activityId && siteId) {
+            await updateOrganizerSite(activityId, siteId, data);
+            onClose();
+            return;
+        }
+        await createOrganizerSite(activityId, data);
+        onClose();
     };
 
     const fetchGetAvailAreas = useCallback(async () => {
@@ -156,38 +101,36 @@ const SiteModal = () => {
     }, []);
 
     useEffect(() => {
+        resetFormData({
+            seatingMapUrl:
+                'https://goticket-bucket.s3.ap-northeast-1.amazonaws.com/public/images/23752b7e-1ad6-48a4-b905-cdacd1b51544.jpg'
+        });
+    }, []);
+
+    useEffect(() => {
         fetchGetAvailAreas();
-        // fetchGetActivity();
     }, [fetchGetAvailAreas]);
 
     useEffect(() => {
-        if (siteIdValue) {
-            const site = organizerSiteList?.find(site => site.id === siteIdValue);
-            if (site) setCurrentSite(site);
-            console.log('siteIdValue site:', site);
-        } else {
-            setCurrentSite(undefined);
+        if (fields.length === 0) {
+            append({ section: '', capacity: 0, price: 0 });
         }
-    }, [siteIdValue, organizerSiteList]);
-
+    }, [append, fields.length]);
     useEffect(() => {
         if (siteId) {
             const site = organizerSiteList?.find(site => site.id === siteId);
-            if (site) {
-                setCurrentSite(site);
-                resetFormData(site);
-                // console.log('useEffect site:', site);
-            } else
-                resetFormData({
-                    siteId: '',
-                    areaId: 0,
-                    name: '',
-                    address: '',
-                    seatingMapUrl: '',
-                    prices: []
-                })
+            console.log('Site data:', site);
+            if (site) resetFormData({ area: site.areaId, ...site });
+        } else {
+            resetFormData({
+                area: 0,
+                name: '',
+                address: '',
+                seatingMapUrl: '',
+                prices: []
+            });
         }
-    }, [siteId, organizerSiteList, resetFormData]);
+    }, [siteId, organizerSiteList]);
 
     return (
         <Modal show={!!showSiteModal} onHide={onClose} backdrop="static" keyboard={false} centered scrollable>
@@ -196,179 +139,179 @@ const SiteModal = () => {
             </Modal.Header>
             <Modal.Body>
                 <ManageSiteStack className=" mx-auto">
-                    <Form.Group className="mb-3">
-                        <Form.Label column xs={2} className="pe-0">
-                            地區
-                        </Form.Label>
-                        <Col xs={10}>
-                            <Controller
-                                name="areaId"
-                                control={control}
-                                render={({ field }) => {
-                                    return (
-                                        <>
+                    <form>
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column xs={2} className="pe-0">
+                                地區
+                            </Form.Label>
+                            <Col xs={10}>
+                                <Controller
+                                    name="area"
+                                    control={control}
+                                    render={({ field }) => {
+                                        return (
                                             <Form.Select
-                                                aria-label="Default select example"
                                                 {...field}
-                                                className={errors.areaId?.message && 'is-invalid'}
+                                                className={errors.area?.message && 'is-invalid'}
+                                                onChange={e => field.onChange(Number(e.target.value))} // 轉成數字
                                             >
                                                 <option value="" hidden>
                                                     請選擇地區
                                                 </option>
-                                                {regionList.map((item) => (
+                                                {regionList.map(item => (
                                                     <option key={item.id} value={item.id}>
                                                         {item.name}
                                                     </option>
                                                 ))}
                                             </Form.Select>
-                                            {errors.areaId && (
-                                                <Form.Text className="text-danger">
-                                                    {errors.areaId.message}
-                                                </Form.Text>
-                                            )}
-                                        </>
-                                    );
-                                }}
-                            />
-                        </Col>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label column xs={2} className="pe-0">
-                            地點
-                        </Form.Label>
-                        <Col xs={10}>
-                            <Controller
-                                name="name"
-                                control={control}
-                                render={({ field }) => (
-                                    <>
+                                        );
+                                    }}
+                                />
+                                {errors.area && <Form.Text className="text-danger">{errors.area.message}</Form.Text>}
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column xs={2} className="pe-0">
+                                名稱
+                            </Form.Label>
+                            <Col xs={10}>
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    render={({ field }) => (
                                         <Form.Control
                                             {...field}
                                             value={field.value ?? ''}
                                             className={errors.name?.message && 'is-invalid'}
+                                            placeholder="請輸入場地名稱"
                                         />
-                                        { errors.name && (
-                                            <Form.Text className="text-danger">{errors.name.message}</Form.Text>
-                                        )}
-                                    </>
-                                )}
-                            />
-                        </Col>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label column xs={2} className="pe-0">
-                            地址
-                        </Form.Label>
-                        <Col xs={10}>
-                            <Controller
-                                name="address"
-                                control={control}
-                                render={({ field }) => (
-                                    <>
+                                    )}
+                                />
+                                {errors.name && <Form.Text className="text-danger">{errors.name.message}</Form.Text>}
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column xs={2} className="pe-0">
+                                地址
+                            </Form.Label>
+                            <Col xs={10}>
+                                <Controller
+                                    name="address"
+                                    control={control}
+                                    render={({ field }) => (
                                         <Form.Control
                                             {...field}
                                             value={field.value ?? ''}
                                             className={errors.address?.message && 'is-invalid'}
+                                            placeholder="請輸入場地地址"
                                         />
-                                        { errors.address && (
-                                            <Form.Text className="text-danger">{errors.address.message}</Form.Text>
-                                        )}
-                                    </>
+                                    )}
+                                />
+                                {errors.address && (
+                                    <Form.Text className="text-danger">{errors.address.message}</Form.Text>
                                 )}
-                            />
-                        </Col>
-                    </Form.Group>
-
-                    <Col xs={12}>
+                            </Col>
+                        </Form.Group>
                         <Form.Group as={Col} controlId="formGroupFirstName">
                             <Form.Label column>分區座位示意圖</Form.Label>
                             <Controller
                                 name="seatingMapUrl"
                                 control={control}
                                 render={({ field }) => (
-                                    <>
-                                        <UploadImg url={field.value} onChange={url => field.onChange(url)} />
-                                        {errors.seatingMapUrl && (
-                                            <Form.Text className="text-danger">
-                                                {errors.seatingMapUrl.message}
-                                            </Form.Text>
-                                        )}
-                                    </>
+                                    <UploadImg url={field.value} onChange={url => field.onChange(url)} />
                                 )}
                             />
+                            {errors.seatingMapUrl && (
+                                <Form.Text className="text-danger">{errors.seatingMapUrl.message}</Form.Text>
+                            )}
                         </Form.Group>
-                    </Col>
-
-                    <Col xs={10} className="mb-3">
-                        <Form.Label column xs={5} className="pe-0">
-                            分區座位價格
-                        </Form.Label>
-                        <Button variant="secondary" className="me-2" onClick={addZonePrice}>
-                            <Icon src={AddIcon} />
-                            新增分區
-                        </Button>
-                    </Col>
-
-
-                    <Col xs={10} className="d-flex gap-2 mb-2">
-                    {/* 表頭列 */}
-                        <div style={{ flex: 1 }} className="text-center fw-bold">分區</div>
-                        <div style={{ flex: 1 }} className="text-center fw-bold">人數上限</div>
-                        <div style={{ flex: 1 }} className="text-center fw-bold">金額</div>
-                        <div style={{ width: '40px' }} /> {/* 空出刪除鈕的位置 */}
-                    </Col>
-
-                    {/* 輸入列 */}
-                    {currentSite?.prices.map((zone, idx) => (
-                        <div key={idx} className="d-flex gap-2 mb-2 align-items-center">
-                            <Form.Control
-                                placeholder="分區"
-                                value={zone.section}
-                                // onChange={(e) => updateZone(idx, 'section', e.target.value)}
-                                style={{ flex: 1 }}
-                            />
-                            <Form.Control
-                                type="text"
-                                pattern="^[1-9][0-9]*$"
-                                placeholder="人數上限"
-                                value={zone.capacity === 0 ? '' : zone.capacity} // 避免初始 0 顯示
-                                onChange={(e) => {
-                                    const val = e.target.value;
-                                    // 允許空白、或是長度最多5且符合正整數格式（首位非0）
-                                    if ((val === '') || (/^[1-9][0-9]{0,4}$/.test(val))) {
-                                        // updateZone(idx, 'capacity', val === '' ? 0 : Number(val));
-                                    }
-                                }}
-                                inputMode="numeric" // 行動裝置輸入優化
-                                style={{ flex: 1 }}
-                            />
-                            <Form.Control
-                                type="text"
-                                pattern="^[1-9][0-9]*$"
-                                placeholder="金額"
-                                value={zone.price === 0 ? '' : zone.price} // 避免初始 0 顯示
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    // 允許空白、或是長度最多6且符合正整數格式（首位非0）
-                                    if ((value === '') || (/^[1-9][0-9]{0,5}$/.test(value))) {
-                                        // updateZone(idx, 'price', value === '' ? 0 : Number(value));
-                                    }
-                                }}
-                                inputMode="numeric" // 行動裝置輸入優化
-                                style={{ flex: 1 }}
-                            />
-                            <Button
-                                variant="outline-danger"
-                                onClick={() => removeZonePrice(idx)}
-                                style={{ width: '40px' }}
-                            >
-                                <FaTrash />
-                            </Button>
-                        </div>
-                    ))}
-
+                        <Row className="my-3">
+                            <Col xs="auto" className="d-flex align-items-center ">
+                                分區座位價格
+                            </Col>
+                            <Col>
+                                <Button
+                                    variant="secondary"
+                                    className="me-2"
+                                    onClick={() => append({ section: '', capacity: 0, price: 0 })}
+                                >
+                                    <FaPlus className="me-2" />
+                                    新增分區
+                                </Button>
+                            </Col>
+                        </Row>
+                        <BorderWrapper>
+                            {errors.prices && <Form.Text className="text-danger">{errors.prices.message}</Form.Text>}
+                            <Row className="text-center fw-bold border-bottom pb-2 mb-3">
+                                <Col xs={4}>分區</Col>
+                                <Col xs={3}>人數上限</Col>
+                                <Col xs={4}>金額</Col>
+                                <Col xs={1} />
+                            </Row>
+                            <Stack gap={2}>
+                                {fields.map((field, idx) => (
+                                    <Form.Group as={Row} key={field.id}>
+                                        <Col xs={4}>
+                                            <Controller
+                                                control={control}
+                                                name={`prices.${idx}.section`}
+                                                render={({ field }) => (
+                                                    <Form.Control
+                                                        {...field}
+                                                        className={
+                                                            errors?.prices?.[idx]?.section?.message && 'is-invalid'
+                                                        }
+                                                    />
+                                                )}
+                                            />
+                                            {errors.prices?.[idx]?.section && (
+                                                <div className="text-danger">{errors.prices[idx].section.message}</div>
+                                            )}
+                                        </Col>
+                                        <Col xs={3}>
+                                            <Controller
+                                                control={control}
+                                                name={`prices.${idx}.capacity`}
+                                                render={({ field }) => (
+                                                    <Form.Control
+                                                        {...field}
+                                                        type="number"
+                                                        className={
+                                                            errors?.prices?.[idx]?.capacity?.message && 'is-invalid'
+                                                        }
+                                                    />
+                                                )}
+                                            />
+                                            {errors.prices?.[idx]?.capacity && (
+                                                <div className="text-danger">{errors.prices[idx].capacity.message}</div>
+                                            )}
+                                        </Col>
+                                        <Col xs={4}>
+                                            <Controller
+                                                control={control}
+                                                name={`prices.${idx}.price`}
+                                                render={({ field }) => (
+                                                    <Form.Control
+                                                        {...field}
+                                                        type="number"
+                                                        className={
+                                                            errors?.prices?.[idx]?.price?.message && 'is-invalid'
+                                                        }
+                                                    />
+                                                )}
+                                            />
+                                            {errors.prices?.[idx]?.price && (
+                                                <div className="text-danger">{errors.prices[idx].price.message}</div>
+                                            )}
+                                        </Col>
+                                        <Col xs={1}>
+                                            <FaTrash onClick={() => remove(idx)} style={{ cursor: 'pointer' }} />
+                                        </Col>
+                                    </Form.Group>
+                                ))}
+                            </Stack>
+                        </BorderWrapper>
+                    </form>
                 </ManageSiteStack>
             </Modal.Body>
             <Modal.Footer className="justify-content-center">

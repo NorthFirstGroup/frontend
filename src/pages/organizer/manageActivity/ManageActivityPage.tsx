@@ -24,6 +24,7 @@ import { SiteProvider } from '@contexts/SiteProvider';
 import useManageActivityLogic from '@hooks/useManageActivityLogic';
 import { isMobile } from 'react-device-detect';
 import { FaPlus } from 'react-icons/fa';
+import SiteModal from './SiteModal';
 
 const ManageActivityHeader = styled.div`
     position: fixed;
@@ -149,7 +150,6 @@ export const ManageActivity = () => {
     const { organizerSiteList } = useSiteContext();
     const { manageActivityInit, resetActivityDetail, toggleShowTimeModal, toggleSiteModal } = useManageActivityLogic();
     const { categoryList } = useAppContext();
-
     const {
         control,
         handleSubmit,
@@ -507,6 +507,7 @@ export const ManageActivity = () => {
                             Array.from(organizerSiteMap.keys()).map(siteId => {
                                 const site = organizerSiteMap.get(siteId);
                                 if (site) {
+                                    organizerSiteList;
                                     return (
                                         <ActivitySiteWithActivity
                                             key={siteId}
@@ -532,6 +533,7 @@ export default function ManageActivityPage() {
                 <ManageActivityProvider>
                     <ManageActivity />
                     <ShowTimeModal />
+                    <SiteModal />
                 </ManageActivityProvider>
             </ShowtimeProvider>
         </SiteProvider>
