@@ -24,7 +24,6 @@ import { useSiteContext } from '@contexts/context/SiteContext';
 import { SiteProvider } from '@contexts/SiteProvider';
 import useManageActivityLogic from '@hooks/useManageActivityLogic';
 import { isMobile } from 'react-device-detect';
-import { is } from 'date-fns/locale';
 
 const ManageActivityHeader = styled.div`
     position: fixed;
@@ -32,14 +31,23 @@ const ManageActivityHeader = styled.div`
     width: 100vw;
     background-color: var(--bs-light, #f8f9fa);
     height: auto;
-    box-shadow: 0 4px 6px 0 #0000001f;
     left: 0;
     padding: 10px 24px;
-    z-index: 1000;
-    padding: 4px 80px 8px;
+    z-index: 200;
+    padding: 10px 80px 10px;
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 1px; /* 陰影高度 */
+        box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.3);
+    }
+
     @media (max-width: 992px) {
         top: 60px;
-        padding: 4px 16px 8px;
+        padding: 12px 16px 8px;
     }
 `;
 
@@ -139,7 +147,7 @@ export const ManageActivity = () => {
     const { activityId } = useParams<{ activityId: string }>();
     const { activityDetail, createActivity, updateActivity, organizerSiteMap } = useManageActivityContext();
     const { organizerSiteList } = useSiteContext();
-    const { resetActivityDetail, toggleShowTimeModal, toggleSiteModal } = useManageActivityLogic();
+    const { manageActivityInit, resetActivityDetail, toggleShowTimeModal, toggleSiteModal } = useManageActivityLogic();
     const { categoryList } = useAppContext();
 
     const {
@@ -185,6 +193,10 @@ export const ManageActivity = () => {
         }
         await createActivity(transformedData);
     };
+
+    useEffect(() => {
+        if (activityId) manageActivityInit(activityId);
+    }, [activityId]);
 
     useEffect(() => {
         if (activityDetail) {

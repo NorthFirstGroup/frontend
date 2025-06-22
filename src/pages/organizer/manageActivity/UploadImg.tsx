@@ -79,7 +79,7 @@ export const UploadImg = (props: UploadImgProps) => {
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
         if (selectedFile && user?.id) {
-            const url = await uploadToS3(user.id, selectedFile);
+            const url = await uploadToS3(user.id, selectedFile, false);
             setImageUrl(url);
             if (onChange) onChange(url);
         }

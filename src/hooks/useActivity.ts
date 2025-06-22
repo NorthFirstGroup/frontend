@@ -26,7 +26,7 @@ const useActivity = (activityId?: number | string) => {
         },
         [activityId]
     );
-    const getActivityShowtime = useCallback(
+    const getActivityShowtimeList = useCallback(
         async (id?: string, loading: boolean = false) => {
             const activityIdNumber = Number(activityId || id);
             try {
@@ -48,7 +48,7 @@ const useActivity = (activityId?: number | string) => {
 
     return {
         getActivityDetail,
-        getActivityShowtime,
+        getActivityShowtimeList,
         showTimeResult,
         isLoading,
         activityDetail
