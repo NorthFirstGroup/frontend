@@ -196,7 +196,7 @@ export const ManageActivity = () => {
 
     useEffect(() => {
         if (activityId) manageActivityInit(activityId);
-    }, [activityId]);
+    }, [activityId, manageActivityInit]);
 
     useEffect(() => {
         if (activityDetail) {
