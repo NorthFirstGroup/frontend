@@ -23,7 +23,7 @@ export const routeConfigs = [
     {
         path: '/user/profile',
         element: <Profile />,
-        roles: ['USER', 'ORGANIZER'] //個人資訊
+        roles: ['USER', 'ORGANIZER'] //會員資訊
     },
     { path: '/user/reset-password', element: <ResetPassword />, roles: [] },
     // {

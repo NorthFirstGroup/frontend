@@ -133,13 +133,13 @@ const ActivityDetailPage = () => {
                             <InfoCardTitle>
                                 <HighlightText>節目</HighlightText>介紹
                             </InfoCardTitle>
-                            <p>{activityDetail?.description}</p>
+                            <p style={{ whiteSpace: 'pre-line' }}>{activityDetail?.description}</p>
                         </InfoCard>
                         <InfoCard className="mb-3" id="notice">
                             <InfoCardTitle>
                                 <HighlightText>重要</HighlightText>須知
                             </InfoCardTitle>
-                            <p>{activityDetail?.information}</p>
+                            <p style={{ whiteSpace: 'pre-line' }}>{activityDetail?.information}</p>
                         </InfoCard>
                     </PageContent>
                 </ActivityPage>

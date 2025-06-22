@@ -52,7 +52,7 @@ const ResetPassword = () => {
                 navigate('/user/profile');
             }, 1500);
         } catch (error: any) {
-            console.error('密碼重設失敗:', error);
+            console.error('密碼重設失敗', error);
             toast.error('密碼重設失敗，請稍後再試！');
         }
     };

@@ -132,7 +132,7 @@ const ActivityList: React.FC = () => {
             {/* ... (your existing Navbar and Filter Form code) ... */}
 
             <Container className="main-content py-4">
-                <h2 className="mb-4">活動管理</h2>
+                <h3 className="mb-4">活動管理</h3>
 
                 {/* Section 1: Filter/Search Form */}
                 <div className="filter-section p-3 mb-4 rounded shadow-sm">

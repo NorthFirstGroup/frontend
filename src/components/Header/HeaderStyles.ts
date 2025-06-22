@@ -38,7 +38,7 @@ export const StyledNavbar = styled(Navbar)`
     background-color: var(--bs-light, #f8f9fa) !important; /* 使用 Bootstrap 預設的 light 變數 */
     position: fixed;
     top: 0;
-    z-index: 999;
+    z-index: 1050;
     box-shadow: 0 2px 16px 0 #0000001f;
 
     @media (max-width: 991.98px) {
@@ -144,5 +144,24 @@ export const StyledAuthButton = styled(Button)<{ $textColor?: string }>`
         border-color: var(--gt-primary-700, #cc3b02);
         color: white;
         text-decoration: none;
+    }
+`;
+
+export const StyledSecondaryNavbar = styled(Navbar)`
+    background-color: var(--bs-light, #f8f9fa) !important; /* 使用 Bootstrap 預設的 light 變數 */
+    border-bottom: 1px solid var(--gt-color-border-default, #e7e7e7); /* Optional: a subtle border */
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Optional: subtle shadow */
+
+    position: fixed;
+    z-index: 1040;
+    width: 100%;
+    left: 0;
+    /* top 屬性仍然透過 props 在組件中設定 */
+
+    /* 響應式樣式 (如果需要，從 Header.module.css 中移過來) */
+    @media (max-width: 992px) {
+        /* 例如，如果手機版不需要 fixed 或者 top 值不同，可以在這裡調整 */
+        /* top: 45px; */
     }
 `;
