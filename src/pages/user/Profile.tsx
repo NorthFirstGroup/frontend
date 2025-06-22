@@ -197,7 +197,7 @@ const Profile: React.FC = () => {
         localAvatarUrl || latestProfileUrl || user?.profile_url || profile?.profile_url || defaultAvatar;
     return (
         <Container className="mt-5" style={{ maxWidth: '600px' }}>
-            <h3>會員資料</h3>
+            <h3>會員資訊</h3>
             <div className="d-flex flex-column align-items-center mt-3">
                 <div
                     style={{

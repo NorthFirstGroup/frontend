@@ -1,7 +1,7 @@
 export interface User {
     email: string;
     nickname?: string;
-    role?: string;
+    role?: 'ORGANIZER' | 'USER' | null;
     profile_url?: string;
     id?: string;
 }
