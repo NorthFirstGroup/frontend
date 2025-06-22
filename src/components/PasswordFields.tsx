@@ -80,7 +80,7 @@ const PasswordFields: React.FC<PasswordFieldsProps> = ({ onChange }) => {
                 <Form.Control
                     type="password"
                     name="password"
-                    placeholder="請輸入密碼"
+                    placeholder="需 8-16 字元，包含大小寫字母與數字"
                     value={password}
                     onChange={handleInputChange}
                     onBlur={e => handlePasswordBlur(e.target.value)}
@@ -94,7 +94,7 @@ const PasswordFields: React.FC<PasswordFieldsProps> = ({ onChange }) => {
                 <Form.Control
                     type="password"
                     name="confirmPassword"
-                    placeholder="再次輸入密碼"
+                    placeholder="需 8-16 字元，包含大小寫字母與數字"
                     value={confirmPassword}
                     onChange={handleInputChange}
                     onBlur={e => handleConfirmPasswordBlur(e.target.value)}
