@@ -184,10 +184,12 @@ const Profile: React.FC = () => {
             return;
         }
         try {
-            const newUrlFromApi = await handleUpdateProfile(user?.id || '', formData);
-            if (!newUrlFromApi) {
-                setSubmitError(profileUpdateError || '更新完成，但沒有收到新的大頭貼URL');
-            }
+            await handleUpdateProfile(user?.id || '', formData);
+            // 偉青：只更新資料不傳圖，不該出現這個訊息，所以先註解
+            // const newUrlFromApi = await handleUpdateProfile(user?.id || '', formData);
+            // if (!newUrlFromApi) {
+            //     setSubmitError(profileUpdateError || '更新完成，但沒有收到新的大頭貼URL');
+            // }
         } catch (err: unknown) {
             setSubmitError(profileUpdateError || handleApiError(err, '更新資料失敗'));
         }
