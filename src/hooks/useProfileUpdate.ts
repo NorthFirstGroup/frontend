@@ -94,6 +94,8 @@ export const useUserProfileData = () => {
         } finally {
             setUpdating(false);
         }
+
+        return null;
     };
 
     return {
