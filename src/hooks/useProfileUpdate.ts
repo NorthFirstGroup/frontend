@@ -67,7 +67,14 @@ export const useUserProfileData = () => {
                 setProfileData,
                 fileToPass
             );
-            if (result.data && result.status_code === 2000 && result.data?.profile_url) {
+
+            if (result.status_code !== 2000) {
+                const apiErrorMessage = result.message || 'API回報錯誤，但無具體訊息';
+                setUpdateError(apiErrorMessage);
+                throw new Error(apiErrorMessage);
+            }
+
+            if (result.data && result.data?.profile_url) {
                 const newAvatarUrl = result.data?.profile_url;
                 setProfile(prevProfile => ({
                     ...prevProfile!, // Use non-null assertion if you're sure profile won't be null here
@@ -78,10 +85,6 @@ export const useUserProfileData = () => {
                 setUpdateSuccess('會員資料已更新');
                 setSelectedFile(null); // 重置選擇檔案狀態
                 return newAvatarUrl;
-            } else {
-                const apiErrorMessage = result.message || 'API回報錯誤，但無具體訊息';
-                setUpdateError(apiErrorMessage);
-                throw new Error(apiErrorMessage); // Propagate error
             }
         } catch (err: unknown) {
             console.error('Error updating profile:', err);
