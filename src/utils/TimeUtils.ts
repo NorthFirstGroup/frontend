@@ -10,7 +10,7 @@ dayjs.locale('zh-tw');
  * @returns string - Formatted date string
  */
 
-const timeFormatter = (time: number | Date | string, format: string = 'YYYY-MM-DD HH:mm'): string => {
+const timeFormatter = (time: number | Date | string, format: string = 'YYYY-MM-DD HH:mm Z'): string => {
     let dayjsObj;
     if (typeof time === 'number') {
         // UNIX timestamp (秒)
