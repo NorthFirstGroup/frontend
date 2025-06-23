@@ -1,4 +1,3 @@
-// src/components/Footer.tsx
 import React from 'react';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import styles from './Header/Header.module.css';
@@ -61,11 +60,10 @@ const Footer: React.FC = () => {
                         </Nav>
                     </Col>
                     {/* 網站資訊 - 保持 text-center，移除 text-md-end */}
-                    <Col md={2} className="mb-3 text-center">
+                    {/* <Col md={2} className="mb-3 text-center">
                         <h5 className="text-primary">網站資訊</h5>
                         <Nav className="flex-column justify-content-center">
                             {' '}
-                            {/* 移除 justify-content-md-end */}
                             <Nav.Link href="/event-list" className="text-gray-950">
                                 節目列表
                             </Nav.Link>
@@ -73,7 +71,7 @@ const Footer: React.FC = () => {
                                 活動資訊
                             </Nav.Link>
                         </Nav>
-                    </Col>
+                    </Col> */}
                     {/* 客服中心 - 保持 text-center，移除 text-md-end */}
                     <Col md={2} className="mb-3 text-center">
                         <h5 className="text-primary">客服中心</h5>
@@ -88,31 +86,26 @@ const Footer: React.FC = () => {
                             </Nav.Link>
                         </Nav>
                     </Col>
-                </Row>
-                <hr className="bg-secondary" />
-                <Row className="align-items-center">
-                    {' '}
-                    {/* 垂直置中對齊 */}
-                    <Col md={6} className="text-center text-md-end text-muted mb-2 mb-md-0">
-                        {' '}
-                        {/* 版權文字靠左對齊 (md 以上) */}
-                        &copy; {new Date().getFullYear()} GoTicket Inc. All rights reserved.
-                    </Col>
-                    <Col md={6} className="text-center text-md-end">
-                        {' '}
-                        {/* 政策連結靠右對齊 (md 以上) */}
-                        <Nav className="justify-content-center justify-content-md-start ">
+                    <Col md={2} className="mb-3 text-center">
+                        <h5 className="text-primary">法律與政策</h5>
+                        <Nav className="flex-column justify-content-center">
                             {' '}
-                            {/* 連結在小螢幕居中，大螢幕靠右 */}
-                            <Nav.Link href="/privacy-policy" className="text-muted px-2">
+                            {/* 移除 justify-content-md-end */}
+                            <Nav.Link href="/privacy-policy" className="text-gray-950">
                                 隱私權政策
                             </Nav.Link>
-                            <Nav.Link href="/terms-of-service" className="text-muted px-2">
+                            <Nav.Link href="/terms-of-service" className="text-gray-950">
                                 使用者條款
                             </Nav.Link>
                         </Nav>
                     </Col>
-                </Row>{' '}
+                </Row>
+                <hr className="bg-secondary" />
+                <Row className="align-items-center">
+                    <Col md={6} className="text-center text-md-start text-muted mb-2 mb-md-0">
+                        &copy; {new Date().getFullYear()} GoTicket Inc. All rights reserved.
+                    </Col>
+                </Row>
             </Container>
         </footer>
     );

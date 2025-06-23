@@ -15,6 +15,12 @@ import ManageActivityPage from '@pages/organizer/manageActivity/ManageActivityPa
 import ActivityList from '@pages/organizer/Activity';
 import VenueForm from '@pages/organizer/VenueForm';
 import ResetPassword from '@pages/ResetPassword';
+import UploadGuidelines from '@pages/footer/UploadGuidelines';
+import FAQ from '@pages/footer/Faq';
+import AboutUs from '@pages/footer/AboutUs';
+import ContactUs from '@pages/footer/ContactUs';
+import PrivacyPolicy from '@pages/footer/PrivacyPolicy';
+import TermsOfService from '@pages/footer/TermsOfService';
 
 export const routeConfigs = [
     { path: '/', element: <Home />, roles: [] },
@@ -90,5 +96,35 @@ export const routeConfigs = [
         path: '/activity/:activityId',
         element: <ActivityDetailPage />,
         roles: [] // 單一活動詳情
+    },
+    {
+        path: '/upload-guidelines',
+        element: <UploadGuidelines />,
+        roles: [] // 活動上架規範
+    },
+    {
+        path: '/faq',
+        element: <FAQ />,
+        roles: [] // 常見問題
+    },
+    {
+        path: '/about-us',
+        element: <AboutUs />,
+        roles: [] // 關於我們
+    },
+    {
+        path: '/contact-us',
+        element: <ContactUs />,
+        roles: [] // 聯絡我們
+    },
+    {
+        path: '/privacy-policy',
+        element: <PrivacyPolicy />,
+        roles: [] // 隱私權政策
+    },
+    {
+        path: '/terms-of-service',
+        element: <TermsOfService />,
+        roles: [] // 使用者條款
     }
 ];
