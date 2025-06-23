@@ -14,15 +14,21 @@ import CategoryFilter from '@components/categoryFilter';
 import calendarIcon from '@assets/searchPageMock/calendar.svg';
 import locationIcon from '@assets/searchPageMock/location.svg';
 
+interface DateRangeItem {
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+    key: string;
+}
+
 const SearchPage = () => {
     const [activities, setActivities] = useState<any[]>([]);
     const [recommends, setRecommends] = useState<FrontpageActivity[]>([]);
     const [location, setLocation] = useState<number[]>([]); // 輸入地區搜尋
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]); // 輸入分類搜尋
-    const [dateRange, setDateRange] = useState([
+    const [dateRange, setDateRange] = useState<DateRangeItem[]>([
         {
-            startDate: new Date(),
-            endDate: new Date(),
+            startDate: undefined,
+            endDate: undefined,
             key: 'selection'
         }
     ]);
@@ -50,8 +56,8 @@ const SearchPage = () => {
             tag: urlTag || '',
             level: urlLevel || '',
             location: location.join(','), // 轉成字串
-            startDate: dateRange[0].startDate.toISOString(),
-            endDate: dateRange[0].endDate.toISOString()
+            startDate: dateRange[0].startDate ? dateRange[0].startDate.toISOString() : '',
+            endDate: dateRange[0].endDate ? dateRange[0].endDate.toISOString() : ''
         };
         const response = await activityAPI.getActivitySearch(searchCondition);
         if (response.results) {
@@ -156,8 +162,9 @@ const SearchPage = () => {
             >
                 <div>搜尋關鍵字：{currentKeyword || '無'}</div>
                 <div>
-                    篩選日期：{format(dateRange[0].startDate, 'yyyy/MM/dd')} -{' '}
-                    {format(dateRange[0].endDate, 'yyyy/MM/dd')}{' '}
+                    篩選日期：
+                    {dateRange && dateRange[0].startDate ? format(dateRange[0].startDate, 'yyyy/MM/dd') : ''} -{' '}
+                    {dateRange && dateRange[0].endDate ? format(dateRange[0].endDate, 'yyyy/MM/dd') : ''}{' '}
                 </div>
                 <div>
                     篩選分類：
@@ -236,7 +243,11 @@ const SearchPage = () => {
                         <input
                             className="form-control"
                             placeholder="選擇日期範圍"
-                            value={`${dateRange[0].startDate.toLocaleDateString()} - ${dateRange[0].endDate.toLocaleDateString()}`}
+                            value={
+                                dateRange[0].startDate && dateRange[0].endDate
+                                    ? `${dateRange[0].startDate.toLocaleDateString()} - ${dateRange[0].endDate.toLocaleDateString()}`
+                                    : ''
+                            }
                             readOnly
                             onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
                         />
@@ -244,7 +255,7 @@ const SearchPage = () => {
                             <div ref={datePickerRef} style={{ position: 'absolute', zIndex: 1000 }}>
                                 <DateRange
                                     onChange={(ranges: any) => setDateRange([ranges.selection])}
-                                    ranges={dateRange}
+                                    ranges={dateRange ? dateRange : []}
                                     editableDateInputs={true}
                                     moveRangeOnFirstSelection={false}
                                 />
