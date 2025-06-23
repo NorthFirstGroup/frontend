@@ -96,7 +96,7 @@ const ActivitySiteWithActivity = (props: ShowTimeProps) => {
             {showTimeList.map(showTime => {
                 return (
                     <BorderWrapperShow key={showTime.id}>
-                        <Row className={`${isMobile ? 'flex-column' : ''}`} w>
+                        <Row className={`${isMobile ? 'flex-column' : ''}`}>
                             <Col className="first-col">
                                 <Row className="mb-2">
                                     <Col className="d-flex align-items-center">
