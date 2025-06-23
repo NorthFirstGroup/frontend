@@ -68,9 +68,9 @@ const ActivityShowTimes = (props: ActivityShowtimeProps) => {
                     <CustomTable responsive className="mt-2">
                         <thead>
                             <tr>
+                                <th>區域</th>
                                 <th>價格</th>
                                 <th>剩餘座位</th>
-                                <th>區域</th>
                                 <th />
                             </tr>
                         </thead>
@@ -79,8 +79,8 @@ const ActivityShowTimes = (props: ActivityShowtimeProps) => {
                                 const { price, vacancy, section } = seat;
                                 return (
                                     <tr key={seat.id}>
-                                        <td>${price}</td>
                                         <td>{section}</td>
+                                        <td>${price}</td>
                                         <ColoredTd vacancy={vacancy}>{vacancy ? `${vacancy} 席` : '完售'}</ColoredTd>
                                         {!isMobile && (
                                             <td className="text-end">
