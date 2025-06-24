@@ -16,7 +16,6 @@ const CountdownActivitiesSection: React.FC = () => {
         const fetchCountdownActivities = async () => {
             try {
                 const response: ApiResponse<FrontpageActivity[]> = await getCountdownActivities();
-                console.log(response.data);
                 if (!response.message) {
                     // 只篩選有 sales_start_time 且尚未開賣的活動
                     const comingSoon = (response.data || []).filter(

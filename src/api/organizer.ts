@@ -61,7 +61,6 @@ export interface OrganizerActivities {
  */
 export const getOrganizerData = async (): Promise<ApiResponse<OrganizerData>> => {
     const res = await apiClient.get<ApiResponse<OrganizerData>>('/v1/organizer/profile');
-    console.log('GET - /v1/organizer/profile', res.data);
     const parsed = OrganizerApplySchema.safeParse(res.data.data);
     if (!parsed.success) console.error('GET - /v1/organizer/profile 驗證錯誤', parsed.error.format());
     return {

@@ -7,7 +7,7 @@ import AppProvider from '@contexts/AppProvider';
 import SecondaryNavbar from './components/Header/SecondaryNavbar'; // New secondary header component
 
 function App() {
-    console.log('App component rendering');
+    // console.log('App component rendering');
     const [mainHeaderHeight, setMainHeaderHeight] = useState(0);
     const [secondaryNavbarHeight, setSecondaryNavbarHeight] = useState(0);
 

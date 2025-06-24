@@ -32,12 +32,12 @@ const Header = ({ onMainHeaderHeightChange }: HeaderProps) => {
     const userMenuItems = getFullUserMenuItems(user?.role);
 
     useEffect(() => {
-        console.log('Header useEffect is running!');
+        // console.log('Header useEffect is running!');
         const calculateAndReportMainHeaderHeight = () => {
             // 直接在 useEffect 內部定義
             if (mainNavbarRef.current) {
                 onMainHeaderHeightChange(mainNavbarRef.current.offsetHeight);
-                console.log('Main Header Height:', mainNavbarRef.current.offsetHeight);
+                // console.log('Main Header Height:', mainNavbarRef.current.offsetHeight);
             }
         };
 
