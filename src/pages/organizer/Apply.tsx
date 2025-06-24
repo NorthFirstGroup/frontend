@@ -254,6 +254,7 @@ const OrganizerApplyForm: React.FC = () => {
                         maxLength={MAX_LENGTH}
                         required
                     />
+                    {errors.address && <div className="text-danger">{errors.address}</div>}
                 </Form.Group>
 
                 {user?.role === 'USER' && (
