@@ -56,8 +56,8 @@ const SearchPage = () => {
             tag: urlTag || '',
             level: urlLevel || '',
             location: location.join(','), // 轉成字串
-            startDate: dateRange[0].startDate ? dateRange[0].startDate.toISOString() : '',
-            endDate: dateRange[0].endDate ? dateRange[0].endDate.toISOString() : ''
+            date_start: dateRange[0].startDate ? dateRange[0].startDate.toISOString() : '',
+            date_end: dateRange[0].endDate ? dateRange[0].endDate.toISOString() : ''
         };
         const response = await activityAPI.getActivitySearch(searchCondition);
         if (response.results) {
