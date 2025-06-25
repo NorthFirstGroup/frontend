@@ -11,7 +11,7 @@ export interface OrganizerData {
     address: string;
 }
 
-export const activityStatusMap = ['', '未上架或草稿', '已上架', '取消', '結束'];
+export const activityStatusMap = ['全部', '未上架或草稿', '已上架', '取消', '結束'];
 
 export interface organizerSearchParams {
     name?: string;

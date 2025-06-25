@@ -161,7 +161,6 @@ const ActivityList: React.FC = () => {
                                         value={filterStatus}
                                         onChange={e => setFilterStatus(Number(e.target.value))}
                                     >
-                                        <option value={0}>全部</option>
                                         {activityStatusMap.map((value, index) => (
                                             <option key={index} value={index}>
                                                 {value}
