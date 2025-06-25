@@ -36,7 +36,8 @@ const useActivity = (activityId?: number | string) => {
                 return response;
             } catch (error) {
                 if (error instanceof ApiError) {
-                    toast.error(error.message || '取得活動場次失敗！');
+                    console.error(error.message || '取得活動場次失敗！');
+                    // toast.error(error.message || '取得活動場次失敗！');
                 }
             } finally {
                 if (loading) setIsLoading(false);

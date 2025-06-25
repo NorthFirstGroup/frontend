@@ -127,7 +127,11 @@ const ActivityDetailPage = () => {
                             <InfoCardTitle>
                                 <HighlightText>購票</HighlightText>資訊
                             </InfoCardTitle>
-                            {showTimesList && <ActivityShowTimes showTimesList={showTimesList} />}
+                            {showTimesList ? (
+                                <ActivityShowTimes showTimesList={showTimesList} />
+                            ) : (
+                                <p>活動籌備中，敬請期待！</p>
+                            )}
                         </InfoCard>
                         <InfoCard className="mb-3" id="introduction">
                             <InfoCardTitle>
