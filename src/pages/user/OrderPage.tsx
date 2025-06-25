@@ -82,7 +82,7 @@ const OrderPage = () => {
                                 </div>
                             </div>
                             {order.status === '已付款' && (
-                                <div className="text-center cursor-pointer" onClick={() => setFullscreenQR(ticket.id)}>
+                                <div className="text-center qr-clickable" onClick={() => setFullscreenQR(ticket.id)}>
                                     <QRCodeSVG value={ticket.id} size={100} />
                                 </div>
                             )}

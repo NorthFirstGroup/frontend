@@ -1,3 +1,7 @@
+.qr-clickable {
+    cursor: pointer;
+}
+
 .fullscreen-qr {
     position: fixed;
     top: 0;
