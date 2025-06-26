@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaCopy } from 'react-icons/fa';
 
 import { FrontpageActivity } from '@type/home';
 import './ActivityCard.css';
@@ -16,6 +16,7 @@ interface ActivityCardProps {
     showRemainingSeats?: boolean;
 
     isEditable?: boolean;
+    onCopy?: (activityId: number) => void;
     onEdit?: (activityId: number) => void;
     onDelete?: (activityId: number, activityName: string) => void;
 }
@@ -27,6 +28,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     hasShadow = true,
     showRemainingSeats = false,
     isEditable = false, // Default to false
+    onCopy,
     onEdit,
     onDelete
 }) => {
@@ -73,6 +75,11 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             console.log('點擊 ActivityCard，導航至:', `/activity/${activity.id}`); // 方便調試
             navigate(`/activity/${activity.id}`);
         }
+    };
+
+    const handleCopyClick = (event: React.MouseEvent) => {
+        event.stopPropagation(); // Prevent the card's onClick from firing
+        onCopy && onCopy(activity.id); // Call if handler exists
     };
 
     const handleEditClick = (event: React.MouseEvent) => {
@@ -142,22 +149,45 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
                                     </label>
                                 </div>
                             )}
-                            <Button
-                                variant="outline-secondary"
-                                size="sm"
-                                className="action-btn"
-                                onClick={handleEditClick}
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip id="delete-tooltip">複製活動</Tooltip>} // The content of your tip
                             >
-                                <FaEdit />
-                            </Button>
-                            <Button
-                                variant="outline-danger"
-                                size="sm"
-                                className="action-btn"
-                                onClick={handleDeleteClick}
+                                <Button
+                                    variant="outline-secondary"
+                                    size="sm"
+                                    className="action-btn"
+                                    onClick={handleCopyClick}
+                                >
+                                    <FaCopy />
+                                </Button>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip id="delete-tooltip">編輯活動</Tooltip>} // The content of your tip
                             >
-                                <FaTrash />
-                            </Button>
+                                <Button
+                                    variant="outline-secondary"
+                                    size="sm"
+                                    className="action-btn"
+                                    onClick={handleEditClick}
+                                >
+                                    <FaEdit />
+                                </Button>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={<Tooltip id="delete-tooltip">刪除活動</Tooltip>} // The content of your tip
+                            >
+                                <Button
+                                    variant="outline-danger"
+                                    size="sm"
+                                    className="action-btn"
+                                    onClick={handleDeleteClick}
+                                >
+                                    <FaTrash />
+                                </Button>
+                            </OverlayTrigger>
                         </div>
                     )}
                 </div>
