@@ -9,7 +9,8 @@ import {
     organizerSearchParams,
     OrganizerOneActivityData,
     getOrganizerActivities,
-    deleteOrganizerActivities
+    deleteOrganizerActivities,
+    copyOrganizerActivities
 } from '@api/organizer';
 import { Categories, Category } from '@api/category';
 
@@ -85,6 +86,22 @@ const ActivityList: React.FC = () => {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+    };
+
+    const handleCopy = async (activityId: number) => {
+        try {
+            const response = await copyOrganizerActivities(activityId);
+            if (response.status_code === 2000) {
+                alert('活動複製成功！');
+                setCurrentPage(1);
+                fetchActivities();
+            } else {
+                alert(`活動複製失敗: ${response.message || '未知錯誤'}`);
+            }
+        } catch (error) {
+            console.error('複製活動時發生錯誤:', error);
+            alert('複製活動時發生網路錯誤，請稍後再試。');
+        }
     };
 
     const confirmDelete = (activityId: number, activityName: string) => {
@@ -223,6 +240,7 @@ const ActivityList: React.FC = () => {
                                         activity={activity}
                                         hasShadow={true}
                                         isEditable={true}
+                                        onCopy={handleCopy}
                                         onEdit={handleEdit} // Pass if you defined a custom handler in ActivityList
                                         onDelete={handleDeleteButtonClick}
                                     />

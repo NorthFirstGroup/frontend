@@ -175,3 +175,27 @@ export const deleteOrganizerActivities = async (activityId: number): Promise<Api
         throw new Error('Failed to get organizer activities');
     }
 };
+
+//該廠商複製活動
+export const copyOrganizerActivities = async (activityId: number): Promise<ApiResponse<null>> => {
+    try {
+        //暫時路徑
+        const response = await apiClient.post<ApiResponse<null>>(`/v1/organizer/activity/${activityId}/copy`);
+
+        if (response.data) {
+            return {
+                status_code: response.data.status_code,
+                message: response.data.message
+            };
+        } else {
+            console.error(`POST - /v1/organizer/activity/${activityId}/copy 錯誤`);
+            return {
+                status_code: 500,
+                message: 'Internal client error: Empty response data from server.'
+            };
+        }
+    } catch (error) {
+        console.error('Error copyOrganizerActivities:', error);
+        throw new Error('Failed to copy organizer activities');
+    }
+};
