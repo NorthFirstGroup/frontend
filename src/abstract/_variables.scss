@@ -24,6 +24,24 @@ $primary: $primary-500;
 // @debug 'DEBUG1: My $primary is: #{$primary}';
 $primary-text: var(--bs-gray-950); // 使用 Bootstrap 的灰色950作為主要文字顏色
 
+$pagination-color: $primary;
+$pagination-active-bg: $primary;
+$pagination-active-border-color: $primary;
+$pagination-hover-color: shade-color($primary, 20%);
+$pagination-disabled-color: lighten($primary, 40%);
+
+$dropdown-link-hover-color: $white;
+$dropdown-link-hover-bg: $gray-100;
+$dropdown-link-active-color: $white;
+$dropdown-link-active-bg: $primary-200;
+
+$form-select-color: $body-color;
+$form-select-border-color: rgba($primary, 0.5);
+$form-select-focus-border-color: $primary;
+$form-select-focus-box-shadow: 0 0 0 $input-focus-width rgba($primary, 0.25);
+$form-select-disabled-bg: $gray-200;
+$form-select-indicator-color: $primary;
+
 $gray-50: #f6f6f6;
 $gray-100: #e7e7e7;
 $gray-200: #d1d1d1;

@@ -12,7 +12,10 @@ interface Props {
 const PhoneNumberInput: React.FC<Props> = ({ inputLabel, inputName, value, onChange, error }) => {
     return (
         <Form.Group className="mb-3">
-            <Form.Label>{inputLabel}</Form.Label>
+            <Form.Label>
+                <span className="text-danger">* </span>
+                {inputLabel}
+            </Form.Label>
             <Form.Control
                 type="tel"
                 name={inputName}

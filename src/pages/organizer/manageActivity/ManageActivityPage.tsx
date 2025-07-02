@@ -189,9 +189,13 @@ export const ManageActivity = () => {
         const transformedData = createActiveSchemaTransformed.parse(data);
         if (activityId) {
             await updateActivity(Number(activityId), transformedData);
-            return;
+        } else {
+            await createActivity(transformedData);
         }
-        await createActivity(transformedData);
+        const manageShowTimeElement = document.getElementById('manage-showtime-section');
+        if (manageShowTimeElement) {
+            manageShowTimeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     };
 
     useEffect(() => {
@@ -487,7 +491,7 @@ export const ManageActivity = () => {
                     </Row>
                 </form>
                 {activityId && (
-                    <ManageShowTime className="mb-3">
+                    <ManageShowTime className="mb-3" id="manage-showtime-section">
                         <ResponsiveRow className="align-items-center mb-3">
                             <Col className={`${isMobile ? 'text-center mb-2' : ''}`}>
                                 <h5>活動場地及場次</h5>

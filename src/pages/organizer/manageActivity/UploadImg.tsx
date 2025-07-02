@@ -105,7 +105,13 @@ export const UploadImg = (props: UploadImgProps) => {
                     <Icon src={Image} width="35px" className="mb-2" />
                     <span className="mb-2">支援 JPG、JPEG、PNG 檔案</span>
                     <Button variant="primary">上傳圖片</Button>
-                    <input type="file" ref={fileInputRef} onChange={handleFileChange} hidden />
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        hidden
+                        accept=".jpg, .jpeg, .png, .gif"
+                    />
                 </WantToUploadImg>
             )}
         </UploadImgWrapper>

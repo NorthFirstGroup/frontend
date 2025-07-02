@@ -31,7 +31,7 @@ export const ManageActivityProvider = ({ children }: { children: ReactNode }) =>
         async (payload: ActivityCreate) => {
             try {
                 const response = await organizerActivityAPI.createActivity(payload);
-                toast.success('新增活動成功！');
+                toast.success('新增活動成功！請繼續新增場地及場次。');
                 navigate(`/organizer/activity/manage/${response.id}`); // 成功後導向活動列表頁面
             } catch (error) {
                 if (error instanceof ApiError) {
@@ -47,7 +47,7 @@ export const ManageActivityProvider = ({ children }: { children: ReactNode }) =>
             try {
                 await organizerActivityAPI.updateActivity(activityId, data);
                 getActivityDetail(activityId);
-                toast.success('更新活動成功！');
+                toast.success('更新活動成功！可繼續更新場地及場次。');
             } catch (error) {
                 if (error instanceof ApiError) {
                     toast.error(error.message || '更新活動失敗！');

@@ -195,12 +195,15 @@ const OrganizerApplyForm: React.FC = () => {
 
     return (
         <Container className="mt-5" style={{ maxWidth: '600px' }}>
-            <h3>廠商資訊</h3>
+            <h3 className="text-center">廠商資訊</h3>
             {errMsg && <Alert variant="danger">{errMsg}</Alert>}
-            {submitSuccess && <Alert variant="success">{submitSuccess}</Alert>}
+            {submitSuccess && <Alert variant="success">{submitSuccess}</Alert>}{' '}
             <Form>
+                <p className="text-danger text-end">* 為必填</p>
                 <Form.Group className="mb-3" controlId="formName">
-                    <Form.Label>單位名稱</Form.Label>
+                    <Form.Label>
+                        <span className="text-danger">* </span>單位名稱
+                    </Form.Label>
                     <Form.Control
                         type="text"
                         placeholder="請輸入單位名稱"
@@ -214,7 +217,9 @@ const OrganizerApplyForm: React.FC = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formUbn">
-                    <Form.Label>統一編號</Form.Label>
+                    <Form.Label>
+                        <span className="text-danger">* </span>統一編號
+                    </Form.Label>
                     <Form.Control
                         type="text"
                         placeholder="請輸入統一編號"
@@ -244,7 +249,9 @@ const OrganizerApplyForm: React.FC = () => {
                 />
 
                 <Form.Group className="mb-3" controlId="formAddress">
-                    <Form.Label>地址</Form.Label>
+                    <Form.Label>
+                        <span className="text-danger">* </span>地址
+                    </Form.Label>
                     <Form.Control
                         type="text"
                         placeholder="請輸入地址"
