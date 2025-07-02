@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Form, Button, Alert, Image } from 'react-bootstrap';
+import { Container, Form, Button, Alert, Image, Row, Col } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
         phone_num: '',
         birth_date: dayjs().format('YYYY-MM-DD'),
         location_ids: [],
-        profile_url: '' // 包含 profile_url 並給予初始值
+        profile_url: ''
     });
     const [areas, setAreas] = useState<Area[]>([]);
 
@@ -70,10 +70,10 @@ const Profile: React.FC = () => {
 
     useEffect(() => {
         if (latestProfileUrl !== null) {
-            setLocalAvatarUrl(latestProfileUrl); // Update local preview/display to the API's URL
+            setLocalAvatarUrl(latestProfileUrl);
             updateUser({ profile_url: latestProfileUrl });
         }
-    }, [latestProfileUrl, updateUser]); // Dependencies are crucial here
+    }, [latestProfileUrl, updateUser]);
 
     useEffect(() => {
         const fetchAreasData = async () => {
@@ -122,7 +122,7 @@ const Profile: React.FC = () => {
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const target = e.target as HTMLInputElement; // 類型斷言
+        const target = e.target as HTMLInputElement;
         const selectedFile = target.files?.[0];
         if (selectedFile) {
             if (selectedFile.size > 2 * 1024 * 1024) {
@@ -149,10 +149,9 @@ const Profile: React.FC = () => {
                 reader.readAsDataURL(selectedFile);
             }
         } else {
-            // If user cancels file selection, clear the error and the selected file in the hook
             setErrors(prev => ({ ...prev, profile_url: '' }));
-            handleProfileFileChange(null); // Pass null to hook
-            setLocalAvatarUrl(user?.profile_url || profile?.profile_url || null); // Revert to current avatar
+            handleProfileFileChange(null);
+            setLocalAvatarUrl(user?.profile_url || profile?.profile_url || null);
         }
     };
 
@@ -177,7 +176,7 @@ const Profile: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitError('');
-        setErrors(prev => ({ ...prev, profile_url: '' })); // 清空圖片錯誤
+        setErrors(prev => ({ ...prev, profile_url: '' }));
 
         if (!isFormValid()) {
             setSubmitError('請檢查表單是否有錯誤或未填寫完整');
@@ -185,11 +184,6 @@ const Profile: React.FC = () => {
         }
         try {
             await handleUpdateProfile(user?.id || '', formData);
-            // 偉青：只更新資料不傳圖，不該出現這個訊息，所以先註解
-            // const newUrlFromApi = await handleUpdateProfile(user?.id || '', formData);
-            // if (!newUrlFromApi) {
-            //     setSubmitError(profileUpdateError || '更新完成，但沒有收到新的大頭貼URL');
-            // }
         } catch (err: unknown) {
             setSubmitError(profileUpdateError || handleApiError(err, '更新資料失敗'));
         }
@@ -197,111 +191,154 @@ const Profile: React.FC = () => {
 
     const currentAvatarToDisplay =
         localAvatarUrl || latestProfileUrl || user?.profile_url || profile?.profile_url || defaultAvatar;
+
     return (
-        <Container className="mt-5" style={{ maxWidth: '600px' }}>
-            <h3>會員資訊</h3>
-            <div className="d-flex flex-column align-items-center mt-3">
-                <div
-                    style={{
-                        width: '100px',
-                        height: '100px',
-                        borderRadius: '50%',
-                        overflow: 'hidden',
-                        marginBottom: '10px',
-                        border: '1px solid #ccc',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    <Image
-                        src={currentAvatarToDisplay}
-                        alt="Avatar"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        onError={e => {
-                            (e.target as HTMLImageElement).src = defaultAvatar;
-                        }}
-                    />
-                </div>
-                <Button variant="outline-primary" onClick={handleAvatarButtonClick} size="sm" disabled={isUpdating}>
-                    {isUpdating ? '上傳中...' : '更換 Avatar'}
-                </Button>
-                <Form.Control
-                    type="file"
-                    onChange={handleFileChange}
-                    ref={fileInputRef}
-                    style={{ display: 'none' }}
-                    accept="image/jpeg, image/png, image/gif"
-                />
-                {errors.profile_url && <Form.Text className="text-danger">{errors.profile_url}</Form.Text>}
-            </div>
-            {areasError && <Alert variant="danger">{areasError}</Alert>}
-            {profileError && <Alert variant="danger">{profileError}</Alert>} {/* 顯示錯誤訊息 */}
-            {profileUpdateError && <Alert variant="danger">{profileUpdateError}</Alert>}
-            {updateSuccess && <Alert variant="success">{updateSuccess}</Alert>}
-            {submitError && <Alert variant="info">{submitError}</Alert>}
-            <Form onSubmit={handleSubmit} className="mt-4">
-                <Form.Group className="mb-3">
-                    <Form.Label>會員帳號</Form.Label>
-                    <Form.Control type="email" value={email} readOnly plaintext disabled />
-                    <Button variant="primary" className="mt-2" onClick={() => navigate('/user/reset-password')}>
-                        重設密碼
-                    </Button>
-                </Form.Group>
-
-                <UserNameInput
-                    inputLabel="暱稱"
-                    inputName="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    error={errors.name}
-                />
-
-                <PhoneNumberInput
-                    inputLabel="手機號碼"
-                    inputName="phone_num"
-                    value={formData.phone_num}
-                    onChange={handleInputChange}
-                    error={errors.phone_num}
-                />
-
-                <Form.Group className="mb-3">
-                    <Form.Label>出生年月日</Form.Label>
-                    <Form.Control
-                        type="date"
-                        name="birth_date"
-                        value={formData.birth_date}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                    <Form.Label>偏好活動地區（至少勾選一個）</Form.Label>
-                    <div className="d-flex flex-wrap gap-2">
-                        {loadingAreas ? (
-                            <div>Loading Areas...</div> // Show loading message
-                        ) : (
-                            areas.map(area => (
-                                <Form.Check
-                                    key={area.id}
-                                    type="checkbox"
-                                    label={area.name}
-                                    value={area.id}
-                                    checked={formData.location_ids.includes(area.id)}
-                                    onChange={handleCheckboxChange}
-                                    className="flex-grow-1"
-                                    style={{ minWidth: 'calc(25% - 10px)' }}
-                                />
-                            ))
-                        )}
+        <Container className="mt-5" style={{ maxWidth: '900px' }}>
+            {' '}
+            {/* Increased max-width for two columns */}
+            <h3 className="text-center">會員資訊</h3>
+            <Row>
+                <Col md={4} className="d-flex flex-column align-items-center mb-4 mb-md-0">
+                    {/* Left Column - Avatar and Member Account */}
+                    <div className="d-flex flex-column align-items-center mt-3">
+                        <div
+                            style={{
+                                width: '100px',
+                                height: '100px',
+                                borderRadius: '50%',
+                                overflow: 'hidden',
+                                marginBottom: '15px',
+                                border: '1px solid #ccc',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                src={currentAvatarToDisplay}
+                                alt="Avatar"
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={e => {
+                                    (e.target as HTMLImageElement).src = defaultAvatar;
+                                }}
+                            />
+                        </div>
+                        <Button
+                            variant="outline-primary"
+                            onClick={handleAvatarButtonClick}
+                            size="sm"
+                            disabled={isUpdating}
+                        >
+                            {isUpdating ? '上傳中...' : '更換 Avatar'}
+                        </Button>
+                        <Form.Control
+                            type="file"
+                            onChange={handleFileChange}
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            accept=".jpg, .jpeg, .png, .gif"
+                            // accept="image/jpeg, image/png, image/gif"
+                        />
+                        {errors.profile_url && <Form.Text className="text-danger">{errors.profile_url}</Form.Text>}
                     </div>
-                </Form.Group>
 
-                <Button type="submit" variant="primary" disabled={!isFormValid() || profileLoading || isUpdating}>
-                    {profileLoading || isUpdating ? '更新中...' : '更新'}
-                </Button>
-            </Form>
+                    {/* Member Account section, now centered */}
+                    <Form.Group className="mb-3 mt-4 w-100 d-flex flex-column align-items-center">
+                        <Form.Label>會員帳號</Form.Label>
+                        {/* Adding 'text-center' to Form.Control for centering text, and 'mx-auto' for block-level centering */}
+                        <Form.Control
+                            type="email"
+                            value={email}
+                            readOnly
+                            plaintext
+                            disabled
+                            className="text-center mx-auto"
+                            style={{ maxWidth: '80%' }}
+                        />
+                        <Button
+                            variant="outline-primary"
+                            className="mt-2"
+                            onClick={() => navigate('/user/reset-password')}
+                        >
+                            重設密碼
+                        </Button>
+                    </Form.Group>
+                </Col>
+
+                <Col md={8}>
+                    {' '}
+                    {/* Right Column */}
+                    {areasError && <Alert variant="danger">{areasError}</Alert>}
+                    {profileError && <Alert variant="danger">{profileError}</Alert>}
+                    {profileUpdateError && <Alert variant="danger">{profileUpdateError}</Alert>}
+                    {updateSuccess && <Alert variant="success">{updateSuccess}</Alert>}
+                    {submitError && <Alert variant="info">{submitError}</Alert>}
+                    <Form onSubmit={handleSubmit} className="mt-4">
+                        <p className="text-danger text-end">* 為必填</p>
+
+                        <UserNameInput
+                            inputLabel="暱稱"
+                            inputName="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            error={errors.name}
+                        />
+
+                        <PhoneNumberInput
+                            inputLabel="手機號碼"
+                            inputName="phone_num"
+                            value={formData.phone_num}
+                            onChange={handleInputChange}
+                            error={errors.phone_num}
+                        />
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <span className="text-danger">* </span>出生年月日
+                            </Form.Label>
+                            <Form.Control
+                                type="date"
+                                name="birth_date"
+                                value={formData.birth_date}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <span className="text-danger">* </span>偏好活動地區（至少勾選一個）
+                            </Form.Label>
+                            <div className="d-flex flex-wrap gap-2">
+                                {loadingAreas ? (
+                                    <div>Loading Areas...</div>
+                                ) : (
+                                    areas.map(area => (
+                                        <Form.Check
+                                            key={area.id}
+                                            type="checkbox"
+                                            label={area.name}
+                                            value={area.id}
+                                            checked={formData.location_ids.includes(area.id)}
+                                            onChange={handleCheckboxChange}
+                                            className="flex-grow-1"
+                                            style={{ minWidth: 'calc(25% - 10px)' }}
+                                        />
+                                    ))
+                                )}
+                            </div>
+                        </Form.Group>
+
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={!isFormValid() || profileLoading || isUpdating}
+                        >
+                            {profileLoading || isUpdating ? '更新中...' : '更新'}
+                        </Button>
+                    </Form>
+                </Col>
+            </Row>
         </Container>
     );
 };
