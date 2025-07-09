@@ -14,6 +14,7 @@ export type ManageActivityContextType = {
     setShowSiteModal: (siteId: string | boolean) => void;
     organizerSiteMap: Map<string, ActivityShowtime[]>;
     setOrganizerSiteMap: (map: Map<string, ActivityShowtime[]>) => void;
+    genActivityDescription: (activityName: string) => Promise<string>;
 };
 
 export const ManageActivityContext = createContext<ManageActivityContextType | undefined>(undefined);

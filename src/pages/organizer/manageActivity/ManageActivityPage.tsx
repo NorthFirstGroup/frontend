@@ -146,7 +146,8 @@ const todayDate = dayjs().startOf('day').toDate(); // 取得今天日期（不�
 export const ManageActivity = () => {
     const navigate = useNavigate();
     const { activityId } = useParams<{ activityId: string }>();
-    const { activityDetail, createActivity, updateActivity, organizerSiteMap } = useManageActivityContext();
+    const { activityDetail, createActivity, updateActivity, organizerSiteMap, genActivityDescription } =
+        useManageActivityContext();
     const { organizerSiteList } = useSiteContext();
     const { manageActivityInit, resetActivityDetail, toggleShowTimeModal, toggleSiteModal } = useManageActivityLogic();
     const { categoryList } = useAppContext();
@@ -155,7 +156,9 @@ export const ManageActivity = () => {
         handleSubmit,
         formState: { errors },
         reset: resetFormData,
-        watch
+        watch,
+        getValues,
+        setValue
     } = useForm<FormData>({
         resolver: zodResolver(createActiveSchema),
         defaultValues: {
@@ -182,6 +185,16 @@ export const ManageActivity = () => {
         }
 
         toggleShowTimeModal(true);
+    };
+    const handleGenerateExample = async () => {
+        const activityName = getValues('name');
+        if (!activityName) {
+            toast.error('請先輸入活動名稱');
+            return;
+        }
+
+        const description = await genActivityDescription(activityName);
+        setValue('description', description);
     };
 
     const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
@@ -438,6 +451,9 @@ export const ManageActivity = () => {
                     <Row className="mb-2 ps-2">
                         <Col xs={12}>
                             <Form.Group as={Row}>
+                                <Button variant="secondary" className="me-2" onClick={handleGenerateExample}>
+                                    產生範例
+                                </Button>
                                 <Form.Label column>活動簡介</Form.Label>
                                 <Controller
                                     name="description"

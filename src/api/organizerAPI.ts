@@ -148,6 +148,13 @@ const organizerActivityAPI = {
     deleteActivity: async (activityId: number): Promise<void> => {
         await apiClient.delete(`/v1/organizer/activity/${activityId}`);
     },
+    genActivityDescription: async (activityName: string): Promise<string> => {
+        const data = {
+            name: activityName
+        };
+        const response = await apiClient.post(`/v1/organizer/activity/genDescription`, data);
+        return response.data.data?.description || 'No description generated';
+    },
     // activity showtime
     getActivityShowtimeList: async (activityId: number): Promise<ActivityShowtime[]> => {
         const response = await apiClient.get(`/v1/organizer/activity/${activityId}/showtime`);

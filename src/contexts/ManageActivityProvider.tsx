@@ -57,6 +57,19 @@ export const ManageActivityProvider = ({ children }: { children: ReactNode }) =>
         [getActivityDetail]
     );
 
+    const genActivityDescription = useCallback(async (activityName: string) => {
+        try {
+            const description = await organizerActivityAPI.genActivityDescription(activityName);
+            toast.success('活動描述生成成功！');
+            return description;
+        } catch (error) {
+            if (error instanceof ApiError) {
+                toast.error(error.message || '生成活動描述失敗！');
+            }
+            return '';
+        }
+    }, []);
+
     const contextValue = useMemo(
         () => ({
             activityDetail,
@@ -69,7 +82,8 @@ export const ManageActivityProvider = ({ children }: { children: ReactNode }) =>
             showSiteModal,
             setShowSiteModal,
             organizerSiteMap,
-            setOrganizerSiteMap
+            setOrganizerSiteMap,
+            genActivityDescription
         }),
         [
             activityDetail,
@@ -82,7 +96,8 @@ export const ManageActivityProvider = ({ children }: { children: ReactNode }) =>
             showSiteModal,
             setShowSiteModal,
             organizerSiteMap,
-            setOrganizerSiteMap
+            setOrganizerSiteMap,
+            genActivityDescription
         ]
     );
 
